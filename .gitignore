@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+
+# Build artifacts
+frontend/dist/
+backend/*.egg-info/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+backend/logs/
+
+# AI model files (large, downloaded at runtime)
+backend/models/*.bin
+backend/models/*.onnx
+
+# FAISS index (generated)
+backend/faiss_index/
+
+# Uploads (local dev)
+backend/uploads/
+
+# Python
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+htmlcov/

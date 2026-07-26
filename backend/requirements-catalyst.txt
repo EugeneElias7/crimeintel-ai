@@ -1,0 +1,16 @@
+# Catalyst-optimized requirements for CrimeIntel AI
+# Use this file for Zoho Catalyst deployment (CPU-only, no CUDA)
+# Usage: pip install -r requirements-catalyst.txt
+
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.2
+python-multipart==0.0.6
+sentence-transformers==2.2.2
+faiss-cpu==1.7.4
+numpy==1.24.3
+# torch is installed as dependency of sentence-transformers (CPU version)
+httpx==0.25.1
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.0

@@ -1,0 +1,42 @@
+# Repository labels for CrimeIntel AI
+# Sync with: https://github.com/marketplace/actions/github-label-sync
+
+- name: bug
+  color: 'b60205'
+  description: Something isn't working
+
+- name: enhancement
+  color: '0052cc'
+  description: New feature or improvement
+
+- name: documentation
+  color: '008672'
+  description: Documentation changes
+
+- name: good first issue
+  color: 'f9d71c'
+  description: Good for newcomers
+
+- name: help wanted
+  color: 'fb8532'
+  description: Extra attention is needed
+
+- name: question
+  color: 'd876e3'
+  description: Further information is requested
+
+- name: wontfix
+  color: 'ffffff'
+  description: This will not be worked on
+
+- name: duplicate
+  color: 'cfd3d7'
+  description: This issue or pull request already exists
+
+- name: invalid
+  color: 'e4e669'
+  description: This doesn't seem right
+
+- name: hackathon
+  color: '00cfcf'
+  description: Hackathon-related task or submission

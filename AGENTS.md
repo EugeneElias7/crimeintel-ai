@@ -18,6 +18,10 @@ Also consult when relevant: `docs/DATABASE_SCHEMA.md`, `docs/AI_SPECIFICATION.md
 
 All instructions live in this repository. When any teammate opens this folder with opencode in their terminal, this `AGENTS.md` is auto-loaded and its mandatory reading list is followed — no individual setup needed. Keep instructions in-repo, commit, and `git push` so every agent works from the same source of truth.
 
+## Permanent agent context
+
+`docs/AGENT_CONTEXT.md` is the locked master instruction set (product identity, scope, architecture, team ownership, git rules, Definition of Done, reporting format). Agents MUST follow it; report per its Final Agent Report section.
+
 ## Hard rules
 
 - Do NOT introduce new technologies, features, architecture, or scope without explicit approval.

@@ -12,7 +12,11 @@ You are working on **CrimeIntel AI** (Team Pixel Pirates, hackathon: Intelligent
 6. `docs/ROADMAP.md` — which phase is current, what to do next
 7. `docs/API_CONTRACT.md` — REST contract (match it exactly)
 
-Also consult when relevant: `docs/DATABASE_SCHEMA.md`, `docs/AI_SPECIFICATION.md`, `docs/UI_DESIGN.md`, `docs/CATALYST_MIGRATION.md`, `docs/DEVELOPMENT_SETUP.md`.
+Also consult when relevant: `docs/DATABASE_SCHEMA.md`, `docs/AI_SPECIFICATION.md`, `docs/UI_DESIGN.md`, `docs/CATALYST_MIGRATION.md`, `docs/DEVELOPMENT_SETUP.md`, `docs/GIT_REFERENCE.md` (command cheat sheet).
+
+## How teammates' agents get these instructions
+
+All instructions live in this repository. When any teammate opens this folder with opencode in their terminal, this `AGENTS.md` is auto-loaded and its mandatory reading list is followed — no individual setup needed. Keep instructions in-repo, commit, and `git push` so every agent works from the same source of truth.
 
 ## Hard rules
 

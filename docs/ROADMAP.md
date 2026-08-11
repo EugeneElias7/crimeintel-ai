@@ -13,12 +13,14 @@
 - [ ] Commit foundation to `main`
 - **Exit:** clean, stable foundation commit on GitHub.
 
-## Phase 1 — Data
-- [ ] Synthetic dataset generator (`scripts/generate_synthetic_data.py`) — ≥ 300 cases, persons, evidence, events, users, audit entries
-- [ ] SQLAlchemy models matching `DATABASE_SCHEMA.md`
-- [ ] Seed script → `data/crimeintel.db`
-- [ ] FAISS build script (`scripts/build_faiss_index.py`)
-- **Owner:** shared (Eugene owns AI parts)
+## Phase 1 — Data ✅ complete (2026-08-11, PR #1)
+- [x] Synthetic dataset generator (`scripts/generate_synthetic_data.py`) — 320 cases, persons, evidence, events, users, audit entries
+- [x] SQLAlchemy models matching `DATABASE_SCHEMA.md` (backend/app/models/)
+- [x] Seed script (`scripts/seed_database.py`) → `data/crimeintel.db` + storage evidence files
+- [x] FAISS build script (`scripts/build_faiss_index.py`) → 320-vector index + vector-id map
+- [x] Semantic retrieval verified (AI tests + canonical-query checks)
+- [x] 10 unit/integration tests passing
+- **Exit:** Phase 2 (Authentication) can start in parallel with Dev 2/Dev 3 planning.
 
 ## Phase 2 — Authentication
 - [ ] `UserRepository` interface + SQLite impl; JWT provider interface + local impl

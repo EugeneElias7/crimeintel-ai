@@ -20,7 +20,11 @@
 # 1. Backend
 python -m venv backend/.venv
 backend\.venv\Scripts\Activate.ps1
-pip install -r backend/requirements.txt
+
+# 1b. Windows: install CPU-only PyTorch FIRST (skips ~2.5 GB CUDA build)
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+pip install -r backend/requirements.txt -r backend/requirements-dev.txt
 
 # 2. Frontend
 cd frontend
@@ -31,8 +35,9 @@ cd ..
 Copy-Item .env.example .env   # edit as needed (defaults work out of the box)
 
 # 4. Data + AI assets (Phase 1+)
-python scripts/generate_synthetic_data.py     # creates data/crimeintel.db + storage files
-python scripts/build_faiss_index.py           # creates data/indexes/cases.index
+python scripts/generate_synthetic_data.py     # creates data/seed/*.json
+python scripts/seed_database.py               # creates data/crimeintel.db + storage files
+python scripts/build_faiss_index.py           # creates data/indexes/cases.index (downloads model once)
 ```
 
 macOS/Linux equivalents: `source backend/.venv/bin/activate`; the same scripts run under `bash` (`scripts/setup.sh`, `scripts/dev.sh`).
@@ -75,8 +80,8 @@ CORS_ORIGINS=http://localhost:5173
 # Backend (Phase 1+)
 pytest tests/unit tests/integration
 
-# AI evaluation (Phase 4+)
-pytest tests/ai -m ai_eval
+# AI evaluation (Phase 4+, model required)
+pytest tests/ai -m ai
 
 # Frontend (Phase 9+)
 cd frontend; npm run test

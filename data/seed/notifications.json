@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "user_id": 2,
+    "title": "Case assigned",
+    "message": "CASE-1005 has been assigned to you.",
+    "notification_type": "case_assignment",
+    "is_read": 0,
+    "created_at": "2026-08-10T14:54:26+00:00"
+  }
+]

@@ -1,0 +1,7947 @@
+[
+  {
+    "case_id": 1,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1001.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 1,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 1,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 1,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1001.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 1,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 1,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1001.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 2,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 2,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 2,
+    "name": "laptop",
+    "description": "Collected during investigation of CASE-1002.",
+    "evidence_type": "object",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 2,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1002.",
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 3,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1003.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 3,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 3,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1003.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 3,
+    "name": "bodycam clip",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 3,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 4,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 4,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1004.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 4,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1004.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 4,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 5,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1005.",
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 5,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1005.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 5,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1005.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 6,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 6,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 6,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 6,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1006.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 7,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1007.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 7,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1007.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 7,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1007.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 7,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 7,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 7,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1007.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 8,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1008.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 8,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 9,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1009.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 9,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 9,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1009.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 9,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 9,
+    "name": "weapon recovered",
+    "description": "Collected during investigation of CASE-1009.",
+    "evidence_type": "object",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 10,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 10,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1010.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 11,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1011.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 11,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1011.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 12,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1012.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 12,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1012.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 12,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1012.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 13,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 13,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1013.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 13,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1013.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 14,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1014.",
+    "evidence_type": "video",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 14,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1014.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 14,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1014.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 14,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 15,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1015.",
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 15,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1015.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 15,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 16,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 16,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 16,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1016.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 16,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 16,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 16,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1016.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 17,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 17,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1017.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 17,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 17,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 18,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1018.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 18,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1018.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 19,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 19,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 19,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1019.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 20,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1020.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 21,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1021.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 21,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 21,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1021.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 21,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 22,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1022.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 22,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 22,
+    "name": "weapon recovered",
+    "description": "Collected during investigation of CASE-1022.",
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 23,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1023.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 23,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1023.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 23,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1023.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 23,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1023.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 24,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1024.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 24,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1024.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 25,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1025.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 25,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1025.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 25,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1025.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 25,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 26,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1026.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 26,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1026.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 26,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1026.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 26,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1026.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 27,
+    "name": "bodycam clip",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 27,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1027.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 27,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 27,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 27,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1027.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 28,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1028.",
+    "evidence_type": "video",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 28,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1028.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 28,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1028.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 28,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1028.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 28,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1028.",
+    "evidence_type": "other",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 28,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 29,
+    "name": "mobile phone",
+    "description": "Collected during investigation of CASE-1029.",
+    "evidence_type": "object",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 29,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1029.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 30,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1030.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 30,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1030.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 30,
+    "name": "bodycam clip",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 30,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1030.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 30,
+    "name": "weapon recovered",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 30,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1030.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 31,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 31,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1031.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 31,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1031.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 31,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1031.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 31,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1031.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 32,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1032.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 32,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 33,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1033.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 33,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1033.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 33,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1033.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 33,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 33,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1033.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 34,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 34,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 35,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 36,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1036.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 36,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1036.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 37,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1037.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 37,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 37,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 37,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 37,
+    "name": "pouch with substance",
+    "description": "Collected during investigation of CASE-1037.",
+    "evidence_type": "object",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 38,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 38,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1038.",
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 38,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1038.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 38,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1038.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 38,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1038.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 39,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 39,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1039.",
+    "evidence_type": "other",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 39,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 39,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 39,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 39,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1039.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 40,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1040.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 41,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1041.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 41,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 41,
+    "name": "bodycam clip",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 41,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1041.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 41,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 42,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 42,
+    "name": "pouch with substance",
+    "description": "Collected during investigation of CASE-1042.",
+    "evidence_type": "object",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 42,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 43,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 43,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 43,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 43,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 43,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 44,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 45,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1045.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 45,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1045.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 45,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1045.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 46,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 46,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1046.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 46,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1046.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 47,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1047.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 47,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1047.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 47,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 47,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1047.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 48,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1048.",
+    "evidence_type": "other",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 48,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1048.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 49,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 49,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 49,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 50,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1050.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 50,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 50,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 50,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 50,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 50,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1050.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 51,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1051.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 51,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 51,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1051.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 51,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1051.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 51,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 52,
+    "name": "pouch with substance",
+    "description": "Collected during investigation of CASE-1052.",
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 52,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1052.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 52,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1052.",
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 53,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1053.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 54,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1054.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 54,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1054.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 55,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1055.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 55,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1055.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 55,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 55,
+    "name": "laptop",
+    "description": "Collected during investigation of CASE-1055.",
+    "evidence_type": "object",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 55,
+    "name": "weapon recovered",
+    "description": "Collected during investigation of CASE-1055.",
+    "evidence_type": "object",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 55,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 56,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1056.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 57,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 57,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1057.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 57,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1057.",
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 57,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1057.",
+    "evidence_type": "video",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 57,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 58,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 58,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1058.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 58,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 58,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1058.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 58,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 59,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 60,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 61,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 62,
+    "name": "mobile phone",
+    "description": "Collected during investigation of CASE-1062.",
+    "evidence_type": "object",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 62,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 62,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1062.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 62,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1062.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 62,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 63,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1063.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 63,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1063.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 63,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 63,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1063.",
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 64,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 64,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1064.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 64,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1064.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 64,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1064.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 65,
+    "name": "weapon recovered",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 65,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1065.",
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 65,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1065.",
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 65,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1065.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 65,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1065.",
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 65,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1065.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 66,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1066.",
+    "evidence_type": "video",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 66,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1066.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 66,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1066.",
+    "evidence_type": "other",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 66,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1066.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 66,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 67,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 67,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 67,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1067.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 68,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1068.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 69,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1069.",
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 69,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1069.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 69,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 70,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 70,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1070.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 70,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1070.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 70,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1070.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 70,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 70,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1070.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 71,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1071.",
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 71,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1071.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 71,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1071.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 71,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 71,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1071.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 72,
+    "name": "weapon recovered",
+    "description": "Collected during investigation of CASE-1072.",
+    "evidence_type": "object",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 72,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1072.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 72,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1072.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 73,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1073.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 73,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 73,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1073.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 73,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1073.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 74,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1074.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 75,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1075.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 76,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 77,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1077.",
+    "evidence_type": "other",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 77,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 77,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1077.",
+    "evidence_type": "other",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 77,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 77,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1077.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 77,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 78,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 78,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 79,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 79,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1079.",
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 79,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1079.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 79,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 79,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1079.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 80,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1080.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 81,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1081.",
+    "evidence_type": "video",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 81,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 81,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1081.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 81,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1081.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 82,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1082.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 82,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 82,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1082.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 82,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1082.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 83,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 83,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1083.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 83,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1083.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 83,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1083.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 84,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1084.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 84,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1084.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 85,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1085.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 85,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 85,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 85,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1085.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 86,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 86,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 86,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1086.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 86,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1086.",
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 86,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 86,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1086.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 87,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1087.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 87,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1087.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 87,
+    "name": "bodycam clip",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 87,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 87,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 87,
+    "name": "laptop",
+    "description": "Collected during investigation of CASE-1087.",
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 88,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 88,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1088.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 88,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1088.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 88,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 89,
+    "name": "pouch with substance",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 89,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 89,
+    "name": "pouch with substance",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 89,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 89,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1089.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 90,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1090.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 90,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 90,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1090.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 91,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1091.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 91,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 91,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 91,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1091.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 91,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 91,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1091.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 92,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 92,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1092.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 93,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1093.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 93,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1093.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 93,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1093.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 93,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 94,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1094.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 94,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1094.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 94,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 94,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1094.",
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 94,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1094.",
+    "evidence_type": "video",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 95,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1095.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 95,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 96,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 96,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 96,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 97,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1097.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 98,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1098.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 98,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1098.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 98,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1098.",
+    "evidence_type": "video",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 99,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1099.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 100,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1100.",
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 100,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1100.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 100,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1100.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 100,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 101,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1101.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 101,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1101.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 102,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1102.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 102,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1102.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 102,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1102.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 102,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 103,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 103,
+    "name": "laptop",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 104,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 105,
+    "name": "weapon recovered",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 105,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 105,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1105.",
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 105,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 106,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 106,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 106,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1106.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 106,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1106.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 106,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 107,
+    "name": "bodycam clip",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 107,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1107.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 107,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 107,
+    "name": "pouch with substance",
+    "description": "Collected during investigation of CASE-1107.",
+    "evidence_type": "object",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 107,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1107.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 107,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1107.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 108,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 108,
+    "name": "pouch with substance",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 108,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 108,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1108.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 109,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1109.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 109,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1109.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 109,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1109.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 110,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1110.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 110,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1110.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 111,
+    "name": "laptop",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 112,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1112.",
+    "evidence_type": "other",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 113,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1113.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 113,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1113.",
+    "evidence_type": "other",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 113,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 114,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1114.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 114,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1114.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 114,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1114.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 114,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 115,
+    "name": "pouch with substance",
+    "description": "Collected during investigation of CASE-1115.",
+    "evidence_type": "object",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 115,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1115.",
+    "evidence_type": "video",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 115,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1115.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 115,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 115,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1115.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 115,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1115.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 116,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 116,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1116.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 116,
+    "name": "mobile phone",
+    "description": "Collected during investigation of CASE-1116.",
+    "evidence_type": "object",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 116,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1116.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 117,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1117.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 117,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1117.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 117,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 118,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1118.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 118,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 118,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 119,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1119.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 119,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 119,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 120,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 120,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1120.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 120,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1120.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 120,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1120.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 120,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1120.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 121,
+    "name": "pouch with substance",
+    "description": "Collected during investigation of CASE-1121.",
+    "evidence_type": "object",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 121,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1121.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 121,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1121.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 121,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1121.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 122,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1122.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 122,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 122,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1122.",
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 122,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1122.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 122,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 122,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 123,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 123,
+    "name": "weapon recovered",
+    "description": "Collected during investigation of CASE-1123.",
+    "evidence_type": "object",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 123,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1123.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 124,
+    "name": "pouch with substance",
+    "description": "Collected during investigation of CASE-1124.",
+    "evidence_type": "object",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 124,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 124,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1124.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 124,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1124.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 125,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 125,
+    "name": "laptop",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 125,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1125.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 125,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1125.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 125,
+    "name": "weapon recovered",
+    "description": "Collected during investigation of CASE-1125.",
+    "evidence_type": "object",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 125,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 126,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 126,
+    "name": "mobile phone",
+    "description": "Collected during investigation of CASE-1126.",
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 126,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 126,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1126.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 126,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1126.",
+    "evidence_type": "other",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 127,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1127.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 127,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1127.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 127,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1127.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 127,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1127.",
+    "evidence_type": "video",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 128,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1128.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 128,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 128,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 128,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1128.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 128,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1128.",
+    "evidence_type": "other",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 129,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1129.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 129,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1129.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 129,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 129,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 129,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 129,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1129.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 130,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 130,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1130.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 131,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 131,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1131.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 132,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1132.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 132,
+    "name": "laptop",
+    "description": "Collected during investigation of CASE-1132.",
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 132,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 133,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1133.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 133,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1133.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 133,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1133.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 133,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1133.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 133,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1133.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 133,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1133.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 134,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1134.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 134,
+    "name": "laptop",
+    "description": "Collected during investigation of CASE-1134.",
+    "evidence_type": "object",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 134,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 134,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1134.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 134,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1134.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 134,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 135,
+    "name": "mobile phone",
+    "description": "Collected during investigation of CASE-1135.",
+    "evidence_type": "object",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 136,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1136.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 136,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1136.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 136,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 137,
+    "name": "mobile phone",
+    "description": "Collected during investigation of CASE-1137.",
+    "evidence_type": "object",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 137,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1137.",
+    "evidence_type": "other",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 138,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1138.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 138,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1138.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 138,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1138.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 138,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1138.",
+    "evidence_type": "video",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 139,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 139,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 139,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1139.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 140,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1140.",
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 140,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1140.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 140,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 141,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 142,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1142.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 142,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1142.",
+    "evidence_type": "other",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 142,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 142,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 143,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1143.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 143,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 143,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 144,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1144.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 145,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1145.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 145,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1145.",
+    "evidence_type": "video",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 146,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 146,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1146.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 147,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1147.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 147,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1147.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 147,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1147.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 147,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1147.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 148,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1148.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 148,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 148,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1148.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 148,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1148.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 148,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 148,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 149,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1149.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 149,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1149.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 150,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1150.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 150,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 151,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1151.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 151,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1151.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 151,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1151.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 151,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 152,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1152.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 152,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1152.",
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 152,
+    "name": "mobile phone",
+    "description": "Collected during investigation of CASE-1152.",
+    "evidence_type": "object",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 152,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 153,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1153.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 154,
+    "name": "mobile phone",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 154,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1154.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 154,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1154.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 154,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1154.",
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 154,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 154,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1154.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 155,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1155.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 155,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1155.",
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 155,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1155.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 155,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1155.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 155,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 155,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1155.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 156,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 156,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1156.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 157,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1157.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 157,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1157.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 157,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1157.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 157,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 157,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 157,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1157.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 158,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1158.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 158,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1158.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 158,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1158.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 158,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 158,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 158,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 159,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 159,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1159.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 159,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 159,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1159.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 159,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1159.",
+    "evidence_type": "other",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 159,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 160,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1160.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 160,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 160,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 160,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1160.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 161,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 161,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1161.",
+    "evidence_type": "video",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 162,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 163,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 163,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1163.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 163,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1163.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 163,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1163.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 163,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 163,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1163.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 164,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 165,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 166,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1166.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 166,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1166.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 166,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1166.",
+    "evidence_type": "other",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 166,
+    "name": "pouch with substance",
+    "description": "Collected during investigation of CASE-1166.",
+    "evidence_type": "object",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 166,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 166,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 167,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1167.",
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 167,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 167,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1167.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 168,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1168.",
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 168,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1168.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 169,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 169,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1169.",
+    "evidence_type": "video",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 169,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 170,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 170,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 170,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 170,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1170.",
+    "evidence_type": "other",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 170,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1170.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 170,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 171,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1171.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 171,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1171.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 171,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1171.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 172,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1172.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 172,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 172,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 172,
+    "name": "mobile phone",
+    "description": "Collected during investigation of CASE-1172.",
+    "evidence_type": "object",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 173,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 174,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 174,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1174.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 174,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 174,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1174.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 174,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1174.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 175,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1175.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 175,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 175,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 176,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1176.",
+    "evidence_type": "other",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 176,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1176.",
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 176,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1176.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 176,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1176.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 176,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 176,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1176.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 177,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1177.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 177,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 177,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1177.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 178,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1178.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 178,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1178.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 178,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1178.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 178,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1178.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 178,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1178.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 178,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 179,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 179,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1179.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 179,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1179.",
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 179,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1179.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 180,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 180,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1180.",
+    "evidence_type": "other",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 180,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 181,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1181.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 181,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1181.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 181,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1181.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 181,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 181,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1181.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 182,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1182.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 182,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 182,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1182.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 182,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 182,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1182.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 182,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 183,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1183.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 183,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1183.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 184,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1184.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 184,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 184,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1184.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 184,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1184.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 184,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 184,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 185,
+    "name": "mobile phone",
+    "description": "Collected during investigation of CASE-1185.",
+    "evidence_type": "object",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 185,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1185.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 185,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1185.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 185,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1185.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 186,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1186.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 186,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1186.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 186,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1186.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 187,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 187,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1187.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 188,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1188.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 188,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1188.",
+    "evidence_type": "other",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 189,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1189.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 189,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1189.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 189,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1189.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 189,
+    "name": "mobile phone",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 189,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1189.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 189,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1189.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 190,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1190.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 190,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1190.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 190,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1190.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 190,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1190.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 190,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 190,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 191,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 191,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1191.",
+    "evidence_type": "other",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 191,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 191,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 191,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1191.",
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 192,
+    "name": "laptop",
+    "description": "Collected during investigation of CASE-1192.",
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 192,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 192,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1192.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 192,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1192.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 192,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1192.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 193,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1193.",
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 193,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1193.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 193,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 193,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1193.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 193,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 194,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1194.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 195,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 195,
+    "name": "weapon recovered",
+    "description": "Collected during investigation of CASE-1195.",
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 195,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 196,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 196,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 197,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1197.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 197,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1197.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 197,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 197,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1197.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 197,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1197.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 198,
+    "name": "mobile phone",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 198,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 198,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1198.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 198,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1198.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 199,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1199.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 199,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 199,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1199.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 199,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1199.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 199,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1199.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 199,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1199.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 200,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1200.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 200,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 200,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1200.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 200,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 200,
+    "name": "weapon recovered",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 201,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1201.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 201,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1201.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 201,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1201.",
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 201,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1201.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 201,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1201.",
+    "evidence_type": "video",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 201,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 202,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1202.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 202,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1202.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 202,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 203,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 203,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 203,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 204,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 204,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1204.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 204,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1204.",
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 204,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 204,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1204.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 205,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1205.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 206,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1206.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 207,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1207.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 207,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 208,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 208,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1208.",
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 208,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1208.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 209,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 210,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1210.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 210,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1210.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 210,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1210.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 210,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1210.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 210,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1210.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 211,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1211.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 212,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 212,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1212.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 213,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1213.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 213,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 213,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 213,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1213.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 214,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1214.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 214,
+    "name": "laptop",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 214,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1214.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 214,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1214.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 214,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1214.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 215,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1215.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 215,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 215,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 215,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1215.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 216,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1216.",
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 216,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1216.",
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 216,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 216,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 216,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1216.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 217,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1217.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 217,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 217,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1217.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 218,
+    "name": "bodycam clip",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 218,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1218.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 219,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 219,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 219,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1219.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 219,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1219.",
+    "evidence_type": "other",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 220,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1220.",
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 220,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 220,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 220,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1220.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 220,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1220.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 221,
+    "name": "laptop",
+    "description": "Collected during investigation of CASE-1221.",
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 221,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 221,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1221.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 221,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1221.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 221,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1221.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 222,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1222.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 222,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1222.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 223,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1223.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 224,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1224.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 224,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1224.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 224,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1224.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 224,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1224.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 224,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 225,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1225.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 225,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1225.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 225,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 225,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1225.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 225,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1225.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 225,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 226,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1226.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 226,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1226.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 226,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1226.",
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 226,
+    "name": "laptop",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 226,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 226,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1226.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 227,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1227.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 227,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1227.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 227,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1227.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 227,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1227.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 228,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1228.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 228,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1228.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 229,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 229,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1229.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 229,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1229.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 229,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 229,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1229.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 230,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1230.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 230,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 230,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1230.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 230,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 231,
+    "name": "pouch with substance",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 231,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1231.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 232,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 232,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1232.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 232,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1232.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 232,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 233,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 233,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1233.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 233,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1233.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 233,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 233,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1233.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 234,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1234.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 234,
+    "name": "bodycam clip",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 234,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 234,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 235,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 235,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 235,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1235.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 235,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1235.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 235,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1235.",
+    "evidence_type": "video",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 235,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 236,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 237,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 238,
+    "name": "weapon recovered",
+    "description": "Collected during investigation of CASE-1238.",
+    "evidence_type": "object",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 238,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 238,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1238.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 238,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1238.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 238,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1238.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 239,
+    "name": "mobile phone",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 239,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1239.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 239,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1239.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 240,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 240,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1240.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 241,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 241,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1241.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 241,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1241.",
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 241,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 241,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1241.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 242,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1242.",
+    "evidence_type": "other",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 242,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1242.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 242,
+    "name": "pouch with substance",
+    "description": "Collected during investigation of CASE-1242.",
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 242,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1242.",
+    "evidence_type": "other",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 242,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1242.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 242,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1242.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 243,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1243.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 243,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1243.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 243,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1243.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 243,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1243.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 243,
+    "name": "laptop",
+    "description": "Collected during investigation of CASE-1243.",
+    "evidence_type": "object",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 243,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 244,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 244,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 245,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 245,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 245,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 245,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1245.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 245,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 246,
+    "name": "weapon recovered",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 246,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 246,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 246,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 246,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 247,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1247.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 247,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1247.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 247,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1247.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 247,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1247.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 247,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 247,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1247.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 248,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1248.",
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 248,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 248,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 248,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1248.",
+    "evidence_type": "video",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 249,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1249.",
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 249,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1249.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 249,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1249.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 249,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1249.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 249,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1249.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 249,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1249.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 250,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1250.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 250,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1250.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 250,
+    "name": "bodycam clip",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 250,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1250.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 251,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1251.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 251,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1251.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 251,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1251.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 251,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1251.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 251,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1251.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 252,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1252.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 253,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1253.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 253,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1253.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 254,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 254,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1254.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 254,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1254.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 255,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1255.",
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 255,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1255.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 256,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1256.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 257,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1257.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 257,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1257.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 258,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 258,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1258.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 258,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 258,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 258,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1258.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 259,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1259.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 259,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 259,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 259,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 259,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1259.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 259,
+    "name": "weapon recovered",
+    "description": "Collected during investigation of CASE-1259.",
+    "evidence_type": "object",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 260,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1260.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 260,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 261,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 261,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 261,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 261,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1261.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 261,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1261.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 261,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1261.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 262,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1262.",
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 262,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1262.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 262,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1262.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 263,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 264,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 265,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 265,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1265.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 265,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1265.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 265,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1265.",
+    "evidence_type": "video",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 265,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1265.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 266,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1266.",
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 266,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 266,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 267,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1267.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 267,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 267,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1267.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 267,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 267,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 268,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 268,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1268.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 268,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 268,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 268,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 269,
+    "name": "mobile phone",
+    "description": "Collected during investigation of CASE-1269.",
+    "evidence_type": "object",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 269,
+    "name": "laptop",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 269,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1269.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 269,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1269.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 269,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1269.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 270,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 270,
+    "name": "mobile phone",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 270,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1270.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 271,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1271.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 271,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1271.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 271,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 271,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 271,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1271.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 271,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1271.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 272,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1272.",
+    "evidence_type": "video",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 272,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1272.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 272,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 272,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1272.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 272,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 272,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1272.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 273,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1273.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 273,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 273,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1273.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 274,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1274.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 274,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1274.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 274,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 274,
+    "name": "footprint cast",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 274,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1274.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 274,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1274.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 275,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1275.",
+    "evidence_type": "other",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 275,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 276,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 276,
+    "name": "mobile phone",
+    "description": null,
+    "evidence_type": "object",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 276,
+    "name": "footprint cast",
+    "description": "Collected during investigation of CASE-1276.",
+    "evidence_type": "other",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 276,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1276.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 276,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1276.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 277,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1277.",
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 277,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1277.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 278,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 278,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1278.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 278,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1278.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 278,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 279,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1279.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 279,
+    "name": "pouch with substance",
+    "description": "Collected during investigation of CASE-1279.",
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 280,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 280,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 281,
+    "name": "clothing sample",
+    "description": null,
+    "evidence_type": "other",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 281,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1281.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 281,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 281,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1281.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 281,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 282,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 282,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1282.",
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 283,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 283,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 284,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 284,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1284.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 285,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1285.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 286,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1286.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 286,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1286.",
+    "evidence_type": "audio",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 286,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1286.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 287,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1287.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 287,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1287.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 287,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 287,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 288,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1288.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 288,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1288.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 289,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1289.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 289,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1289.",
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 289,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1289.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 289,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1289.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 289,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1289.",
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 290,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1290.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 290,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 290,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 290,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 291,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 291,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 291,
+    "name": "CCTV footage",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 292,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1292.",
+    "evidence_type": "audio",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 293,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1293.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 293,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 294,
+    "name": "bodycam clip",
+    "description": null,
+    "evidence_type": "video",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 294,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1294.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 294,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1294.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 294,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 295,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 296,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 296,
+    "name": "pouch with substance",
+    "description": "Collected during investigation of CASE-1296.",
+    "evidence_type": "object",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 297,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1297.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 297,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1297.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 297,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 297,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1297.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 297,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 298,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1298.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 298,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1298.",
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 299,
+    "name": "scene photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 299,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 299,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1299.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 299,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1299.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 299,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 300,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1300.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 300,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1300.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 300,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 300,
+    "name": "mobile phone",
+    "description": "Collected during investigation of CASE-1300.",
+    "evidence_type": "object",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 301,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 302,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 302,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 302,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 302,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1302.",
+    "evidence_type": "document",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 303,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1303.",
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 303,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 303,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 304,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1304.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 304,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 304,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 304,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1304.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 304,
+    "name": "interrogation audio",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 304,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 305,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 305,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1305.",
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 306,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1306.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 306,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1306.",
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 306,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1306.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 306,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 307,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 307,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1307.",
+    "evidence_type": "document",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 307,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 308,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1308.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 308,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 309,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1309.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 309,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1309.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 309,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1309.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 309,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 309,
+    "name": "scene photo",
+    "description": "Collected during investigation of CASE-1309.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 309,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1309.",
+    "evidence_type": "video",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 310,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1310.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 310,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1310.",
+    "evidence_type": "image",
+    "uploaded_by": 1
+  },
+  {
+    "case_id": 310,
+    "name": "complainant statement",
+    "description": "Collected during investigation of CASE-1310.",
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 311,
+    "name": "call recording",
+    "description": "Collected during investigation of CASE-1311.",
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 311,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 311,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1311.",
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 311,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 312,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 312,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 313,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 313,
+    "name": "spot sketch",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 313,
+    "name": "FIR copy",
+    "description": "Collected during investigation of CASE-1313.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 313,
+    "name": "interrogation audio",
+    "description": "Collected during investigation of CASE-1313.",
+    "evidence_type": "audio",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 314,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1314.",
+    "evidence_type": "video",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 315,
+    "name": "CCTV footage",
+    "description": "Collected during investigation of CASE-1315.",
+    "evidence_type": "video",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 315,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 315,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 315,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 316,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1316.",
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 316,
+    "name": "spot sketch",
+    "description": "Collected during investigation of CASE-1316.",
+    "evidence_type": "document",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 316,
+    "name": "seizure memo",
+    "description": "Collected during investigation of CASE-1316.",
+    "evidence_type": "document",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 317,
+    "name": "seizure memo",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 317,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1317.",
+    "evidence_type": "other",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 317,
+    "name": "bodycam clip",
+    "description": "Collected during investigation of CASE-1317.",
+    "evidence_type": "video",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 318,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 318,
+    "name": "suspect photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 5
+  },
+  {
+    "case_id": 318,
+    "name": "call recording",
+    "description": null,
+    "evidence_type": "audio",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 319,
+    "name": "FIR copy",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 319,
+    "name": "CCTV frame",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 4
+  },
+  {
+    "case_id": 319,
+    "name": "suspect photo",
+    "description": "Collected during investigation of CASE-1319.",
+    "evidence_type": "image",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 320,
+    "name": "clothing sample",
+    "description": "Collected during investigation of CASE-1320.",
+    "evidence_type": "other",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 320,
+    "name": "CCTV frame",
+    "description": "Collected during investigation of CASE-1320.",
+    "evidence_type": "image",
+    "uploaded_by": 3
+  },
+  {
+    "case_id": 320,
+    "name": "vehicle photo",
+    "description": null,
+    "evidence_type": "image",
+    "uploaded_by": 2
+  },
+  {
+    "case_id": 320,
+    "name": "complainant statement",
+    "description": null,
+    "evidence_type": "document",
+    "uploaded_by": 6
+  },
+  {
+    "case_id": 320,
+    "name": "vehicle photo",
+    "description": "Collected during investigation of CASE-1320.",
+    "evidence_type": "image",
+    "uploaded_by": 4
+  }
+]

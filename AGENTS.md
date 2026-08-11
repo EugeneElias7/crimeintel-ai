@@ -61,4 +61,4 @@ All instructions live in this repository. When any teammate opens this folder wi
 
 ## Current status
 
-Phase 0 (Foundation) is complete. See `docs/ROADMAP.md` — the next phase is **Phase 1 — Data** (synthetic dataset generator, SQLAlchemy models, seed script, FAISS build script).
+Phase 1 (Data) is complete: synthetic dataset (320 cases), SQLAlchemy models, seed script, FAISS index + retrieval verified. See `docs/ROADMAP.md` — the next phase is **Phase 2 — Authentication** (`feature/auth-admin`): JWT provider + `/auth/*` endpoints + login UI.

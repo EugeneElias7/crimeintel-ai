@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "conversation_id": 1,
+    "role": "user",
+    "content": "Find vehicle theft cases in Bengaluru.",
+    "intent": null,
+    "confidence": null,
+    "sources": null,
+    "feedback": null,
+    "created_at": "2026-08-09T05:54:26+00:00"
+  },
+  {
+    "id": 2,
+    "conversation_id": 1,
+    "role": "user",
+    "content": "Summarize CASE-1024.",
+    "intent": null,
+    "confidence": null,
+    "sources": null,
+    "feedback": null,
+    "created_at": "2026-08-09T06:54:26+00:00"
+  },
+  {
+    "id": 3,
+    "conversation_id": 1,
+    "role": "user",
+    "content": "What evidence is associated with CASE-1024?",
+    "intent": null,
+    "confidence": null,
+    "sources": null,
+    "feedback": null,
+    "created_at": "2026-08-09T07:54:26+00:00"
+  },
+  {
+    "id": 4,
+    "conversation_id": 1,
+    "role": "user",
+    "content": "Find cases similar to CASE-1024.",
+    "intent": null,
+    "confidence": null,
+    "sources": null,
+    "feedback": null,
+    "created_at": "2026-08-09T08:54:26+00:00"
+  },
+  {
+    "id": 5,
+    "conversation_id": 1,
+    "role": "user",
+    "content": "Which district has the highest number of theft cases?",
+    "intent": null,
+    "confidence": null,
+    "sources": null,
+    "feedback": null,
+    "created_at": "2026-08-09T09:54:26+00:00"
+  }
+]

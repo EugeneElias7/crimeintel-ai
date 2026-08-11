@@ -9,7 +9,7 @@
 ## Testing
 
 - [ ] Backend tests pass (`pytest tests/unit tests/integration`)
-- [ ] AI evaluation passes if CRIMA touched (`pytest tests/ai -m ai_eval`)
+- [ ] AI evaluation passes if CRIMA touched (`pytest tests/ai -m ai`)
 - [ ] Manual run per `docs/DEVELOPMENT_SETUP.md`
 
 ## Scope check

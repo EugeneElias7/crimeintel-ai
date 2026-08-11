@@ -1,0 +1,9 @@
+# CrimeIntel AI — backend runtime dependencies (Phase 1 subset)
+# Shared file: coordinate changes with the team (AGENTS.md/AGENT_CONTEXT.md §16)
+
+SQLAlchemy>=2.0,<2.1
+sentence-transformers>=3.0
+faiss-cpu>=1.8
+numpy>=1.26
+passlib[bcrypt]>=1.7,<1.8
+bcrypt==4.0.1

@@ -1,0 +1,2 @@
+# CrimeIntel AI — development dependencies (Phases 1+)
+pytest>=8.0

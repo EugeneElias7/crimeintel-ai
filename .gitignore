@@ -27,6 +27,7 @@ data/*.db-wal
 data/*.db-shm
 data/indexes/*.index
 data/indexes/*.faiss
+data/indexes/*.json
 storage/**/*
 !storage/.gitkeep
 

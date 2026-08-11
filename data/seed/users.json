@@ -1,0 +1,44 @@
+[
+  {
+    "username": "admin",
+    "full_name": "A. Prakash",
+    "email": "admin@crimeintel.demo",
+    "role": "admin",
+    "id": 1
+  },
+  {
+    "username": "kavya",
+    "full_name": "Kavya Rao",
+    "email": "kavya@crimeintel.demo",
+    "role": "investigator",
+    "id": 2
+  },
+  {
+    "username": "ravi",
+    "full_name": "Ravi Hegde",
+    "email": "ravi@crimeintel.demo",
+    "role": "investigator",
+    "id": 3
+  },
+  {
+    "username": "arjun",
+    "full_name": "Arjun Nair",
+    "email": "arjun@crimeintel.demo",
+    "role": "analyst",
+    "id": 4
+  },
+  {
+    "username": "meera",
+    "full_name": "Meera Iyer",
+    "email": "meera@crimeintel.demo",
+    "role": "viewer",
+    "id": 5
+  },
+  {
+    "username": "sanjay",
+    "full_name": "Sanjay Patil",
+    "email": "sanjay@crimeintel.demo",
+    "role": "admin",
+    "id": 6
+  }
+]

@@ -1,0 +1,46 @@
+# --- Python / backend ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+
+# --- Node / frontend ---
+node_modules/
+frontend/dist/
+frontend/dev-dist/
+*.tsbuildinfo
+
+# --- Environment / secrets ---
+.env
+.env.local
+.env.*.local
+
+# --- Generated data (local-first runtime artifacts) ---
+data/crimeintel.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+data/indexes/*.index
+data/indexes/*.faiss
+storage/**/*
+!storage/.gitkeep
+
+# --- AI model caches ---
+*.onnx
+models/
+
+# --- IDE / OS ---
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+logs/

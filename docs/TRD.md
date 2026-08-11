@@ -64,10 +64,12 @@ Only the **adapter implementations** change. Services, contracts, and UI stay.
 ## 4. Frontend Requirements
 
 - React 18 + TypeScript strict mode + Tailwind.
+- Approved UI libraries (open-source): `motion` (animations/3D micro-interactions), `recharts` (animated analytics charts), `lucide-react` (icons). No other UI libs without approval.
+- Design system: **Meridian** theme — see `docs/UI_DESIGN.md` (final tokens; no generic "AI default" styling).
 - Pages: Login, Dashboard, Case Explorer, Case Detail, Evidence, Analytics, Reports, Admin (users, audit, settings), CRIMA AI, NotFound.
 - API client with typed models; interceptors attach JWT, handle 401 refresh flow.
 - State: React context for auth; local state for pages (no heavy global store required).
-- Loading/error/empty states required on every data view (`UI_DESIGN.md`).
+- Loading/error/empty states required on every data view (`UI_DESIGN.md` §7–9).
 - Vite dev proxy: `/api` → `http://localhost:8000`.
 
 ## 5. Backend Requirements

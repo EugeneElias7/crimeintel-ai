@@ -80,7 +80,7 @@ The platform is **not** a generic police management system. Supporting modules (
 
 ## 8. Technology Principles
 
-- **Frontend:** React + TypeScript + Tailwind CSS
+- **Frontend:** React + TypeScript + Tailwind CSS, `motion` (animations), `recharts` (charts), `lucide-react` (icons) — polished professional SaaS look ("Meridian" theme, see `UI_DESIGN.md`)
 - **Backend:** FastAPI + Python
 - **Database:** SQLite (local) → Catalyst Data Store (cloud)
 - **Storage:** Local filesystem → Catalyst Stratus (cloud)

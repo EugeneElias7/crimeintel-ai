@@ -1,11 +1,11 @@
 # Run both backend and frontend from this project's real location
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-$backend = Start-Process -FilePath "$root\backend\.venv\Scripts\python.exe" `
-    -ArgumentList "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000" `
+# Use system python (via rtk) instead of venv
+$backend = Start-Process -FilePath "rtk" -ArgumentList "python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000" `
     -WorkingDirectory "$root\backend" -PassThru
 
-$frontend = Start-Process -FilePath "npm" -ArgumentList "run", "dev" `
+$frontend = Start-Process -FilePath "rtk" -ArgumentList "npm", "run", "dev" `
     -WorkingDirectory "$root\frontend" -PassThru
 
 Write-Host "Backend PID: $($backend.Id)" -ForegroundColor Green

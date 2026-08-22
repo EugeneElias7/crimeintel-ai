@@ -34,4 +34,4 @@ temp_predict.json
 temp_register.json
 
 # OS
-.DS_Store
+.DS_Storebackend/data/*.db

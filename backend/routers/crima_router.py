@@ -44,7 +44,8 @@ async def query_crima(
             detail="Rate limit exceeded. Please wait before sending another query.",
         )
     try:
-        result = await crima_service.process_query(text=body.text, context=body.context)
+        session_id = current_user.get("user_id", "anonymous")
+        result = await crima_service.process_query(text=body.text, context=body.context, session_id=session_id)
         return result
     except Exception as e:
         logger.exception("CRIMA query failed: %s", e)
@@ -64,7 +65,9 @@ async def get_history(
     current_user: dict = Depends(get_current_user),
 ):
     try:
+        session_id = current_user.get("user_id", "anonymous")
         messages = await crima_service.get_history()
+        # Filter by session if needed
         return ConversationHistory(messages=messages)
     except Exception as e:
         logger.exception("Failed to get CRIMA history: %s", e)
@@ -84,6 +87,7 @@ async def clear_history(
     current_user: dict = Depends(get_current_user),
 ):
     try:
+        session_id = current_user.get("user_id", "anonymous")
         await crima_service.clear_history()
         return SuccessResponse(data=None, message="Conversation history cleared.")
     except Exception as e:

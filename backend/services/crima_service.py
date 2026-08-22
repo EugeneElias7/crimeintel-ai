@@ -1,10 +1,12 @@
-import logging
+from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+import logging
+import uuid
 
 from models.crima import QueryResponse, QueryResult
 from services.llm_provider import LLMProviderFactory, LLMResponse
 from services.grounding_validator import grounding_validator
+from services.conversation_manager import conversation_manager
 
 logger = logging.getLogger(__name__)
 
@@ -26,11 +28,16 @@ class CRIMAService:
         self._history: List[Dict[str, str]] = []
 
     async def process_query(
-        self, text: str, context: Optional[List[Dict[str, Any]]] = None
+        self, text: str, context: Optional[List[Dict[str, Any]]] = None, session_id: str = "default"
     ) -> QueryResponse:
         context = context or []
 
-        intent, entities = await self.intent_service.classify(text)
+        # Classify intent with session context
+        intent, entities = await self.intent_service.classify(text, session_id)
+
+        # Update conversation context
+        conversation_manager.add_to_history("default", "user", text)
+        conversation_manager.add_to_history("default", "assistant", "", {"intent": intent})
 
         enriched_query = await self.context_service.merge(text, context, entities)
 
@@ -41,12 +48,44 @@ class CRIMAService:
         confidence_avg = 0.0
         context_records: List[Dict[str, Any]] = []
 
+        # Get conversation context for tool selection
+        context_summary = conversation_manager.get_context_summary("default")
+        
+        # Update conversation context with current intent
+        conversation_manager.get_context("default").last_intent = intent
+
+        # Process based on intent
         if intent == "greeting":
             response_text = (
                 "Hello! I am CRIMA, your Crime Intelligence Assistant. "
-                "I can help you search for cases, view case details, "
-                "look up suspects or evidence, and provide crime statistics. "
-                "How can I assist you today?"
+                "I can help you search cases, view case details, "
+                "look up suspects or evidence, analyze crime trends, "
+                "and provide crime statistics. How can I assist you today?"
+            )
+            confidence_avg = 1.0
+            sources = ["crima_knowledge"]
+
+        elif intent == "general_help":
+            response_text = (
+                "I'm CRIMA, your Crime Intelligence Assistant. I can help you with:\n\n"
+                "🔍 **Case Search** - Find cases by crime type, location, date, or status\n"
+                "📋 **Case Details** - Get full case information including suspects, evidence, witnesses\n"
+                "👤 **Suspect Search** - Find suspects by name or aliases\n"
+                "🔍 **Evidence Search** - Look up evidence associated with cases\n"
+                "👥 **Witness Search** - Find witnesses and their statements\n"
+                "📅 **Timeline** - View case timelines and events\n"
+                "🔗 **Cross Reference** - Find connections between cases\n"
+                "🔄 **Similar Cases** - Find cases with similar patterns\n"
+                "📊 **Statistics** - Crime statistics, trends, and analytics\n"
+                "📍 **Location Analysis** - Crime patterns by location\n"
+                "📈 **Crime Trends** - Trend analysis over time\n\n"
+                "Just ask me naturally! For example:\n"
+                "• \"Show me theft cases in Bengaluru\"\n"
+                "• \"Tell me about FIR-2025-000123\"\n"
+                "• \"Who are the suspects in FIR-2025-001024?\"\n"
+                "• \"What evidence is linked to FIR-2025-000123?\"\n"
+                "• \"Show me crime trends in Bengaluru\"\n"
+                "• \"How many theft cases are open?\""
             )
             confidence_avg = 1.0
             sources = ["crima_knowledge"]
@@ -57,6 +96,21 @@ class CRIMAService:
                 try:
                     case_data = await self.case_service.get_case(case_id)
                     context_records = [self._case_to_record(case_data)]
+                    
+                    # Add case to conversation context
+                    conversation_manager.add_case_to_context("default", case_id, {
+                        "crime_type": case_data.get("crime_type"),
+                        "location": case_data.get("location"),
+                        "district": case_data.get("district"),
+                        "status": case_data.get("status"),
+                    })
+                    
+                    # Update conversation context
+                    conversation_manager.get_context("default").active_cases = [case_id]
+                    conversation_manager.get_context("default").active_location = case_data.get("location")
+                    conversation_manager.get_context("default").active_crime_type = case_data.get("crime_type")
+                    conversation_manager.get_context("default").last_intent = "case_detail"
+                    
                     summary = (
                         f"Case {case_data['case_id']}: {case_data['crime_type']} "
                         f"at {case_data['location']}, {case_data['district']}. "
@@ -91,40 +145,237 @@ class CRIMAService:
                 response_text = "Please specify a case ID to view details."
                 confidence_avg = 0.0
 
-        elif intent == "statistics":
-            try:
-                analytics = await self._get_analytics_summary()
-                context_records = [{"summary": analytics.get("summary", ""), "case_id": "analytics"}]
-                response_text = await self._generate_grounded_response(
-                    text, context_records, intent, entities
-                )
-                if not response_text or response_text.startswith("Insufficient"):
-                    response_text = analytics.get("summary", "")
-                total_found = analytics.get("total_cases", 0)
-                confidence_avg = 0.9
-                sources = ["analytics_service"]
-            except Exception as e:
-                logger.error("Failed to get analytics: %s", e)
-                response_text = "Unable to retrieve crime statistics at this time."
+        elif intent == "summarization":
+            case_id = entities.get("case_id", "")
+            if case_id:
+                try:
+                    case_data = await self.case_service.get_case(case_id)
+                    context_records = [self._case_to_record(case_data)]
+                    response_text = await self._generate_grounded_response(
+                        text, context_records, intent, entities
+                    )
+                    if not response_text or response_text.startswith("Insufficient"):
+                        summary = (
+                            f"Case {case_data['case_id']}: {case_data['crime_type']} "
+                            f"at {case_data['location']}, {case_data['district']}. "
+                            f"Status: {case_data['status']}. "
+                            f"Filed by officer {case_data['officer']['display_name']}. "
+                            f"Suspects: {case_data['suspect_count']}, Evidence items: {case_data['evidence_count']}."
+                        )
+                        response_text = summary
+                    total_found = 1
+                    confidence_avg = 0.95
+                    sources = [f"Cases/{case_id}"]
+                except ValueError as e:
+                    response_text = f"Case {case_id} was not found in the system."
+                    confidence_avg = 0.0
+                    sources = []
+            else:
+                response_text = "Please specify a case ID to summarize."
                 confidence_avg = 0.0
 
-        else:
-            try:
-                crime_type = entities.get("crime_type")
-                locations = entities.get("locations", [])
-                persons = entities.get("persons", [])
-                date_ref = entities.get("date_ref")
+        elif intent == "suspect_search":
+            persons = entities.get("persons", [])
+            locations = entities.get("locations", [])
+            crime_type = entities.get("crime_type")
+            
+            structured_results = await self._structured_retrieval(
+                crime_type=crime_type,
+                locations=locations,
+                persons=persons,
+                date_ref=None,
+                k=10
+            )
+            
+            # Filter for suspects
+            suspects_found = []
+            for case_data, score in structured_results:
+                suspects = await self.case_service.get_case_suspects(case_data["case_id"])
+                if suspects:
+                    for suspect in suspects:
+                        suspects_found.append({
+                            "case_id": case_id,
+                            "suspect": suspect,
+                            "case_context": f"{case_data.get('crime_type')} at {case_data.get('location')}",
+                            "score": score
+                        })
+            
+            if suspects_found:
+                context_records = [{"summary": f"Found {len(suspects_found)} suspects across cases", "type": "suspects"}]
+                for s in suspects_found[:5]:
+                    context_records.append({
+                        "case_id": s["case_id"],
+                        "suspect": s["suspect"],
+                        "case_context": s["case_context"]
+                    })
+                response_text = await self._generate_grounded_response(text, context_records, intent, entities)
+                total_found = len(suspects_found)
+                confidence_avg = 0.9
+                sources = [f"Cases/{s['case_id']}" for s in suspects_found[:5]]
+            else:
+                response_text = "No suspects found matching your criteria."
+                confidence_avg = 0.1
+                sources = []
 
-                structured_results = await self._structured_retrieval(
-                    crime_type=crime_type,
-                    locations=locations,
-                    persons=persons,
-                    date_ref=date_ref,
-                    k=10
-                )
+        elif intent == "evidence_search":
+            case_id = entities.get("case_id")
+            locations = entities.get("locations", [])
+            
+            if case_id:
+                try:
+                    evidence = await self.case_service.get_case_evidence(case_id)
+                    if evidence:
+                        context_records = [{"evidence": e, "case_id": case_id} for e in evidence]
+                        response_text = await self._generate_grounded_response(text, [{"evidence": evidence, "case_id": case_id}], intent, entities)
+                        total_found = len(evidence)
+                        confidence_avg = 0.95
+                        sources = [f"Cases/{case_id}"]
+                    else:
+                        response_text = f"No evidence found for case {case_id}."
+                        confidence_avg = 0.1
+                        sources = []
+                except ValueError:
+                    response_text = f"Case {case_id} not found."
+                    confidence_avg = 0.0
+                    sources = []
+            else:
+                response_text = "Please specify a case ID to search for evidence."
+                confidence_avg = 0.0
+                sources = []
 
-                if structured_results:
-                    for case_data, score in structured_results:
+        elif intent == "witness_search":
+            case_id = entities.get("case_id")
+            if case_id:
+                try:
+                    witnesses = await self.case_service.get_case_witnesses(case_id)
+                    if witnesses:
+                        context_records = [{"witness": w, "case_id": case_id} for w in witnesses]
+                        response_text = await self._generate_grounded_response(text, [{"witness": w, "case_id": case_id} for w in witnesses], intent, entities)
+                        total_found = len(witnesses)
+                        confidence_avg = 0.95
+                        sources = [f"Cases/{case_id}"]
+                    else:
+                        response_text = f"No witnesses found for case {case_id}."
+                        confidence_avg = 0.1
+                        sources = []
+                except ValueError:
+                    response_text = f"Case {case_id} not found."
+                    confidence_avg = 0.0
+                    sources = []
+            else:
+                response_text = "Please specify a case ID to search for witnesses."
+                confidence_avg = 0.0
+                sources = []
+
+        elif intent == "evidence_search":
+            case_id = entities.get("case_id")
+            if case_id:
+                try:
+                    evidence = await self.case_service.get_case_evidence(case_id)
+                    if evidence:
+                        context_records = [{"evidence": e, "case_id": case_id} for e in evidence]
+                        response_text = await self._generate_grounded_response(text, [{"evidence": e, "case_id": case_id} for e in evidence], intent, entities)
+                        total_found = len(evidence)
+                        confidence_avg = 0.95
+                        sources = [f"Cases/{case_id}"]
+                    else:
+                        response_text = f"No evidence found for case {case_id}."
+                        confidence_avg = 0.1
+                        sources = []
+                except ValueError:
+                    response_text = f"Case {case_id} not found."
+                    confidence_avg = 0.0
+                    sources = []
+            else:
+                response_text = "Please specify a case ID to search for evidence."
+                confidence_avg = 0.0
+                sources = []
+
+        elif intent == "witness_search":
+            case_id = entities.get("case_id")
+            if case_id:
+                try:
+                    witnesses = await self.case_service.get_case_witnesses(case_id)
+                    if witnesses:
+                        context_records = [{"witness": w, "case_id": case_id} for w in witnesses]
+                        response_text = await self._generate_grounded_response(text, [{"witness": w, "case_id": case_id} for w in witnesses], intent, entities)
+                        total_found = len(witnesses)
+                        confidence_avg = 0.95
+                        sources = [f"Cases/{case_id}"]
+                    else:
+                        response_text = f"No witnesses found for case {case_id}."
+                        confidence_avg = 0.1
+                        sources = []
+                except ValueError:
+                    response_text = f"Case {case_id} not found."
+                    confidence_avg = 0.0
+                    sources = []
+            else:
+                response_text = "Please specify a case ID to search for witnesses."
+                confidence_avg = 0.0
+                sources = []
+
+        elif intent == "timeline_search":
+            case_id = entities.get("case_id")
+            if case_id:
+                try:
+                    timeline = await self.case_service.get_case_timeline(case_id)
+                    if timeline:
+                        context_records = [{"timeline": t, "case_id": case_id} for t in timeline]
+                        response_text = await self._generate_grounded_response(text, [{"timeline": t, "case_id": case_id} for t in timeline], intent, entities)
+                        total_found = len(timeline)
+                        confidence_avg = 0.95
+                        sources = [f"Cases/{case_id}"]
+                    else:
+                        response_text = f"No timeline events found for case {case_id}."
+                        confidence_avg = 0.1
+                        sources = []
+                except ValueError:
+                    response_text = f"Case {case_id} not found."
+                    confidence_avg = 0.0
+                    sources = []
+            else:
+                response_text = "Please specify a case ID to view timeline."
+                confidence_avg = 0.0
+                sources = []
+
+        elif intent == "timeline_search":
+            case_id = entities.get("case_id")
+            if case_id:
+                try:
+                    timeline = await self.case_service.get_case_timeline(case_id)
+                    if timeline:
+                        context_records = [{"timeline": t, "case_id": case_id} for t in timeline]
+                        response_text = await self._generate_grounded_response(text, [{"timeline": t, "case_id": case_id} for t in timeline], intent, entities)
+                        total_found = len(timeline)
+                        confidence_avg = 0.95
+                        sources = [f"Cases/{case_id}"]
+                    else:
+                        response_text = f"No timeline events found for case {case_id}."
+                        confidence_avg = 0.1
+                        sources = []
+                except ValueError:
+                    response_text = f"Case {case_id} not found."
+                    confidence_avg = 0.0
+                    sources = []
+            else:
+                response_text = "Please specify a case ID to view timeline."
+                confidence_avg = 0.0
+                sources = []
+
+        elif intent == "similar_case_search":
+            # Use FAISS for semantic similarity search
+            embedding = await self.embedding_service.generate(text)
+            similar = await self.faiss_service.search(embedding, k=10)
+            
+            if similar:
+                id_mapping = await self.faiss_service.get_id_mapping()
+                for idx, score in similar:
+                    case_id = id_mapping.get(idx)
+                    if not case_id:
+                        continue
+                    try:
+                        case_data = await self.case_service.get_case(case_id)
                         context_records.append(self._case_to_record(case_data))
                         results.append(
                             QueryResult(
@@ -140,47 +391,248 @@ class CRIMAService:
                                 ),
                             )
                         )
-                        sources.append(f"Cases/{case_data['case_id']}")
+                        sources.append(f"Cases/{case_id}")
+                    except ValueError:
+                        continue
+                total_found = len(results)
+                if results:
+                    confidence_avg = round(sum(r.confidence for r in results) / len(results), 4)
+                    response_text = await self._generate_grounded_response(text, context_records, intent, entities)
+                    if not response_text or response_text.startswith("Insufficient"):
+                        response_text = f"I found {total_found} similar cases related to your query."
                 else:
-                    embedding = await self.embedding_service.generate(enriched_query)
-                    similar = await self.faiss_service.search(embedding, k=10)
+                    response_text = "No similar cases found."
+                    confidence_avg = 0.05
+                    total_found = 0
+            else:
+                response_text = "Please specify a case ID to find similar cases."
+                confidence_avg = 0.0
+                sources = []
 
-                    if similar:
-                        id_mapping = await self.faiss_service.get_id_mapping()
-                        for idx, score in similar:
-                            case_id = id_mapping.get(idx)
-                            if not case_id:
-                                continue
-                            try:
-                                case_data = await self.case_service.get_case(case_id)
-                                if crime_type and case_data.get("crime_type") != crime_type:
-                                    continue
-                                if locations:
-                                    loc_match = any(
-                                        loc.lower() in case_data.get("location", "").lower()
-                                        or loc.lower() in case_data.get("district", "").lower()
-                                        for loc in locations
-                                    )
-                                    if not loc_match:
-                                        continue
-                                context_records.append(self._case_to_record(case_data))
-                                results.append(
-                                    QueryResult(
-                                        case_id=case_data["case_id"],
-                                        crime_type=case_data["crime_type"],
-                                        location=case_data["location"],
-                                        date_filed=case_data["date_filed"],
-                                        status=case_data["status"],
-                                        confidence=round(score, 4),
-                                        summary=(
-                                            f"{case_data['crime_type']} at {case_data['location']}, "
-                                            f"{case_data['district']} - {case_data['status']}"
-                                        ),
-                                    )
-                                )
-                                sources.append(f"Cases/{case_id}")
-                            except ValueError:
-                                continue
+        elif intent == "crime_trend":
+            crime_type = entities.get("crime_type")
+            locations = entities.get("locations", [])
+            date_ref = entities.get("date_ref")
+            
+            # Get analytics for trends
+            try:
+                analytics = await self._get_analytics_summary()
+                if locations:
+                    # Filter by location if specified
+                    pass
+                
+                context_records = [{
+                    "summary": analytics.get("summary", ""),
+                    "type": "analytics",
+                    "crime_type": crime_type,
+                    "location": locations[0] if locations else None
+                }]
+                response_text = await self._generate_grounded_response(text, context_records, intent, entities)
+                if not response_text or response_text.startswith("Insufficient"):
+                    response_text = analytics.get("summary", "")
+                total_found = analytics.get("total_cases", 0)
+                confidence_avg = 0.9
+                sources = ["analytics_service"]
+            except Exception as e:
+                logger.error("Failed to get analytics: %s", e)
+                response_text = "Unable to retrieve crime trend analysis at this time."
+                confidence_avg = 0.0
+
+        elif intent == "location_query":
+            locations = entities.get("locations", [])
+            crime_type = entities.get("crime_type")
+            
+            structured_results = await self._structured_retrieval(
+                crime_type=crime_type,
+                locations=locations,
+                persons=[],
+                date_ref=None,
+                k=10
+            )
+            
+            if structured_results:
+                for case_data, score in structured_results:
+                    context_records.append(self._case_to_record(case_data))
+                    results.append(
+                        QueryResult(
+                            case_id=case_data["case_id"],
+                            crime_type=case_data["crime_type"],
+                            location=case_data["location"],
+                            date_filed=case_data["date_filed"],
+                            status=case_data["status"],
+                            confidence=round(score, 4),
+                            summary=(
+                                f"{case_data['crime_type']} at {case_data['location']}, "
+                                f"{case_data['district']} - {case_data['status']}"
+                            ),
+                        )
+                    )
+                    sources.append(f"Cases/{case_data['case_id']}")
+
+            total_found = len(results)
+            if results:
+                confidence_avg = round(sum(r.confidence for r in results) / len(results), 4)
+                response_text = await self._generate_grounded_response(text, context_records, intent, entities)
+                if not response_text or response_text.startswith("Insufficient"):
+                    if results:
+                        response_text = f"I found {total_found} cases matching your location query."
+                else:
+                    response_text = f"No cases found for the specified location."
+                    confidence_avg = 0.1
+            else:
+                response_text = f"No cases found in the specified location."
+                confidence_avg = 0.05
+                total_found = 0
+
+        elif intent == "crime_trend":
+            crime_type = entities.get("crime_type")
+            locations = entities.get("locations", [])
+            
+            analytics = await self._get_analytics_summary()
+            context_records = [{
+                "summary": analytics.get("summary", ""),
+                "type": "analytics",
+                "crime_type": crime_type,
+                "location": locations[0] if locations else None
+            }]
+            response_text = await self._generate_grounded_response(text, context_records, intent, entities)
+            if not response_text or response_text.startswith("Insufficient"):
+                response_text = analytics.get("summary", "")
+            total_found = analytics.get("total_cases", 0)
+            confidence_avg = 0.9
+            sources = ["analytics_service"]
+
+        elif intent == "statistics":
+            try:
+                analytics = await self._get_analytics_summary()
+                context_records = [{"summary": analytics.get("summary", ""), "case_id": "analytics"}]
+                response_text = await self._generate_grounded_response(text, context_records, intent, entities)
+                if not response_text or response_text.startswith("Insufficient"):
+                    response_text = analytics.get("summary", "")
+                total_found = analytics.get("total_cases", 0)
+                confidence_avg = 0.9
+                sources = ["analytics_service"]
+            except Exception as e:
+                logger.error("Failed to get analytics: %s", e)
+                response_text = "Unable to retrieve crime statistics at this time."
+                confidence_avg = 0.0
+
+        elif intent == "similar_case_search":
+            # Use FAISS for semantic similarity search
+            embedding = await self.embedding_service.generate(text)
+            similar = await self.faiss_service.search(embedding, k=10)
+            
+            if similar:
+                id_mapping = await self.faiss_service.get_id_mapping()
+                for idx, score in similar:
+                    case_id = id_mapping.get(idx)
+                    if not case_id:
+                        continue
+                    try:
+                        case_data = await self.case_service.get_case(case_id)
+                        context_records.append(self._case_to_record(case_data))
+                        results.append(
+                            QueryResult(
+                                case_id=case_data["case_id"],
+                                crime_type=case_data["crime_type"],
+                                location=case_data["location"],
+                                date_filed=case_data["date_filed"],
+                                status=case_data["status"],
+                                confidence=round(score, 4),
+                                summary=(
+                                    f"{case_data['crime_type']} at {case_data['location']}, "
+                                    f"{case_data['district']} - {case_data['status']}"
+                                ),
+                            )
+                        )
+                        sources.append(f"Cases/{case_id}")
+                    except ValueError:
+                        continue
+
+                total_found = len(results)
+                if results:
+                    confidence_avg = round(sum(r.confidence for r in results) / len(results), 4)
+                    response_text = await self._generate_grounded_response(text, context_records, intent, entities)
+                    if not response_text or response_text.startswith("Insufficient"):
+                        if results:
+                            response_text = f"I found {total_found} similar cases related to your query."
+                        else:
+                            response_text = "I could not find any cases matching your query. Try being more specific or using different keywords."
+                            confidence_avg = 0.1
+                    elif not results:
+                        response_text = "No similar cases found in the database. Please try rephrasing your query."
+                        confidence_avg = 0.05
+                        total_found = 0
+            else:
+                response_text = "No similar cases found in the database. Please try rephrasing your query."
+                confidence_avg = 0.05
+                total_found = 0
+
+        elif intent == "general_help":
+            response_text = (
+                "I'm CRIMA, your Crime Intelligence Assistant. I can help you with:\n\n"
+                "🔍 **Case Search** - Find cases by crime type, location, date, or status\n"
+                "📋 **Case Details** - Get full case information including suspects, evidence, witnesses\n"
+                "👤 **Suspect Search** - Find suspects by name or aliases\n"
+                "🔍 **Evidence Search** - Look up evidence associated with cases\n"
+                "👥 **Witness Search** - Find witnesses and their statements\n"
+                "📅 **Timeline** - View case timelines and events\n"
+                "🔗 **Cross Reference** - Find connections between cases\n"
+                "🔄 **Similar Cases** - Find cases with similar patterns\n"
+                "📊 **Statistics** - Crime statistics, trends, and analytics\n"
+                "📍 **Location Analysis** - Crime patterns by location\n"
+                "📈 **Crime Trends** - Trend analysis over time\n\n"
+                "Just ask me naturally! For example:\n"
+                "• \"Show me theft cases in Bengaluru\"\n"
+                "• \"Tell me about FIR-2025-000123\"\n"
+                "• \"Who are the suspects in FIR-2025-001024?\"\n"
+                "• \"What evidence is linked to FIR-2025-000123?\"\n"
+                "• \"Show me crime trends in Bengaluru\"\n"
+                "• \"How many theft cases are open?\""
+            )
+            confidence_avg = 1.0
+            sources = ["crima_knowledge"]
+
+        elif intent == "greeting":
+            response_text = (
+                "Hello! I am CRIMA, your Crime Intelligence Assistant. "
+                "I can help you search cases, view case details, "
+                "look up suspects or evidence, analyze crime trends, "
+                "and provide crime statistics. How can I assist you today?"
+            )
+            confidence_avg = 1.0
+            sources = ["crima_knowledge"]
+
+        elif intent == "location_query":
+            locations = entities.get("locations", [])
+            crime_type = entities.get("crime_type")
+            
+            structured_results = await self._structured_retrieval(
+                crime_type=entities.get("crime_type"),
+                locations=entities.get("locations", []),
+                persons=entities.get("persons", []),
+                date_ref=entities.get("date_ref"),
+                k=10
+            )
+            
+            if structured_results:
+                for case_data, score in structured_results:
+                    context_records.append(self._case_to_record(case_data))
+                    results.append(
+                        QueryResult(
+                            case_id=case_data["case_id"],
+                            crime_type=case_data["crime_type"],
+                            location=case_data["location"],
+                            date_filed=case_data["date_filed"],
+                            status=case_data["status"],
+                            confidence=round(score, 4),
+                            summary=(
+                                f"{case_data['crime_type']} at {case_data['location']}, "
+                                f"{case_data['district']} - {case_data['status']}"
+                            ),
+                        )
+                    )
+                    sources.append(f"Cases/{case_data['case_id']}")
 
                 total_found = len(results)
                 if results:
@@ -203,9 +655,78 @@ class CRIMAService:
                             )
                             confidence_avg = 0.1
                 else:
+                    response_text = "No matching cases found in the database. Try being more specific."
+                    confidence_avg = 0.05
+                    total_found = 0
+            else:
+                response_text = "No matching cases found in the database. Try being more specific."
+                confidence_avg = 0.05
+                total_found = 0
+
+        else:
+            # Default to case_search with FAISS
+            try:
+                embedding = await self.embedding_service.generate(text)
+                similar = await self.faiss_service.search(embedding, k=10)
+
+                if similar:
+                    id_mapping = await self.faiss_service.get_id_mapping()
+                    for idx, score in similar:
+                        case_id = id_mapping.get(idx)
+                        if not case_id:
+                            continue
+                        try:
+                            case_data = await self.case_service.get_case(case_id)
+                            context_records.append(self._case_to_record(case_data))
+                            results.append(
+                                QueryResult(
+                                    case_id=case_data["case_id"],
+                                    crime_type=case_data["crime_type"],
+                                    location=case_data["location"],
+                                    date_filed=case_data["date_filed"],
+                                    status=case_data["status"],
+                                    confidence=round(score, 4),
+                                    summary=(
+                                        f"{case_data['crime_type']} at {case_data['location']}, "
+                                        f"{case_data['district']} - {case_data['status']}"
+                                    ),
+                                )
+                            )
+                            sources.append(f"Cases/{case_id}")
+                        except ValueError:
+                            continue
+
+                    total_found = len(results)
+                    if results:
+                        confidence_avg = round(
+                            sum(r.confidence for r in results) / len(results), 4
+                        )
+                        response_text = await self._generate_grounded_response(
+                            text, context_records, intent, entities
+                        )
+                        if not response_text or response_text.startswith("Insufficient"):
+                            if results:
+                                response_text = (
+                                    f"I found {total_found} relevant case{'s' if total_found != 1 else ''} "
+                                    f"related to your query."
+                                )
+                            else:
+                                response_text = (
+                                    "I could not find any cases matching your query. "
+                                    "Try being more specific or using different keywords."
+                                )
+                                confidence_avg = 0.1
+                    elif not results:
+                        response_text = (
+                            "No similar cases found in the database. "
+                            "Please try rephrasing your query."
+                        )
+                        confidence_avg = 0.05
+                        total_found = 0
+                else:
                     response_text = (
-                        "No matching cases found in the database. "
-                        "Try being more specific or using different keywords."
+                        "No similar cases found in the database. "
+                        "Please try rephrasing your query."
                     )
                     confidence_avg = 0.05
                     total_found = 0
@@ -218,15 +739,12 @@ class CRIMAService:
                 )
                 confidence_avg = 0.0
 
-        self._history.append({
-            "role": "user",
-            "text": text,
-            "timestamp": datetime.utcnow().isoformat(),
-        })
-        self._history.append({
-            "role": "assistant",
-            "text": response_text,
-            "timestamp": datetime.utcnow().isoformat(),
+        # Update conversation history
+        conversation_manager.add_to_history("default", "user", text, {"intent": intent})
+        conversation_manager.add_to_history("default", "assistant", response_text or "", {
+            "intent": intent,
+            "entities": entities,
+            "results_count": len(results)
         })
 
         return QueryResponse(
@@ -251,7 +769,7 @@ class CRIMAService:
             return context_validation["fallback_message"]
 
         result: LLMResponse = await LLMProviderFactory.generate_with_fallback(
-            query, context_records, intent, entities
+            text, context_records, intent, entities
         )
         logger.info("CRIMA response from provider: %s (model: %s, fallback: %s)",
                     result.provider, result.model, result.metadata.get("fallback", False))

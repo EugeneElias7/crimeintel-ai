@@ -40,7 +40,7 @@ def start_backend():
     print("Starting CrimeIntel AI Backend Server...")
     print("=" * 60)
     backend_cmd = [
-        sys.executable, "-m", "uvicorn", "app.main:app",
+        sys.executable, "-m", "uvicorn", "backend.main:app",
         "--host", "0.0.0.0", "--port", "8000"
     ]
     backend_proc = subprocess.Popen(

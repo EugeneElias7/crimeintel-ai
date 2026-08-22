@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-from .database import engine, Base
 
-Base.metadata.create_all(bind=engine)
+from .database import engine, Base
 
 app = FastAPI(title="CrimeIntel AI API")
 

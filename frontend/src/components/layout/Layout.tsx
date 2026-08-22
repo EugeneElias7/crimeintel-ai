@@ -21,7 +21,9 @@ export default function Layout() {
   }, [navigate]);
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="relative flex h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-100/60">
+      <div className="pointer-events-none absolute -top-32 right-[15%] h-96 w-96 rounded-full bg-gradient-to-br from-blue-300/30 to-indigo-300/20 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-[20%] h-80 w-80 rounded-full bg-gradient-to-tr from-cyan-200/25 to-violet-200/20 blur-3xl" />
       <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
       <div className={`flex flex-1 flex-col transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
         <Navbar onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} sidebarCollapsed={sidebarCollapsed} />

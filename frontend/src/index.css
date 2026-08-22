@@ -5,33 +5,354 @@
 
 @import "tailwindcss";
 
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes gradient-shift {
+  0% { --angle: 0deg; }
+  100% { --angle: 360deg; }
+}
+
+@keyframes float-orb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.08); }
+  66% { transform: translate(-25px, 25px) scale(0.95); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 24px -6px rgba(99, 102, 241, 0.55); }
+  50% { box-shadow: 0 0 44px -4px rgba(139, 92, 246, 0.75); }
+}
+
 @layer base {
   @font-face {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     src: local(Segoe UI);
   }
+
+  body {
+    @apply antialiased;
+  }
 }
 
 @layer components {
+  /* ---------- Gradient border system ---------- */
+  .gradient-border {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.55),
+      rgba(139, 92, 246, 0.45),
+      rgba(6, 182, 212, 0.55)
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0.45;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .gradient-border:hover::before,
+  .gradient-border:focus-within::before {
+    opacity: 1;
+  }
+
+  /* Animated rotating conic border */
+  .gradient-border-animated::before {
+    background: conic-gradient(
+      from var(--angle),
+      #3b82f6,
+      #8b5cf6,
+      #ec4899,
+      #06b6d4,
+      #3b82f6
+    );
+    animation: gradient-shift 5s linear infinite;
+    opacity: 0.85;
+  }
+
+  /* Static always-on soft gradient line (hairlines / dividers / top accents) */
+  .gradient-line {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(59, 130, 246, 0.7),
+      rgba(139, 92, 246, 0.7),
+      rgba(6, 182, 212, 0.7),
+      transparent
+    );
+  }
+
+  .gradient-line-strong {
+    height: 2px;
+    width: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+  }
+
+  /* ---------- Buttons ---------- */
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg focus:ring-4 focus:ring-blue-300 focus:outline-none py-2 px-4 text-sm;
+    @apply relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-[length:200%_auto] text-white font-medium rounded-lg py-2 px-4 text-sm shadow-md shadow-blue-500/25;
+    transition:
+      background-position 0.4s ease,
+      transform 0.2s ease,
+      box-shadow 0.3s ease;
   }
-  
+
+  .btn-primary:hover:not(:disabled) {
+    background-position: right center;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.5);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .btn-primary:focus-visible {
+    outline: 2px solid transparent;
+    box-shadow:
+      0 0 0 3px rgba(99, 102, 241, 0.35),
+      0 8px 24px -4px rgba(99, 102, 241, 0.5);
+  }
+
+  /* Shine sweep across buttons */
+  .btn-shine::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      rgba(255, 255, 255, 0.35),
+      transparent
+    );
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
+  }
+
+  .btn-shine:hover::after {
+    left: 130%;
+  }
+
+  /* ---------- Cards ---------- */
   .kpi-card {
-    @apply bg-white rounded-[10px] p-5 shadow-[0_1px_2px_rgba(11,18,32,0.06),0_4px_12px_rgba(11,18,32,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg;
+    @apply relative overflow-hidden rounded-[14px] bg-white p-5 shadow-[0_1px_2px_rgba(11,18,32,0.06),0_4px_12px_rgba(11,18,32,0.06)];
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
   }
-  
+
+  .kpi-card::before {
+    content: "";
+    position: absolute;
+    inset-x: 0;
+    top: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+    opacity: 0.85;
+  }
+
+  .kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 4px 12px rgba(11, 18, 32, 0.08),
+      0 16px 32px -8px rgba(79, 70, 229, 0.18);
+  }
+
+  .kpi-card:hover::before {
+    background: linear-gradient(90deg, #60a5fa, #a78bfa, #22d3ee);
+  }
+
   .kpi-card .icon {
     @apply w-5 h-5 text-cyan-500;
   }
-  
+
+  /* Glass card for overlays / login */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 1rem;
+  }
+
+  /* ---------- Text ---------- */
+  .text-gradient {
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-gradient-light {
+    background: linear-gradient(90deg, #93c5fd, #c4b5fd, #67e8f9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ---------- Inputs ---------- */
+  .input-field {
+    @apply rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition-all duration-300;
+  }
+
+  .input-field::placeholder {
+    @apply text-gray-400;
+  }
+
+  .input-field:hover:not(:disabled) {
+    border-color: #bfdbfe;
+  }
+
+  .input-field:focus {
+    outline: none;
+    border-color: transparent;
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4) border-box;
+    background-size: 100% 100%, 250% 250%;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.14);
+  }
+
+  .input-field:disabled {
+    @apply cursor-not-allowed bg-gray-50 text-gray-500;
+  }
+
+  .input-error {
+    border-color: #fca5a5;
+  }
+
+  .input-error:hover:not(:disabled) {
+    border-color: #f87171;
+  }
+
+  .input-error:focus {
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      linear-gradient(135deg, #ef4444, #ec4899) border-box;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+  }
+
+  /* Dark variant for the login card */
+  .input-dark {
+    @apply w-full rounded-lg border border-slate-600/60 bg-slate-900/70 px-3 py-2.5 text-sm text-white shadow-sm transition-all duration-300;
+  }
+
+  .input-dark::placeholder {
+    @apply text-slate-500;
+  }
+
+  .input-dark:hover:not(:disabled) {
+    border-color: rgba(129, 140, 248, 0.55);
+  }
+
+  .input-dark:focus {
+    outline: none;
+    border-color: transparent;
+    background:
+      linear-gradient(#0f172a, #0f172a) padding-box,
+      linear-gradient(135deg, #60a5fa, #a78bfa, #22d3ee) border-box;
+    background-size: 100% 100%, 250% 250%;
+    box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.18);
+  }
+
+  .input-error-dark:focus {
+    background:
+      linear-gradient(#0f172a, #0f172a) padding-box,
+      linear-gradient(135deg, #ef4444, #ec4899) border-box;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.16);
+  }
+
+  /* ---------- Spinner ---------- */
   .spinner {
     @apply inline-block w-8 h-8 border-2 border-slate-300 border-t-slate-900 rounded-full animate-spin;
+  }
+
+  .spinner-gradient {
+    @apply inline-block w-8 h-8 rounded-full animate-spin;
+    border: 2.5px solid transparent;
+    background:
+      linear-gradient(var(--tw-bg, white), var(--tw-bg, white)) padding-box,
+      conic-gradient(from var(--angle), #3b82f6, transparent 60%, #06b6d4, #3b82f6)
+        border-box;
+    animation:
+      spinner-rotate 0.8s linear infinite,
+      gradient-shift 3s linear infinite;
+  }
+
+  @keyframes spinner-rotate {
+    to { transform: rotate(360deg); }
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Subtle blueprint grid overlay */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.8s ease both;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2.6s ease-in-out infinite;
   }
 }

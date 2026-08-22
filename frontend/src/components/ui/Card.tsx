@@ -10,15 +10,18 @@ interface CardProps {
 
 export default function Card({ title, subtitle, actions, children, className = '' }: CardProps) {
   return (
-    <div className={`rounded-lg bg-white shadow-sm ${className}`}>
+    <div className={`gradient-border rounded-xl bg-white shadow-[0_1px_2px_rgba(11,18,32,0.05),0_4px_16px_rgba(11,18,32,0.06)] transition-shadow duration-300 hover:shadow-[0_4px_12px_rgba(11,18,32,0.06),0_16px_40px_-12px_rgba(79,70,229,0.22)] ${className}`}>
       {(title || subtitle || actions) && (
-        <div className="flex items-start justify-between border-b border-gray-100 px-5 py-4">
-          <div>
-            {title && <h3 className="text-base font-semibold text-gray-900">{title}</h3>}
-            {subtitle && <p className="mt-0.5 text-sm text-gray-500">{subtitle}</p>}
+        <>
+          <div className="flex items-start justify-between px-5 py-4">
+            <div>
+              {title && <h3 className="relative text-base font-semibold text-gray-900">{title}</h3>}
+              {subtitle && <p className="mt-0.5 text-sm text-gray-500">{subtitle}</p>}
+            </div>
+            {actions && <div className="flex items-center gap-2">{actions}</div>}
           </div>
-          {actions && <div className="flex items-center gap-2">{actions}</div>}
-        </div>
+          <div className="gradient-line" />
+        </>
       )}
       <div className="px-5 py-4">{children}</div>
     </div>

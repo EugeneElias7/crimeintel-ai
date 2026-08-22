@@ -26,15 +26,15 @@ export default function Table<T extends Record<string, any>>({
   onSort,
 }: TableProps<T>) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
+    <div className="gradient-border overflow-x-auto rounded-xl bg-white">
+      <table className="min-w-full divide-y divide-gray-100">
+        <thead>
+          <tr className="bg-gradient-to-r from-blue-50 via-indigo-50/70 to-violet-50">
             {columns.map((col) => (
               <th
                 key={col.key}
-                className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 ${
-                  col.sortable ? 'cursor-pointer select-none hover:bg-gray-100' : ''
+                className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 ${
+                  col.sortable ? 'cursor-pointer select-none transition-colors hover:text-indigo-600' : ''
                 }`}
                 onClick={() => col.sortable && onSort?.(col.key)}
               >
@@ -58,7 +58,7 @@ export default function Table<T extends Record<string, any>>({
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className="divide-y divide-gray-100 bg-white">
           {data.length === 0 ? (
             <tr>
               <td
@@ -72,9 +72,11 @@ export default function Table<T extends Record<string, any>>({
             data.map((item, idx) => (
               <tr
                 key={(item as any).id as string || idx}
-                className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} ${
-                  onRowClick ? 'cursor-pointer hover:bg-blue-50' : ''
-                } transition-colors`}
+                className={`${
+                  onRowClick
+                    ? 'cursor-pointer transition-colors hover:bg-gradient-to-r hover:from-blue-50/80 hover:to-indigo-50/50'
+                    : ''
+                } ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}`}
                 onClick={() => onRowClick?.(item)}
               >
                 {columns.map((col) => (

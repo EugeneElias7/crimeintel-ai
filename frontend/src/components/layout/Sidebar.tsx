@@ -42,21 +42,36 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed left-0 top-0 z-30 flex h-screen flex-col bg-slate-900 text-white transition-all duration-300 ${
+      className={`fixed left-0 top-0 z-30 flex h-screen flex-col bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 text-white shadow-2xl shadow-blue-950/40 transition-all duration-300 before:absolute before:right-0 before:top-0 before:h-full before:w-px before:bg-gradient-to-b before:from-transparent before:via-blue-500/40 before:to-transparent ${
         collapsed ? 'w-16' : 'w-64'
       }`}
     >
-      <div className="flex h-16 items-center border-b border-slate-700 px-4">
-        {!collapsed && (
-          <h1 className="text-lg font-bold tracking-wide">CrimeIntel AI</h1>
+      <div className="relative flex h-16 items-center px-4">
+        {!collapsed ? (
+          <h1 className="text-lg font-bold tracking-wide">
+            <span className="text-gradient-light">Crime</span>Intel{' '}
+            <span className="text-gradient-light">AI</span>
+          </h1>
+        ) : (
+          <span className="mx-auto text-lg font-bold text-gradient-light">CI</span>
         )}
         <button
           onClick={onToggle}
-          className={`rounded p-1 text-slate-400 hover:bg-slate-800 hover:text-white ${collapsed ? 'mx-auto' : 'ml-auto'}`}
+          className={`absolute right-2 rounded p-1 text-slate-400 transition-colors hover:bg-white/10 hover:text-white ${
+            collapsed ? 'hidden' : ''
+          }`}
         >
-          {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+          <ChevronLeft size={18} />
         </button>
       </div>
+      {collapsed && (
+        <button
+          onClick={onToggle}
+          className="mx-auto mb-2 rounded p-1 text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
+        >
+          <ChevronRight size={18} />
+        </button>
+      )}
 
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1 px-2">
@@ -68,8 +83,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
                     isActive
-                      ? 'border-l-4 border-blue-500 bg-slate-800 text-white'
-                      : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                      ? 'bg-gradient-to-r from-blue-600 via-indigo-600/90 to-violet-600/70 text-white shadow-lg shadow-blue-950/40'
+                      : 'text-slate-400 hover:bg-white/10 hover:text-white'
                   } ${collapsed ? 'justify-center border-l-0' : ''}`
                 }
               >
@@ -95,8 +110,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                     className={({ isActive }) =>
                       `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
                         isActive
-                          ? 'border-l-4 border-blue-500 bg-slate-800 text-white'
-                          : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                          ? 'bg-gradient-to-r from-blue-600 via-indigo-600/90 to-violet-600/70 text-white shadow-lg shadow-blue-950/40'
+                          : 'text-slate-400 hover:bg-white/10 hover:text-white'
                       } ${collapsed ? 'justify-center border-l-0' : ''}`
                     }
                   >
@@ -121,8 +136,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
                   isActive
-                    ? 'border-l-4 border-blue-500 bg-slate-800 text-white'
-                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                    ? 'bg-gradient-to-r from-blue-600 via-indigo-600/90 to-violet-600/70 text-white shadow-lg shadow-blue-950/40'
+                    : 'text-slate-400 hover:bg-white/10 hover:text-white'
                 } ${collapsed ? 'justify-center border-l-0' : ''}`
               }
             >
@@ -133,18 +148,19 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         </ul>
       </nav>
 
-      <div className="border-t border-slate-700 p-4">
+      <div className="p-4">
+        <div className="mb-3 gradient-line opacity-40" />
         {collapsed ? (
           <button
             onClick={logout}
-            className="mx-auto flex items-center justify-center rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white"
+            className="mx-auto flex items-center justify-center rounded-lg p-2 text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
             title="Logout"
           >
             <LogOut size={18} />
           </button>
         ) : (
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-medium">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600 text-sm font-medium ring-2 ring-white/10 ring-offset-2 ring-offset-slate-950">
               {user?.display_name?.charAt(0)?.toUpperCase() || 'U'}
             </div>
             <div className="flex-1 truncate">
@@ -153,7 +169,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             </div>
             <button
               onClick={logout}
-              className="rounded p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white"
+              className="rounded p-1.5 text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
               title="Logout"
             >
               <LogOut size={16} />

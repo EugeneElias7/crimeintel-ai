@@ -98,7 +98,7 @@ function ProfileTab({
             Display Name
           </label>
           <input
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="input-field w-full"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
           />
@@ -109,7 +109,7 @@ function ProfileTab({
               Phone
             </label>
             <input
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="input-field w-full"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+91 XXXXXXXXXX"
@@ -120,7 +120,7 @@ function ProfileTab({
               Badge Number
             </label>
             <input
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="input-field w-full"
               value={badgeNumber}
               onChange={(e) => setBadgeNumber(e.target.value)}
               placeholder="e.g. KSP-#####"

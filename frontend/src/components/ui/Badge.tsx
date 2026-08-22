@@ -14,12 +14,15 @@ interface BadgeProps {
 }
 
 const colorMap: Record<BadgeVariant, string> = {
-  open: 'bg-blue-100 text-blue-800',
-  closed: 'bg-green-100 text-green-800',
-  under_investigation: 'bg-amber-100 text-amber-800',
-  filed: 'bg-gray-100 text-gray-800',
-  critical: 'bg-red-100 text-red-800',
-  default: 'bg-gray-100 text-gray-800',
+  open: 'bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 ring-1 ring-inset ring-blue-200',
+  closed:
+    'bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-700 ring-1 ring-inset ring-emerald-200',
+  under_investigation:
+    'bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 ring-1 ring-inset ring-amber-200',
+  filed: 'bg-gradient-to-r from-slate-100 to-gray-100 text-gray-600 ring-1 ring-inset ring-slate-200',
+  critical:
+    'bg-gradient-to-r from-red-100 to-rose-100 text-red-700 ring-1 ring-inset ring-red-200 shadow-sm shadow-red-200/50',
+  default: 'bg-gradient-to-r from-slate-100 to-gray-100 text-gray-600 ring-1 ring-inset ring-slate-200',
 };
 
 export default function Badge({ variant = 'default', children }: BadgeProps) {

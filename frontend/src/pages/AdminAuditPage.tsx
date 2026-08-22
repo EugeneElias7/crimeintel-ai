@@ -109,7 +109,7 @@ export default function AdminAuditPage() {
             />
           </div>
           <select
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="input-field"
             value={selectedUser}
             onChange={(e) => {
               setSelectedUser(e.target.value);
@@ -124,7 +124,7 @@ export default function AdminAuditPage() {
             ))}
           </select>
           <select
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="input-field"
             value={selectedAction}
             onChange={(e) => {
               setSelectedAction(e.target.value);
@@ -140,7 +140,7 @@ export default function AdminAuditPage() {
           </select>
           <input
             type="date"
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="input-field"
             value={dateFrom}
             onChange={(e) => {
               setDateFrom(e.target.value);
@@ -150,7 +150,7 @@ export default function AdminAuditPage() {
           />
           <input
             type="date"
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="input-field"
             value={dateTo}
             onChange={(e) => {
               setDateTo(e.target.value);

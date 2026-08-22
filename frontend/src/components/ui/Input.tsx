@@ -16,21 +16,19 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             {label}
           </label>
         )}
-        <div className="relative">
+        <div className="relative group">
           {icon && (
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+            <div
+              className={`pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-3 transition-colors duration-300 ${
+                error ? 'text-red-400' : 'text-gray-400 group-focus-within:text-indigo-500'
+              }`}
+            >
               {icon}
             </div>
           )}
           <input
             ref={ref}
-            className={`block w-full rounded-lg border px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-0 ${
-              icon ? 'pl-10' : ''
-            } ${
-              error
-                ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-            } disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 ${className}`}
+            className={`input-field ${icon ? '!pl-10' : ''} ${error ? 'input-error' : ''} ${className}`}
             {...props}
           />
         </div>

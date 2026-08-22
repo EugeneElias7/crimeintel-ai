@@ -293,7 +293,7 @@ export default function AdminUsersPage() {
                     Name *
                   </label>
                   <input
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="input-field w-full"
                     value={form.display_name}
                     onChange={(e) =>
                       setForm((f) => ({ ...f, display_name: e.target.value }))
@@ -305,7 +305,7 @@ export default function AdminUsersPage() {
                     Email *
                   </label>
                   <input
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="input-field w-full"
                     type="email"
                     value={form.email}
                     onChange={(e) =>
@@ -320,7 +320,7 @@ export default function AdminUsersPage() {
                     Badge #
                   </label>
                   <input
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="input-field w-full"
                     value={form.badge_number}
                     onChange={(e) =>
                       setForm((f) => ({ ...f, badge_number: e.target.value }))
@@ -332,7 +332,7 @@ export default function AdminUsersPage() {
                     Phone
                   </label>
                   <input
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="input-field w-full"
                     value={form.phone}
                     onChange={(e) =>
                       setForm((f) => ({ ...f, phone: e.target.value }))
@@ -346,7 +346,7 @@ export default function AdminUsersPage() {
                     Role
                   </label>
                   <select
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="input-field w-full"
                     value={form.role}
                     onChange={(e) =>
                       setForm((f) => ({
@@ -367,7 +367,7 @@ export default function AdminUsersPage() {
                     Status
                   </label>
                   <select
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="input-field w-full"
                     value={form.status}
                     onChange={(e) =>
                       setForm((f) => ({ ...f, status: e.target.value }))

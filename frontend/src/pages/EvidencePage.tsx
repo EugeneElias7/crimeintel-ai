@@ -183,7 +183,7 @@ export default function EvidencePage() {
               Select Case
             </label>
             <select
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="input-field w-full"
               value={selectedCaseId}
               onChange={(e) => setSelectedCaseId(e.target.value)}
             >
@@ -274,14 +274,14 @@ export default function EvidencePage() {
                   Description
                 </label>
                 <input
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="input-field w-full"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Brief description of evidence"
                 />
               </div>
               <div className="flex items-end">
-                <label className="flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm">
+                <label className="gradient-border flex cursor-pointer items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm transition-shadow hover:shadow-md hover:shadow-blue-100">
                   <input
                     type="checkbox"
                     checked={sensitive}

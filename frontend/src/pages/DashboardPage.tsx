@@ -205,9 +205,13 @@ export default function DashboardPage() {
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kpiCards.map((card, idx) => (
-          <Card key={idx}>
+          <Card key={idx} className="group">
             <div className="flex items-start justify-between">
-              <div className={`rounded-lg p-3 ${card.bg}`}>{card.icon}</div>
+              <div
+                className={`rounded-lg p-3 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 ${card.bg}`}
+              >
+                {card.icon}
+              </div>
             </div>
             <p className="mt-3 text-3xl font-bold text-gray-900">{card.value}</p>
             <p className="text-sm text-gray-500">{card.label}</p>

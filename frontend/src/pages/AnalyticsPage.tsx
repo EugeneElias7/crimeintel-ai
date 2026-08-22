@@ -170,7 +170,7 @@ export default function AnalyticsPage() {
               </label>
               <input
                 type="date"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="input-field"
                 value={customFrom}
                 onChange={(e) => setCustomFrom(e.target.value)}
               />
@@ -181,7 +181,7 @@ export default function AnalyticsPage() {
               </label>
               <input
                 type="date"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="input-field"
                 value={customTo}
                 onChange={(e) => setCustomTo(e.target.value)}
               />

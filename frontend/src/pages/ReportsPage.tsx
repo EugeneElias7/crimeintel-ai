@@ -119,7 +119,7 @@ export default function ReportsPage() {
                 Select Case
               </label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="input-field w-full"
                 value={selectedCaseId}
                 onChange={(e) => setSelectedCaseId(e.target.value)}
               >
@@ -257,7 +257,7 @@ export default function ReportsPage() {
               </label>
               <input
                 type="date"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="input-field"
                 value={summaryFrom}
                 onChange={(e) => setSummaryFrom(e.target.value)}
               />
@@ -268,7 +268,7 @@ export default function ReportsPage() {
               </label>
               <input
                 type="date"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="input-field"
                 value={summaryTo}
                 onChange={(e) => setSummaryTo(e.target.value)}
               />
@@ -278,7 +278,7 @@ export default function ReportsPage() {
                 District
               </label>
               <select
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="input-field"
                 value={summaryDistrict}
                 onChange={(e) => setSummaryDistrict(e.target.value)}
               >

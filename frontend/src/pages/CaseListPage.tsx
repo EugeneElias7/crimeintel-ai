@@ -186,7 +186,7 @@ export default function CaseListPage() {
             />
           </div>
           <select
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="input-field"
             value={filters.crime_type ?? ''}
             onChange={(e) => {
               setFilters((f) => ({ ...f, crime_type: e.target.value || undefined }));
@@ -201,7 +201,7 @@ export default function CaseListPage() {
             ))}
           </select>
           <select
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="input-field"
             value={filters.status ?? ''}
             onChange={(e) => {
               setFilters((f) => ({ ...f, status: e.target.value || undefined }));
@@ -216,7 +216,7 @@ export default function CaseListPage() {
             ))}
           </select>
           <select
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="input-field"
             value={filters.district ?? ''}
             onChange={(e) => {
               setFilters((f) => ({ ...f, district: e.target.value || undefined }));
@@ -232,7 +232,7 @@ export default function CaseListPage() {
           </select>
           <input
             type="date"
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="input-field"
             value={filters.date_from ?? ''}
             onChange={(e) => {
               setFilters((f) => ({ ...f, date_from: e.target.value || undefined }));
@@ -242,7 +242,7 @@ export default function CaseListPage() {
           />
           <input
             type="date"
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="input-field"
             value={filters.date_to ?? ''}
             onChange={(e) => {
               setFilters((f) => ({ ...f, date_to: e.target.value || undefined }));
@@ -403,7 +403,7 @@ function CreateCaseModal({
               Title *
             </label>
             <input
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="input-field w-full"
               value={form.title}
               onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
             />
@@ -414,7 +414,7 @@ function CreateCaseModal({
                 Crime Type *
               </label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="input-field w-full"
                 value={form.crime_type}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, crime_type: e.target.value }))
@@ -433,7 +433,7 @@ function CreateCaseModal({
                 District *
               </label>
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="input-field w-full"
                 value={form.district}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, district: e.target.value }))
@@ -453,7 +453,7 @@ function CreateCaseModal({
               Location *
             </label>
             <input
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="input-field w-full"
               value={form.location}
               onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
             />
@@ -463,7 +463,7 @@ function CreateCaseModal({
               Description
             </label>
             <textarea
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="input-field w-full"
               rows={3}
               value={form.description ?? ''}
               onChange={(e) =>

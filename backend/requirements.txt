@@ -1,12 +1,11 @@
---index-url https://download.pytorch.org/whl/cpu
-fastapi==0.109.0
+fastapi==0.115.0
 uvicorn==0.30.6
 pydantic==2.9.2
 python-multipart==0.0.6
 sentence-transformers==2.2.2
 faiss-cpu==1.7.4
 numpy==1.24.3
-torch==2.1.0
+torch==2.1.0 --index-url https://download.pytorch.org/whl/cpu
 zoho-catalyst-sdk==1.0.0
 httpx==0.27.0
 python-jose[cryptography]==3.3.0

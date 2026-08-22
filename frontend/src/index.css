@@ -1,12 +1,37 @@
+/*
+  CrimeIntel AI - Tailwind CSS Configuration
+  The @import statements are handled by the @tailwindcss/vite plugin
+*/
+
 @import "tailwindcss";
 
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  @font-face {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    src: local(Segoe UI);
+  }
 }
 
-#root {
-  min-height: 100vh;
+@layer components {
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg focus:ring-4 focus:ring-blue-300 focus:outline-none py-2 px-4 text-sm;
+  }
+  
+  .kpi-card {
+    @apply bg-white rounded-[10px] p-5 shadow-[0_1px_2px_rgba(11,18,32,0.06),0_4px_12px_rgba(11,18,32,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg;
+  }
+  
+  .kpi-card .icon {
+    @apply w-5 h-5 text-cyan-500;
+  }
+  
+  .spinner {
+    @apply inline-block w-8 h-8 border-2 border-slate-300 border-t-slate-900 rounded-full spin animate-spin;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }

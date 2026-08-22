@@ -57,6 +57,28 @@ async def seed_database(count: int = 500) -> None:
         except Exception as e:
             logger.error("Failed to insert user %s: %s", officer["user_id"], e)
 
+    # Placeholder super-admin account for demo logins
+    admin_email = "admin@cromaAI.in"
+    existing_admin = await sqlite_db.query("Users", {"email": admin_email})
+    if not existing_admin:
+        from utils.helpers import generate_uuid
+        admin_now = datetime.utcnow().isoformat()
+        admin_id = generate_uuid()
+        await sqlite_db.insert("Users", {
+            "ROWID": admin_id,
+            "user_id": admin_id,
+            "display_name": "System Administrator",
+            "email": admin_email,
+            "password_hash": hashlib.sha256(b"admin1234").hexdigest(),
+            "role": "super_admin",
+            "badge_number": "",
+            "phone": "",
+            "status": "active",
+            "created_at": admin_now,
+            "updated_at": admin_now,
+        })
+        logger.info("Inserted admin user %s", admin_id)
+
     case_ids = {}
     for case in data["cases"]:
         try:

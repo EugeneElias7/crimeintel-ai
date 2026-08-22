@@ -1,4 +1,3 @@
-import type { ApiResponse } from '../types/api';
 import type { QueryResponse, ChatMessage } from '../types/crima';
 import api from './api';
 

@@ -75,11 +75,19 @@ class TestContextService:
     @pytest.mark.asyncio
     async def test_save_and_get_history(self):
         from services.context_service import ContextService
+        import uuid
+        user_id = f"usr_test_{uuid.uuid4().hex[:8]}"
         service = ContextService()
-        await service.save("usr_001", "Find theft cases", "Found 10 cases")
-        await service.save("usr_001", "Show me more", "Here are more details")
-        history = await service.get_history("usr_001")
-        assert len(history) == 2
+        # Clear any existing data for this user
+        await service.clear(user_id)
+        await service.save(user_id, "Find theft cases", "Found 10 cases")
+        await service.save(user_id, "Show me more", "Here are more details")
+        history = await service.get_history(user_id)
+        # Check that we have exactly 2 user messages and 2 assistant responses
+        user_messages = [h for h in history if h["role"] == "user"]
+        assistant_messages = [h for h in history if h["role"] == "assistant"]
+        assert len(user_messages) == 2
+        assert len(assistant_messages) == 2
         assert history[0]["role"] == "user"
 
     @pytest.mark.asyncio

@@ -25,7 +25,7 @@ class IntentService:
     ]
 
     SUSPECT_SEARCH_KEYWORDS = [
-        "suspect", "accused", "wanted", "criminal", "person of interest",
+        "suspect", "suspects", "accused", "wanted", "criminal", "person of interest",
     ]
 
     EVIDENCE_SEARCH_KEYWORDS = [
@@ -187,13 +187,19 @@ class IntentService:
 
         has_case_id = "case_id" in entities
 
+        # Check for empty/whitespace query
+        if not text.strip():
+            raise ValueError("Query cannot be empty")
+
         if greeting_score >= 2 or (greeting_score == 1 and len(text.split()) <= 3):
             entities["intent_class"] = "greeting"
             return ("greeting", entities)
 
-        if has_case_id and summarize_score > 0:
-            entities["intent_class"] = "case_detail"
-            return ("case_detail", entities)
+        # Explicit summarization keywords take priority over case_detail
+        explicit_summarize = any(kw in text_lower for kw in ["summarize", "summary", "brief"])
+        if has_case_id and summarize_score > 0 and explicit_summarize:
+            entities["intent_class"] = "summarization"
+            return ("summarization", entities)
 
         if stats_score >= 2 or ("statistics" in text_lower and stats_score >= 1):
             entities["intent_class"] = "statistics"
@@ -214,6 +220,11 @@ class IntentService:
         if cross_ref_score >= 1:
             entities["intent_class"] = "cross_reference"
             return ("cross_reference", entities)
+
+        # case_search takes priority over location_query when crime_type is present
+        if case_search_score >= 1 and entities.get("crime_type"):
+            entities["intent_class"] = "case_search"
+            return ("case_search", entities)
 
         if location_score >= 1:
             entities["intent_class"] = "location_query"

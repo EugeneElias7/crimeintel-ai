@@ -42,8 +42,8 @@ export default function ReportsPage() {
     if (!selectedCaseId) return;
     setLoadingCase(true);
     try {
-      const res = await getCase(selectedCaseId);
-      setCaseDetail(res.data);
+      const caseDetail = await getCase(selectedCaseId);
+      setCaseDetail(caseDetail);
     } catch {
       setCaseDetail(null);
     } finally {
@@ -59,9 +59,9 @@ export default function ReportsPage() {
         getTrends(summaryFrom || undefined, summaryTo || undefined),
         getByDistrict(summaryFrom || undefined, summaryTo || undefined),
       ]);
-      setOverview(overviewRes.data);
-      setTrends(trendsRes.data);
-      setByDistrict(districtRes.data);
+      setOverview(overviewRes);
+      setTrends(trendsRes);
+      setByDistrict(districtRes);
     } catch {
       setOverview(null);
     } finally {

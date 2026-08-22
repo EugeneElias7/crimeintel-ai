@@ -1,4 +1,4 @@
-import type { PaginatedResponse, ApiResponse, PaginationParams } from '../types/api';
+import type { PaginatedResponse, PaginationParams } from '../types/api';
 import type { Case, CaseDetail, CaseCreate, CaseFilters } from '../types/case';
 import api from './api';
 
@@ -85,35 +85,32 @@ const mapCaseDetail = (c: any): CaseDetail => ({
   })),
 });
 
-export const getCase = async (caseId: string): Promise<ApiResponse<CaseDetail>> => {
-  const { data } = await api.get<ApiResponse<any>>(`/cases/${caseId}`);
-  return {
-    ...data,
-    data: data.data ? mapCaseDetail(data.data) : null,
-  };
+export const getCase = async (caseId: string): Promise<CaseDetail | null> => {
+  const { data } = await api.get<any>(`/cases/${caseId}`);
+  return data ? mapCaseDetail(data) : null;
 };
 
-export const createCase = async (caseData: CaseCreate): Promise<ApiResponse<CaseDetail>> => {
-  const { data } = await api.post<ApiResponse<CaseDetail>>('/cases', caseData);
+export const createCase = async (caseData: CaseCreate): Promise<CaseDetail> => {
+  const { data } = await api.post<any>('/cases', caseData);
   return data;
 };
 
 export const updateCase = async (
   caseId: string,
   caseData: Partial<CaseCreate>,
-): Promise<ApiResponse<CaseDetail>> => {
-  const { data } = await api.put<ApiResponse<CaseDetail>>(`/cases/${caseId}`, caseData);
+): Promise<CaseDetail> => {
+  const { data } = await api.put<any>(`/cases/${caseId}`, caseData);
   return data;
 };
 
 export const getTimeline = async (
   caseId: string,
-): Promise<ApiResponse<import('../types/case').TimelineEvent[]>> => {
+): Promise<import('../types/case').TimelineEvent[]> => {
   const { data } = await api.get(`/cases/${caseId}/timeline`);
   return data;
 };
 
-export const getRelatedCases = async (caseId: string): Promise<ApiResponse<Case[]>> => {
-  const { data } = await api.get<ApiResponse<Case[]>>(`/cases/${caseId}/related`);
+export const getRelatedCases = async (caseId: string): Promise<Case[]> => {
+  const { data } = await api.get(`/cases/${caseId}/related`);
   return data;
 };

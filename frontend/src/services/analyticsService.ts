@@ -1,4 +1,3 @@
-import type { ApiResponse } from '../types/api';
 import type { OverviewData, DistributionItem, TrendItem, DistrictItem } from '../types/analytics';
 import api from './api';
 

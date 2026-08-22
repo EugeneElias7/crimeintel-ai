@@ -68,8 +68,8 @@ export default function CaseDetailPage() {
       getRelatedCases(id).catch(() => null),
     ])
       .then(([caseRes, relatedRes]) => {
-        setCaseDetail(caseRes.data);
-        if (relatedRes) setRelatedCases(relatedRes.data);
+        setCaseDetail(caseRes);
+        if (relatedRes) setRelatedCases(relatedRes);
       })
       .catch(() => setError('Case not found'))
       .finally(() => setLoading(false));

@@ -32,7 +32,6 @@ import { getOverview, getTrends } from '../services/analyticsService';
 import { listCases } from '../services/caseService';
 import type { OverviewData, TrendItem } from '../types/analytics';
 import type { Case } from '../types/case';
-import type { ApiResponse } from '../types/api';
 
 const COLORS = ['#3B82F6', '#EF4444', '#F59E0B', '#10B981', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
 

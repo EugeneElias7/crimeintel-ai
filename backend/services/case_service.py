@@ -140,10 +140,10 @@ class CaseService:
 
         return {"data": page_items, "total": total, "page": page, "pages": pages}
 
-    async def get_case(self, case_id: str) -> dict:
+    async def get_case(self, case_id: str) -> Optional[dict]:
         case = await self.db.get("Cases", case_id)
         if not case:
-            raise ValueError("Case not found")
+            return None
 
         suspects = await self.db.query("Suspects", {"case_id": case_id})
         witnesses = await self.db.query("Witnesses", {"case_id": case_id})

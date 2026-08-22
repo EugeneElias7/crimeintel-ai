@@ -18,16 +18,10 @@ class CatalystFSAdapter:
     async def _ensure_initialized(self) -> None:
         if not self._initialized:
             try:
-                from catalyst_sdk import CatalystApp
+                import zcatalyst_sdk
 
-                self._client = CatalystApp.initialize(
-                    {
-                        "project_id": settings.CATALYST_PROJECT_ID,
-                        "client_id": settings.CATALYST_CLIENT_ID,
-                        "client_secret": settings.CATALYST_CLIENT_SECRET,
-                    }
-                )
-                self._filestore = self._client.filestore()
+                app = zcatalyst_sdk.initialize()
+                self._filestore = app.filestore()
                 self._initialized = True
                 logger.info("CatalystFSAdapter initialized successfully")
             except Exception as e:

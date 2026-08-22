@@ -9,7 +9,7 @@ from config import settings
 class CSRFMiddleware(BaseHTTPMiddleware):
     """Validates Origin header on state-changing requests."""
 
-    ALLOWED_ORIGINS = settings.ALLOWED_ORIGINS.split(",") if settings.ALLOWED_ORIGINS else []
+    ALLOWED_ORIGINS = settings.ALLOWED_ORIGINS if settings.ALLOWED_ORIGINS else []
 
     async def dispatch(self, request: Request, call_next):
         if request.method in ("POST", "PUT", "PATCH", "DELETE"):

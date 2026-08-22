@@ -1,0 +1,1 @@
+import{p as e}from"./index-Dz4ifjyM.js";var t=async(t={})=>{let{data:n}=await e.get(`/cases`,{params:t});return n},n=async t=>{let{data:n}=await e.get(`/cases/${t}`);return n},r=async t=>{let{data:n}=await e.post(`/cases`,t);return n},i=async t=>{let{data:n}=await e.get(`/cases/${t}/related`);return n};export{t as i,n,i as r,r as t};

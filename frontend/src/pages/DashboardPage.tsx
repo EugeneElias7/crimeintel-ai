@@ -28,10 +28,11 @@ import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import EmptyState from '../components/ui/EmptyState';
-import { getOverview } from '../services/analyticsService';
+import { getOverview, getTrends } from '../services/analyticsService';
 import { listCases } from '../services/caseService';
-import type { OverviewData } from '../types/analytics';
+import type { OverviewData, TrendItem } from '../types/analytics';
 import type { Case } from '../types/case';
+import type { ApiResponse } from '../types/api';
 
 const COLORS = ['#3B82F6', '#EF4444', '#F59E0B', '#10B981', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
 
@@ -76,6 +77,7 @@ function SkeletonChart() {
 export default function DashboardPage() {
   const navigate = useNavigate();
   const [overview, setOverview] = useState<OverviewData | null>(null);
+  const [trends, setTrends] = useState<TrendItem[]>([]);
   const [recentCases, setRecentCases] = useState<Case[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,12 +87,14 @@ export default function DashboardPage() {
     setLoading(true);
     setError(null);
     try {
-      const [overviewRes, casesRes] = await Promise.all([
+      const [overviewRes, casesRes, trendsRes] = await Promise.all([
         getOverview(),
         listCases({ page: 1, limit: 10 }),
+        getTrends(),
       ]);
-      setOverview(overviewRes.data);
+      setOverview(overviewRes);
       setRecentCases(casesRes.data);
+      setTrends(trendsRes);
       setLastUpdated(new Date());
     } catch {
       setError('Failed to load dashboard data');
@@ -257,13 +261,13 @@ export default function DashboardPage() {
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                data={[
-                  { month: 'Jan', total: 12 },
-                  { month: 'Feb', total: 19 },
-                  { month: 'Mar', total: 15 },
-                  { month: 'Apr', total: 22 },
-                  { month: 'May', total: 18 },
-                  { month: 'Jun', total: 25 },
+                data={trends.length > 0 ? trends : [
+                  { month: 'Jan', total: 0, open: 0, closed: 0 },
+                  { month: 'Feb', total: 0, open: 0, closed: 0 },
+                  { month: 'Mar', total: 0, open: 0, closed: 0 },
+                  { month: 'Apr', total: 0, open: 0, closed: 0 },
+                  { month: 'May', total: 0, open: 0, closed: 0 },
+                  { month: 'Jun', total: 0, open: 0, closed: 0 },
                 ]}
               >
                 <CartesianGrid strokeDasharray="3 3" />
@@ -276,6 +280,23 @@ export default function DashboardPage() {
                   stroke="#3B82F6"
                   strokeWidth={2}
                   dot={{ r: 4 }}
+                  name="Total"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="open"
+                  stroke="#F59E0B"
+                  strokeWidth={2}
+                  dot={{ r: 4 }}
+                  name="Open"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="closed"
+                  stroke="#10B981"
+                  strokeWidth={2}
+                  dot={{ r: 4 }}
+                  name="Closed"
                 />
               </LineChart>
             </ResponsiveContainer>

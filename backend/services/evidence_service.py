@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from typing import List
 
 from fastapi import UploadFile
 
@@ -17,10 +18,17 @@ class EvidenceService:
         self.db = db
         self.fs = fs
 
-    async def list_evidence(self, case_id: str) -> list:
+    async def list_evidence(self, case_id: str) -> List[dict]:
         records = await self.db.query("Evidence_Metadata", {"case_id": case_id})
-        return [
-            {
+        results = []
+        for r in (records or []):
+            uploaded_by_id = r.get("uploaded_by", "")
+            uploaded_by_user = await self.db.get("Users", uploaded_by_id) if uploaded_by_id else None
+            uploaded_by = {
+                "user_id": uploaded_by_id,
+                "display_name": uploaded_by_user.get("display_name", "Unknown") if uploaded_by_user else "Unknown",
+            }
+            results.append({
                 "evidence_id": r.get("evidence_id") or r.get("ROWID"),
                 "case_id": r.get("case_id"),
                 "file_name": r.get("file_name"),
@@ -29,16 +37,22 @@ class EvidenceService:
                 "file_url": r.get("file_url"),
                 "description": r.get("description"),
                 "sensitive": r.get("sensitive", False),
-                "uploaded_by": r.get("uploaded_by", ""),
+                "uploaded_by": uploaded_by,
                 "uploaded_at": r.get("uploaded_at", ""),
-            }
-            for r in (records or [])
-        ]
+            })
+        return results
 
     async def get_evidence(self, evidence_id: str) -> dict:
         record = await self.db.get("Evidence_Metadata", evidence_id)
         if not record:
             raise ValueError("Evidence not found")
+
+        uploaded_by_id = record.get("uploaded_by", "")
+        uploaded_by_user = await self.db.get("Users", uploaded_by_id) if uploaded_by_id else None
+        uploaded_by = {
+            "user_id": uploaded_by_id,
+            "display_name": uploaded_by_user.get("display_name", "Unknown") if uploaded_by_user else "Unknown",
+        }
 
         return {
             "evidence_id": record.get("evidence_id") or evidence_id,
@@ -49,7 +63,7 @@ class EvidenceService:
             "file_url": record.get("file_url"),
             "description": record.get("description"),
             "sensitive": record.get("sensitive", False),
-            "uploaded_by": record.get("uploaded_by", ""),
+            "uploaded_by": uploaded_by,
             "uploaded_at": record.get("uploaded_at", ""),
         }
 

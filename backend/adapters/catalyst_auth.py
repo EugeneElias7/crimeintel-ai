@@ -14,15 +14,9 @@ class CatalystAuthAdapter:
     async def _ensure_initialized(self) -> None:
         if not self._initialized:
             try:
-                from catalyst_sdk import CatalystApp
+                import zcatalyst_sdk
 
-                self._client = CatalystApp.initialize(
-                    {
-                        "project_id": settings.CATALYST_PROJECT_ID,
-                        "client_id": settings.CATALYST_CLIENT_ID,
-                        "client_secret": settings.CATALYST_CLIENT_SECRET,
-                    }
-                )
+                self._client = zcatalyst_sdk.initialize()
                 self._initialized = True
                 logger.info("CatalystAuthAdapter initialized successfully")
             except Exception as e:

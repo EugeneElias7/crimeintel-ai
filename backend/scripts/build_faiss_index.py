@@ -1,7 +1,7 @@
 """FAISS index build script for CrimeIntel AI.
 
-Fetches cases with embeddings from the Data Store, builds a FAISS index,
-and saves it to the File Store (or a local file for development).
+Fetches cases from the local SQLite database, generates embeddings,
+builds a FAISS index, and saves it locally.
 """
 
 import asyncio
@@ -37,58 +37,44 @@ async def build_faiss_index() -> None:
     logger.info("FAISS index dimension: %d", dimension)
     logger.info("FAISS index path: %s", index_path)
 
+    from adapters.sqlite_db import sqlite_db
+    from services.embedding_service import EmbeddingService
+
+    await sqlite_db._ensure_initialized()
+    logger.info("Connected to SQLite database")
+
+    all_cases = await sqlite_db.get_all("Cases")
+    if not all_cases:
+        logger.error("No cases found in database. Run seed_database.py first.")
+        return
+
+    logger.info("Found %d cases in database", len(all_cases))
+
+    embedding_service = EmbeddingService()
+    await embedding_service.load_model()
+
     embeddings = []
     case_ids = []
 
-    try:
-        from adapters.catalyst_db import catalyst_db
-
-        await catalyst_db._ensure_initialized()
-        logger.info("Connected to Catalyst Data Store")
-        all_cases = await catalyst_db.get_all("ci_cases")
-        if not all_cases:
-            all_cases = await catalyst_db.get_all("cases")
-    except Exception as e:
-        logger.warning("Could not connect to Catalyst Data Store: %s", e)
-        logger.info("Using local seed data file instead...")
-        import json
-
-        seed_path = os.path.join(os.path.dirname(__file__), "..", "seed_data.json")
-        if os.path.exists(seed_path):
-            with open(seed_path) as f:
-                data = json.load(f)
-            all_cases = data.get("cases", [])
-        else:
-            logger.info("No seed data found. Generating synthetic cases...")
-            from seed_data.generate_cases import generate_cases
-
-            data = generate_cases(100)
-            all_cases = data["cases"]
-
     for case in all_cases:
-        emb = case.get("embedding")
-        if emb:
-            if isinstance(emb, str):
-                import json as _json
+        case_id = case.get("case_id") or case.get("ROWID")
+        if not case_id:
+            continue
 
-                emb = _json.loads(emb)
-            embeddings.append(emb)
-            case_ids.append(case.get("case_id", case.get("ROWID", "")))
+        text_to_embed = f"{case.get('crime_type', '')} {case.get('location', '')} {case.get('description', '')} {case.get('district', '')}"
+        embedding = await embedding_service.generate(text_to_embed)
+
+        embeddings.append(embedding)
+        case_ids.append(case_id)
 
     if not embeddings:
-        logger.warning("No embeddings found in the data. Generating random embeddings for demo.")
-        rng = np.random.default_rng(42)
-        for case in all_cases:
-            embeddings.append(rng.random(dimension).astype(np.float32).tolist())
-            case_ids.append(case.get("case_id", case.get("ROWID", "")))
-
-    embeddings_array = np.array(embeddings, dtype=np.float32)
-    if embeddings_array.shape[0] == 0:
-        logger.error("No data available to build index")
+        logger.error("No embeddings generated")
         return
 
-    logger.info("Building FAISS index with %d vectors of dimension %d", len(embeddings_array), dimension)
+    embeddings_array = np.array(embeddings, dtype=np.float32)
+    logger.info("Generated %d embeddings of dimension %d", len(embeddings_array), dimension)
 
+    logger.info("Building FAISS index...")
     index = faiss.IndexFlatL2(dimension)
     index.add(embeddings_array)
     logger.info("Index contains %d vectors", index.ntotal)
@@ -97,33 +83,27 @@ async def build_faiss_index() -> None:
     faiss.write_index(index, str(index_path))
     logger.info("Index saved to %s", index_path)
 
-    try:
-        from adapters.catalyst_fs import catalyst_fs
-        from adapters.catalyst_db import catalyst_db
+    mapping_path = index_path.replace(".bin", "_mapping.json")
+    import json
+    id_mapping = {str(i): case_id for i, case_id in enumerate(case_ids)}
+    with open(mapping_path, "w") as f:
+        json.dump(id_mapping, f)
+    logger.info("ID mapping saved to %s", mapping_path)
 
-        current_time = asyncio.get_event_loop().time()
-        meta = {
+    try:
+        meta_table = settings.DATA_STORE_TABLE_PREFIX + "faiss_index_meta"
+        meta_data = {
+            "ROWID": "faiss_index_meta_001",
             "index_path": index_path,
             "dimension": dimension,
             "vector_count": index.ntotal,
-            "built_at": str(current_time),
+            "built_at": str(asyncio.get_event_loop().time()),
             "status": "ready",
         }
-
-        try:
-            await catalyst_db._ensure_initialized()
-            await catalyst_db.insert("faiss_index_meta", meta)
-            logger.info("FAISS Index Meta table updated")
-        except Exception as e:
-            logger.warning("Could not update FAISS Index Meta: %s", e)
-
-        try:
-            await catalyst_fs._ensure_initialized()
-            logger.info("Index also available for upload to File Store")
-        except Exception as e:
-            logger.warning("File Store not available: %s", e)
+        await sqlite_db.insert(meta_table, meta_data)
+        logger.info("FAISS Index Meta table updated")
     except Exception as e:
-        logger.info("Index saved locally. File Store upload skipped: %s", e)
+        logger.warning("Could not update FAISS Index Meta: %s", e)
 
     print()
     print("=" * 50)
@@ -132,6 +112,7 @@ async def build_faiss_index() -> None:
     print(f"  Dimension:      {dimension}")
     print(f"  Vectors:        {index.ntotal}")
     print(f"  Saved to:       {index_path}")
+    print(f"  Mapping saved:  {mapping_path}")
     print(f"  Index type:     L2 (cosine search)")
     print("=" * 50)
 

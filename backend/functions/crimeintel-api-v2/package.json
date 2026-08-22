@@ -1,0 +1,15 @@
+{
+  "name": "crimeintel-api",
+  "version": "1.0.0",
+  "description": "CrimeIntel AI API backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "express-fileupload": "^1.5.2",
+    "jsonwebtoken": "^9.0.2",
+    "zcatalyst-sdk-node": "^2.3.0"
+  }
+}

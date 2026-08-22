@@ -8,14 +8,13 @@ from middleware.rate_limiter import rate_limiter
 from models.common import SuccessResponse
 from models.user import LoginRequest, LoginResponse, UserProfileResponse
 from services.auth_service import AuthService
-from adapters.catalyst_db import catalyst_db
-from adapters.catalyst_auth import catalyst_auth
+from adapters.db import db, auth
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-auth_service = AuthService(db=catalyst_db, auth_adapter=catalyst_auth)
+auth_service = AuthService(db=db, auth_adapter=auth)
 
 
 def _get_client_ip(request: Request) -> str:

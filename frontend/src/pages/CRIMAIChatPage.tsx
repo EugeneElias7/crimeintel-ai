@@ -44,9 +44,9 @@ export default function CRIMAIChatPage() {
 
   useEffect(() => {
     getHistory()
-      .then((res) => {
-        if (res.data && res.data.length > 0) {
-          setMessages(res.data);
+      .then((history) => {
+        if (history && history.length > 0) {
+          setMessages(history);
         }
       })
       .catch(() => {});
@@ -71,8 +71,8 @@ export default function CRIMAIChatPage() {
       const res = await sendQuery(text);
       const aiMsg: ChatMessage = {
         role: 'assistant',
-        text: res.data.response,
-        results: res.data.results,
+        text: res.response,
+        results: res.results,
         timestamp: new Date().toISOString(),
       };
       setMessages((prev) => [...prev, aiMsg]);
@@ -155,7 +155,7 @@ export default function CRIMAIChatPage() {
                   <div className="ml-9 rounded-2xl rounded-tl-sm border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700">
                     <p className="whitespace-pre-wrap">{msg.text}</p>
 
-                    {msg.results && msg.results.length > 0 && (
+                    {msg.results && Array.isArray(msg.results) && msg.results.length > 0 && (
                       <div className="mt-3 space-y-2">
                         {msg.results.map((r, ri) => (
                           <QueryResultCard key={ri} result={r} />

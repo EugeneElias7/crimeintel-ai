@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from middleware.auth_middleware import get_current_user
 from models.common import SuccessResponse
 from models.user import UserProfileResponse
-from adapters.catalyst_db import catalyst_db
+from adapters.db import db
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ async def get_profile(
     current_user: dict = Depends(get_current_user),
 ):
     try:
-        user = await catalyst_db.get("Users", current_user["user_id"])
+        user = await db.get("Users", current_user["user_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -70,7 +70,7 @@ async def update_profile(
         )
 
     try:
-        user = await catalyst_db.get("Users", current_user["user_id"])
+        user = await db.get("Users", current_user["user_id"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -79,7 +79,7 @@ async def update_profile(
 
         from datetime import datetime
         update_data["updated_at"] = datetime.utcnow().isoformat()
-        await catalyst_db.update("Users", current_user["user_id"], update_data)
+        await db.update("Users", current_user["user_id"], update_data)
         return SuccessResponse(data=update_data, message="Profile updated successfully.")
     except HTTPException:
         raise
@@ -101,7 +101,7 @@ async def get_preferences(
     current_user: dict = Depends(get_current_user),
 ):
     try:
-        records = await catalyst_db.query("User_Preferences", {"user_id": current_user["user_id"]})
+        records = await db.query("User_Preferences", {"user_id": current_user["user_id"]})
         if records:
             prefs = records[0]
             return SuccessResponse(
@@ -163,20 +163,20 @@ async def update_preferences(
             "theme": theme,
         }
 
-        records = await catalyst_db.query("User_Preferences", {"user_id": current_user["user_id"]})
+        records = await db.query("User_Preferences", {"user_id": current_user["user_id"]})
         if records:
             existing = records[0]
             pref_id = existing.get("ROWID") or existing.get("preference_id")
             if pref_id:
-                await catalyst_db.update("User_Preferences", pref_id, pref_data)
+                await db.update("User_Preferences", pref_id, pref_data)
             else:
                 from utils.helpers import generate_uuid
                 pref_data["ROWID"] = generate_uuid()
-                await catalyst_db.insert("User_Preferences", pref_data)
+                await db.insert("User_Preferences", pref_data)
         else:
             from utils.helpers import generate_uuid
             pref_data["ROWID"] = generate_uuid()
-            await catalyst_db.insert("User_Preferences", pref_data)
+            await db.insert("User_Preferences", pref_data)
 
         return SuccessResponse(data=pref_data, message="Preferences updated successfully.")
     except HTTPException:

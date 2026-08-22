@@ -85,7 +85,7 @@ export default function EvidencePage() {
 
   useEffect(() => {
     listCases({ limit: 100 })
-      .then((res) => setCases(res.data))
+      .then((res) => setCases(res?.data || []))
       .catch(() => {});
   }, []);
 

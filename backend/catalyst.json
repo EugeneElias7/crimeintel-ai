@@ -1,0 +1,9 @@
+{
+  "functions": {
+    "targets": [
+      "crimeintel-frontend",
+      "crimeintel-api-v2"
+    ],
+    "source": "functions"
+  }
+}

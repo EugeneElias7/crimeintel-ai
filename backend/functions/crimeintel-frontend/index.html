@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/server/crimeintel-frontend/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AI-powered Crime Intelligence Platform for Karnataka State Police">
+    <meta name="author" content="Pixel Pirates">
+    <title>CrimeIntel AI</title>
+    <script>
+      // SPA redirect for static hosting (Catalyst, Netlify, etc.)
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/server/crimeintel-frontend/assets/index-Dz4ifjyM.js"></script>
+    <link rel="modulepreload" crossorigin href="/server/crimeintel-frontend/assets/createLucideIcon-DJYM0P7l.js">
+    <link rel="stylesheet" crossorigin href="/server/crimeintel-frontend/assets/index-DD9B4Yrt.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

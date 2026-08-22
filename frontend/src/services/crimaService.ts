@@ -5,14 +5,14 @@ import api from './api';
 export const sendQuery = async (
   text: string,
   context?: string,
-): Promise<ApiResponse<QueryResponse>> => {
-  const { data } = await api.post<ApiResponse<QueryResponse>>('/crima/query', { text, context });
+): Promise<QueryResponse> => {
+  const { data } = await api.post<QueryResponse>('/crima/query', { text, context });
   return data;
 };
 
-export const getHistory = async (): Promise<ApiResponse<ChatMessage[]>> => {
-  const { data } = await api.get<ApiResponse<ChatMessage[]>>('/crima/history');
-  return data;
+export const getHistory = async (): Promise<ChatMessage[]> => {
+  const { data } = await api.get<{ messages: ChatMessage[] }>('/crima/history');
+  return data.messages;
 };
 
 export const clearHistory = async (): Promise<void> => {

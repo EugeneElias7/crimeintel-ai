@@ -5,13 +5,13 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from middleware.auth_middleware import get_current_user
 from models.common import SuccessResponse
 from services.notification_service import NotificationService
-from adapters.catalyst_db import catalyst_db
+from adapters.db import db
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/notifications", tags=["Notifications"])
 
-notification_service = NotificationService(db=catalyst_db)
+notification_service = NotificationService(db=db)
 
 
 @router.get(

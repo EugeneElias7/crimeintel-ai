@@ -36,6 +36,17 @@ class DistrictItem(BaseModel):
     count: int
 
 
+class HeatMapItem(BaseModel):
+    case_id: str
+    crime_type: str
+    status: str
+    date_filed: str
+    district: str
+    latitude: float
+    longitude: float
+    intensity: float = 1.0
+
+
 class StatusBreakdown(BaseModel):
     status: str
     count: int

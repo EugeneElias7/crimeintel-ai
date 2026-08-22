@@ -12,7 +12,7 @@ from services.embedding_service import EmbeddingService
 from services.faiss_service import FAISSService
 from services.context_service import ContextService
 from services.case_service import CaseService
-from adapters.catalyst_db import catalyst_db
+from adapters.db import db
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ crima_service = CRIMAService(
     embedding_service=EmbeddingService(),
     faiss_service=FAISSService(),
     context_service=ContextService(),
-    case_service=CaseService(db=catalyst_db),
+    case_service=CaseService(db=db),
 )
 
 

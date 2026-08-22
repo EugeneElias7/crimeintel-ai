@@ -8,15 +8,14 @@ from models.common import PaginatedResponse, SuccessResponse
 from models.user import UserCreate, UserResponse, UserUpdate
 from services.user_service import UserService
 from services.audit_service import AuditService
-from adapters.catalyst_db import catalyst_db
-from adapters.catalyst_auth import catalyst_auth
+from adapters.db import db, auth
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/admin", tags=["Administration"])
 
-user_service = UserService(db=catalyst_db, auth_adapter=catalyst_auth)
-audit_service = AuditService(db=catalyst_db)
+user_service = UserService(db=db, auth_adapter=auth)
+audit_service = AuditService(db=db)
 
 _admin_role = require_role(["admin", "super_admin"])
 _super_admin_role = require_role(["super_admin"])
@@ -187,7 +186,7 @@ async def get_system_settings(
     current_user: dict = Depends(_admin_role),
 ):
     try:
-        records = await catalyst_db.get_all("System_Config")
+        records = await db.get_all("System_Config")
         config = {}
         for rec in records or []:
             key = rec.get("config_key", "")
@@ -231,16 +230,16 @@ async def update_system_settings(
         for key, value in body.items():
             if key not in allowed_keys:
                 continue
-            existing = await catalyst_db.query("System_Config", {"config_key": key})
+            existing = await db.query("System_Config", {"config_key": key})
             if existing:
                 rec = existing[0]
                 rid = rec.get("ROWID") or rec.get("config_id")
                 if rid:
-                    await catalyst_db.update("System_Config", rid, {"config_value": str(value)})
+                    await db.update("System_Config", rid, {"config_value": str(value)})
             else:
                 from utils.helpers import generate_uuid
                 from datetime import datetime
-                await catalyst_db.insert("System_Config", {
+                await db.insert("System_Config", {
                     "ROWID": generate_uuid(),
                     "config_key": key,
                     "config_value": str(value),

@@ -7,19 +7,20 @@ from middleware.auth_middleware import get_current_user, require_role
 from models.analytics import (
     DistributionItem,
     DistrictItem,
+    HeatMapItem,
     OverviewResponse,
     PeriodInfo,
     TrendItem,
 )
 from models.common import SuccessResponse
 from services.analytics_service import AnalyticsService
-from adapters.catalyst_db import catalyst_db
+from adapters.db import db
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/analytics", tags=["Analytics"])
 
-analytics_service = AnalyticsService(db=catalyst_db)
+analytics_service = AnalyticsService(db=db)
 
 
 @router.get(
@@ -130,11 +131,11 @@ async def get_by_officer(
     to_date: Optional[str] = Query(default=None, alias="to", description="End date (ISO format)"),
 ):
     try:
-        all_cases = await catalyst_db.get_all("Cases")
+        all_cases = await db.get_all("Cases")
         if not all_cases:
             return []
 
-        all_users = await catalyst_db.get_all("Users")
+        all_users = await db.get_all("Users")
         user_map = {}
         for u in all_users or []:
             uid = u.get("ROWID") or u.get("user_id")
@@ -161,4 +162,64 @@ async def get_by_officer(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve officer breakdown.",
+        )
+
+
+@router.get(
+    "/heatmap/data",
+    response_model=list[HeatMapItem],
+    status_code=status.HTTP_200_OK,
+    summary="Get heat map data for crime incidents",
+)
+async def get_heatmap_data(
+    current_user: dict = Depends(get_current_user),
+    from_date: Optional[str] = Query(default=None, alias="from", description="Start date (ISO format)"),
+    to_date: Optional[str] = Query(default=None, alias="to", description="End date (ISO format)"),
+    crime_type: Optional[str] = Query(default=None, description="Filter by crime type"),
+    district: Optional[str] = Query(default=None, description="Filter by district"),
+):
+    try:
+        all_cases = await db.get_all("Cases")
+        if not all_cases:
+            return []
+
+        filtered = []
+        missing_coords = 0
+        for case in all_cases:
+            date_str = case.get("date_filed") or case.get("created_at", "")
+            if from_date and date_str < from_date:
+                continue
+            if to_date and date_str > to_date:
+                continue
+            if crime_type and case.get("crime_type") != crime_type:
+                continue
+            if district and case.get("district") != district:
+                continue
+
+            lat = case.get("latitude")
+            lon = case.get("longitude")
+            if lat is None or lon is None:
+                missing_coords += 1
+                continue
+
+            filtered.append(HeatMapItem(
+                case_id=case.get("case_id") or case.get("ROWID") or "",
+                crime_type=case.get("crime_type", ""),
+                status=case.get("status", ""),
+                date_filed=date_str,
+                district=case.get("district", ""),
+                latitude=float(lat),
+                longitude=float(lon),
+                intensity=1.0,
+            ))
+
+        if missing_coords > 0:
+            logger.info("Heatmap: %d cases missing coordinates", missing_coords)
+
+        return filtered
+    except Exception as e:
+        logger.exception("Failed to get heatmap data: %s", e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve heatmap data.",
         )

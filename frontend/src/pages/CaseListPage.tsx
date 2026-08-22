@@ -22,20 +22,32 @@ function getBadgeVariant(status: string) {
 }
 
 const CRIME_TYPES = [
-  'Theft',
-  'Burglary',
-  'Assault',
-  'Robbery',
-  'Homicide',
-  'Fraud',
-  'Cyber Crime',
-  'Narcotics',
-  'Domestic Violence',
-  'Traffic Violation',
+  'assault',
+  'cybercrime',
+  'dacoity',
+  'fraud',
+  'kidnapping',
+  'murder',
+  'other',
+  'rioting',
+  'robbery',
+  'theft',
 ];
 
-const STATUSES = ['Open', 'Under Investigation', 'Closed', 'Filed'];
-const DISTRICTS = ['North', 'South', 'East', 'West', 'Central'];
+const STATUSES = ['open', 'under_investigation', 'closed', 'filed'];
+
+const DISTRICTS = [
+  'Bangalore Rural',
+  'Bangalore Urban',
+  'Belgaum',
+  'Dharwad',
+  'Gulbarga',
+  'Hubli',
+  'Mangalore',
+  'Mysore',
+  'Shimoga',
+  'Tumkur',
+];
 
 export default function CaseListPage() {
   const navigate = useNavigate();
@@ -72,9 +84,9 @@ export default function CaseListPage() {
       };
       if (debouncedSearch) params.q = debouncedSearch;
       const res = await listCases(params);
-      setCases(res.data);
-      setTotal(res.total);
-      setPages(res.pages);
+      setCases(res?.data || []);
+      setTotal(res?.total || 0);
+      setPages(res?.pages || 0);
     } catch {
       setError('Failed to load cases');
     } finally {

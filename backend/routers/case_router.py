@@ -18,17 +18,17 @@ from models.case import (
 )
 from models.common import PaginatedResponse, SuccessResponse
 from services.case_service import CaseService
-from adapters.catalyst_db import catalyst_db
+from adapters.db import db
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/cases", tags=["Cases"])
 
-case_service = CaseService(db=catalyst_db)
+case_service = CaseService(db=db)
 
 
 @router.get(
-    "/",
+    "",
     response_model=PaginatedResponse,
     status_code=status.HTTP_200_OK,
     summary="List cases with optional filters",
@@ -259,7 +259,7 @@ async def add_timeline_event(
         event_data["created_at"] = now
         event_data["officer_id"] = event_data.get("officer_id") or current_user["user_id"]
 
-        await catalyst_db.insert("Timeline", event_data)
+        await db.insert("Timeline", event_data)
         return SuccessResponse(data=event_data, message="Timeline event added successfully.")
     except ValueError as e:
         raise HTTPException(
@@ -325,9 +325,9 @@ async def add_suspect(
         row_data["created_at"] = now
         row_data["updated_at"] = now
 
-        await catalyst_db.insert("Suspects", row_data)
+        await db.insert("Suspects", row_data)
 
-        await catalyst_db.insert("Audit_Logs", {
+        await db.insert("Audit_Logs", {
             "user_id": current_user["user_id"],
             "action": "suspect.added",
             "module": "cases",
@@ -399,9 +399,9 @@ async def add_witness(
         row_data["created_at"] = now
         row_data["updated_at"] = now
 
-        await catalyst_db.insert("Witnesses", row_data)
+        await db.insert("Witnesses", row_data)
 
-        await catalyst_db.insert("Audit_Logs", {
+        await db.insert("Audit_Logs", {
             "user_id": current_user["user_id"],
             "action": "witness.added",
             "module": "cases",

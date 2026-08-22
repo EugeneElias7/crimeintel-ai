@@ -111,6 +111,52 @@ HOSPITALS = ["Victoria Hospital", "Bowring Hospital", "KC General Hospital", "St
 
 STATIONS = ["Majestic", "MG Road", "Koramangala", "Indiranagar", "Whitefield", "Jayanagar"]
 
+EVIDENCE_TYPES = [
+    {"type": "pdf", "extensions": [".pdf"], "descriptions": [
+        "Forensic lab report detailing analysis results",
+        "Witness statement recorded in official format",
+        "Autopsy report with cause of death",
+        "Ballistics analysis report",
+        "Document examination report",
+        "Chemical analysis report",
+        "Digital forensics report",
+        "Case investigation diary extract"
+    ]},
+    {"type": "jpeg", "extensions": [".jpg", ".jpeg"], "descriptions": [
+        "Crime scene photograph showing evidence in situ",
+        "Suspect identification photograph",
+        "CCTV screenshot of suspect",
+        "Injury documentation photograph",
+        "Vehicle damage photograph",
+        "Stolen property recovered photograph",
+        "Fingerprint lift photograph",
+        "Scene overview photograph"
+    ]},
+    {"type": "png", "extensions": [".png"], "descriptions": [
+        "Digital evidence screenshot",
+        "Map with crime location marked",
+        "Timeline diagram",
+        "Network analysis chart",
+        "Phone records visualization",
+        "Financial transaction diagram"
+    ]},
+    {"type": "mp4", "extensions": [".mp4"], "descriptions": [
+        "CCTV footage from nearby camera",
+        "Body camera footage from responding officer",
+        "Interrogation video recording",
+        "Crime scene walkthrough video",
+        "Surveillance footage showing suspect",
+        "Dashcam footage from patrol vehicle"
+    ]}
+]
+
+EVIDENCE_FILE_PREFIXES = {
+    "pdf": ["forensic_report", "witness_statement", "autopsy_report", "ballistics_report", "doc_examination", "chemical_analysis", "digital_forensics", "investigation_diary"],
+    "jpeg": ["crime_scene_photo", "suspect_photo", "cctv_screenshot", "injury_photo", "vehicle_damage", "recovered_property", "fingerprint_lift", "scene_overview"],
+    "png": ["digital_screenshot", "crime_map", "timeline_diagram", "network_chart", "phone_records_viz", "financial_diagram"],
+    "mp4": ["cctv_footage", "bodycam_footage", "interrogation_video", "scene_walkthrough", "surveillance_clip", "dashcam_footage"]
+}
+
 
 def generate_random_date(start_year=2024, end_year=2026):
     start = datetime(start_year, 1, 1)
@@ -197,43 +243,84 @@ def generate_timeline(case_id: str, date_filed: str, officer_id: str) -> list:
             "event_date": filed_date.isoformat(),
             "event_type": "fir_registered",
             "description": "FIR registered at the police station.",
-            "officer_id": officer_id
+            "officer_id": officer_id,
+            "created_at": filed_date.isoformat()
         }
     ]
     if random.random() > 0.3:
+        suspect_date = filed_date + timedelta(days=random.randint(1, 7))
         events.append({
             "event_id": f"evt_{uuid.uuid4().hex[:8]}",
             "case_id": case_id,
-            "event_date": (filed_date + timedelta(days=random.randint(1, 7))).isoformat(),
+            "event_date": suspect_date.isoformat(),
             "event_type": "suspect_identified",
             "description": "Suspect identified through investigation.",
-            "officer_id": officer_id
+            "officer_id": officer_id,
+            "created_at": suspect_date.isoformat()
         })
     if random.random() > 0.5:
+        evidence_date = filed_date + timedelta(days=random.randint(3, 30))
         events.append({
             "event_id": f"evt_{uuid.uuid4().hex[:8]}",
             "case_id": case_id,
-            "event_date": (filed_date + timedelta(days=random.randint(3, 30))).isoformat(),
+            "event_date": evidence_date.isoformat(),
             "event_type": "evidence_collected",
             "description": "Physical evidence collected from the crime scene.",
-            "officer_id": officer_id
+            "officer_id": officer_id,
+            "created_at": evidence_date.isoformat()
         })
     return events
 
 
+def generate_evidence(case_id: str, crime_type: str, officer_id: str) -> list:
+    evidence_count = random.randint(1, 4)
+    evidence_list = []
+    
+    for _ in range(evidence_count):
+        ev_type_info = random.choice(EVIDENCE_TYPES)
+        ev_type = ev_type_info["type"]
+        extension = random.choice(ev_type_info["extensions"])
+        prefix = random.choice(EVIDENCE_FILE_PREFIXES[ev_type])
+        description_template = random.choice(ev_type_info["descriptions"])
+        
+        file_name = f"{prefix}_{uuid.uuid4().hex[:8]}{extension}"
+        file_size = random.randint(1024, 25 * 1024 * 1024)
+        
+        description = description_template
+        if "evidence" in description.lower() or "photo" in description.lower() or "footage" in description.lower():
+            description += f" Related to {crime_type} case."
+        
+        evidence_list.append({
+            "evidence_id": f"evd_{uuid.uuid4().hex[:8]}",
+            "case_id": case_id,
+            "file_name": file_name,
+            "file_type": ev_type,
+            "file_size": file_size,
+            "file_url": f"/evidence/{case_id}/{file_name}",
+            "description": description,
+            "sensitive": random.random() < 0.15,
+            "uploaded_by": officer_id,
+            "uploaded_at": datetime.now().isoformat()
+        })
+    
+    return evidence_list
+
+
 def generate_cases(count: int = 500) -> dict:
     officers = [
-        {"user_id": "usr_001", "display_name": "SI Arun Kumar", "badge_number": "KSP-2024-0789"},
-        {"user_id": "usr_002", "display_name": "Insp. Priya Sharma", "badge_number": "KSP-2024-0456"},
-        {"user_id": "usr_003", "display_name": "SI Manoj Reddy", "badge_number": "KSP-2024-0123"},
-        {"user_id": "usr_004", "display_name": "SI Geeta Verma", "badge_number": "KSP-2024-0678"},
-        {"user_id": "usr_005", "display_name": "Insp. Suresh Naik", "badge_number": "KSP-2024-0345"},
+        {"user_id": "usr_001", "display_name": "SI Arun Kumar", "badge_number": "KSP-2024-0789", "email": "arun.kumar@ksp.gov.in", "role": "officer", "phone": "9876543210", "status": "active"},
+        {"user_id": "usr_002", "display_name": "Insp. Priya Sharma", "badge_number": "KSP-2024-0456", "email": "priya.sharma@ksp.gov.in", "role": "inspector", "phone": "9876543211", "status": "active"},
+        {"user_id": "usr_003", "display_name": "SI Manoj Reddy", "badge_number": "KSP-2024-0123", "email": "manoj.reddy@ksp.gov.in", "role": "officer", "phone": "9876543212", "status": "active"},
+        {"user_id": "usr_004", "display_name": "SI Geeta Verma", "badge_number": "KSP-2024-0678", "email": "geeta.verma@ksp.gov.in", "role": "officer", "phone": "9876543213", "status": "active"},
+        {"user_id": "usr_005", "display_name": "Insp. Suresh Naik", "badge_number": "KSP-2024-0345", "email": "suresh.naik@ksp.gov.in", "role": "inspector", "phone": "9876543214", "status": "active"},
+        {"user_id": "usr_006", "display_name": "Admin User", "badge_number": "KSP-2024-0000", "email": "admin@ksp.gov.in", "role": "admin", "phone": "9876543215", "status": "active"},
     ]
 
     cases = []
     suspects = []
     witnesses = []
     timeline = []
+    evidence = []
 
     for i in range(1, count + 1):
         date_filed = generate_random_date()
@@ -281,13 +368,93 @@ def generate_cases(count: int = 500) -> dict:
         suspects.extend(generate_suspects(case_id))
         witnesses.extend(generate_witnesses(case_id))
         timeline.extend(generate_timeline(case_id, date_filed.isoformat(), officer["user_id"]))
+        evidence.extend(generate_evidence(case_id, crime_type, officer["user_id"]))
+
+    # Ensure CASE-1024 (FIR-2025-001024) exists with rich evidence for demo
+    demo_case_id = "FIR-2025-001024"
+    demo_exists = any(c["case_id"] == demo_case_id for c in cases)
+    if not demo_exists:
+        demo_case = {
+            "case_id": demo_case_id,
+            "fir_number": "KSP-BLR-2025-1024",
+            "crime_type": "theft",
+            "status": "under_investigation",
+            "date_filed": "2025-06-15",
+            "date_closed": None,
+            "location": "MG Road, Bangalore",
+            "latitude": 12.9759,
+            "longitude": 77.6058,
+            "district": "Bangalore Urban",
+            "description": "Vehicle theft reported on MG Road. A black Honda City (KA-01-XX-1024) was stolen from a parking lot. CCTV footage shows two suspects breaking the window and hot-wiring the vehicle. The vehicle was later recovered abandoned in Whitefield with stripped parts.",
+            "officer_id": "usr_001",
+            "priority": "high",
+            "created_at": "2025-06-15T10:30:00Z",
+            "updated_at": "2025-07-20T14:00:00Z"
+        }
+        cases.append(demo_case)
+        suspects.extend(generate_suspects(demo_case_id))
+        witnesses.extend(generate_witnesses(demo_case_id))
+        timeline.extend(generate_timeline(demo_case_id, "2025-06-15T10:30:00Z", "usr_001"))
+        # Add specific rich evidence for demo case
+        demo_evidence = [
+            {
+                "evidence_id": "evd_demo_001",
+                "case_id": demo_case_id,
+                "file_name": "cctv_footage_mgroad_20250615.mp4",
+                "file_type": "mp4",
+                "file_size": 15728640,
+                "file_url": f"/evidence/{demo_case_id}/cctv_footage_mgroad_20250615.mp4",
+                "description": "CCTV footage from MG Road parking lot showing two suspects breaking into black Honda City KA-01-XX-1024 at 02:30 AM",
+                "sensitive": False,
+                "uploaded_by": "usr_001",
+                "uploaded_at": "2025-06-15T11:00:00Z"
+            },
+            {
+                "evidence_id": "evd_demo_002",
+                "case_id": demo_case_id,
+                "file_name": "forensic_report_vehicle_recovery.pdf",
+                "file_type": "pdf",
+                "file_size": 524288,
+                "file_url": f"/evidence/{demo_case_id}/forensic_report_vehicle_recovery.pdf",
+                "description": "Forensic lab report on recovered vehicle found abandoned in Whitefield. Fingerprints lifted from steering wheel and door handles match suspect database entries.",
+                "sensitive": True,
+                "uploaded_by": "usr_001",
+                "uploaded_at": "2025-07-10T09:00:00Z"
+            },
+            {
+                "evidence_id": "evd_demo_003",
+                "case_id": demo_case_id,
+                "file_name": "witness_statement_security_guard.pdf",
+                "file_type": "pdf",
+                "file_size": 262144,
+                "file_url": f"/evidence/{demo_case_id}/witness_statement_security_guard.pdf",
+                "description": "Witness statement from parking lot security guard who saw two males acting suspiciously near the vehicle around 02:15 AM",
+                "sensitive": False,
+                "uploaded_by": "usr_001",
+                "uploaded_at": "2025-06-15T12:00:00Z"
+            },
+            {
+                "evidence_id": "evd_demo_004",
+                "case_id": demo_case_id,
+                "file_name": "crime_scene_photos_mgroad.jpg",
+                "file_type": "jpeg",
+                "file_size": 3145728,
+                "file_url": f"/evidence/{demo_case_id}/crime_scene_photos_mgroad.jpg",
+                "description": "Crime scene photographs showing broken window glass, forced ignition, and tool marks on steering column",
+                "sensitive": False,
+                "uploaded_by": "usr_001",
+                "uploaded_at": "2025-06-15T11:30:00Z"
+            },
+        ]
+        evidence.extend(demo_evidence)
 
     return {
         "officers": officers,
         "cases": cases,
         "suspects": suspects,
         "witnesses": witnesses,
-        "timeline": timeline
+        "timeline": timeline,
+        "evidence": evidence
     }
 
 

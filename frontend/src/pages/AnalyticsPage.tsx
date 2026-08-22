@@ -31,6 +31,7 @@ import {
   getByDistrict,
 } from '../services/analyticsService';
 import type { OverviewData, DistributionItem, TrendItem, DistrictItem } from '../types/analytics';
+import type { ApiResponse } from '../types/api';
 
 const COLORS = ['#3B82F6', '#EF4444', '#F59E0B', '#10B981', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
 
@@ -77,10 +78,10 @@ export default function AnalyticsPage() {
         getTrends(range.from, range.to),
         getByDistrict(range.from, range.to),
       ]);
-      setOverview(overviewRes.data);
-      setDistribution(distRes.data);
-      setTrends(trendsRes.data);
-      setByDistrict(districtRes.data);
+      setOverview(overviewRes);
+      setDistribution(distRes);
+      setTrends(trendsRes);
+      setByDistrict(districtRes);
     } catch {
       setError('Failed to load analytics data');
     } finally {

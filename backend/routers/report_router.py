@@ -8,16 +8,16 @@ from models.common import SuccessResponse
 from services.case_service import CaseService
 from services.evidence_service import EvidenceService
 from services.analytics_service import AnalyticsService
-from adapters.catalyst_db import catalyst_db
-from adapters.catalyst_fs import catalyst_fs
+from adapters.db import db
+from adapters.local_fs import local_fs
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/reports", tags=["Reports"])
 
-case_service = CaseService(db=catalyst_db)
-evidence_service = EvidenceService(db=catalyst_db, fs=catalyst_fs)
-analytics_service = AnalyticsService(db=catalyst_db)
+case_service = CaseService(db=db)
+evidence_service = EvidenceService(db=db, fs=local_fs)
+analytics_service = AnalyticsService(db=db)
 
 
 @router.get(

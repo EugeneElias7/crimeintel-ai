@@ -1,12 +1,12 @@
-# CrimeIntel AI — Hackathon Submission Packet
+# CrimeIntel AI 
 
-| Field | Details |
-|---|---|
-| **Project Name** | CrimeIntel AI |
-| **Team** | Pixel Pirates |
-| **Theme** | Intelligent Conversational AI for KSP Crime Database |
-| **Track** | AI for Social Impact / Public Safety |
-| **Date** | July 2026 |
+| Field                  | Details                                              |
+| ---------------------- | ---------------------------------------------------- |
+| **Project Name** | CrimeIntel AI                                        |
+|                        |                                                      |
+| **Theme**        | Intelligent Conversational AI for KSP Crime Database |
+| **Track**        | AI for Social Impact / Public Safety                 |
+| **Date**         | July 2026                                            |
 
 ---
 
@@ -50,22 +50,22 @@ Crime incidents plotted on an interactive Leaflet map with density heat mapping.
 
 ## 4. Technology Stack
 
-| Layer | Technology | Purpose |
-|---|---|---|
-| **Frontend** | React 18 + TypeScript | UI framework |
-| **Styling** | Tailwind CSS 3 | Utility-first styling |
-| **Charts** | Recharts | Analytics visualizations |
-| **Maps** | Leaflet + react-leaflet | Geospatial heat map |
-| **State** | React Context + useReducer | Client state management |
-| **Backend** | Python 3.11 + FastAPI | REST API server |
-| **NLP / Embeddings** | Sentence Transformers (`all-MiniLM-L6-v2`) | Query & document embeddings |
-| **Vector Search** | FAISS (CPU) | Approximate nearest-neighbor search |
-| **Intent Classification** | Custom regex + ML classifier | Query intent detection |
-| **Auth** | Zoho Catalyst Authentication | User identity & JWT |
-| **Database** | Zoho Catalyst Data Store | Case records, users, audit logs |
-| **File Storage** | Zoho Catalyst File Store | Evidence files, thumbnails |
-| **Hosting** | Zoho Catalyst Functions + Hosting | Serverless deployment |
-| **CI/CD** | GitHub Actions | Lint, test, deploy pipeline |
+| Layer                           | Technology                                   | Purpose                             |
+| ------------------------------- | -------------------------------------------- | ----------------------------------- |
+| **Frontend**              | React 18 + TypeScript                        | UI framework                        |
+| **Styling**               | Tailwind CSS 3                               | Utility-first styling               |
+| **Charts**                | Recharts                                     | Analytics visualizations            |
+| **Maps**                  | Leaflet + react-leaflet                      | Geospatial heat map                 |
+| **State**                 | React Context + useReducer                   | Client state management             |
+| **Backend**               | Python 3.11 + FastAPI                        | REST API server                     |
+| **NLP / Embeddings**      | Sentence Transformers (`all-MiniLM-L6-v2`) | Query & document embeddings         |
+| **Vector Search**         | FAISS (CPU)                                  | Approximate nearest-neighbor search |
+| **Intent Classification** | Custom regex + ML classifier                 | Query intent detection              |
+| **Auth**                  | Zoho Catalyst Authentication                 | User identity & JWT                 |
+| **Database**              | Zoho Catalyst Data Store                     | Case records, users, audit logs     |
+| **File Storage**          | Zoho Catalyst File Store                     | Evidence files, thumbnails          |
+| **Hosting**               | Zoho Catalyst Functions + Hosting            | Serverless deployment               |
+| **CI/CD**                 | GitHub Actions                               | Lint, test, deploy pipeline         |
 
 ---
 
@@ -81,18 +81,18 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 
 ## 6. Feature Summary
 
-| Module | Key Features | Status |
-|---|---|---|
-| **Authentication** | Login/logout, JWT sessions, role-based access (4 roles) | ✓ Complete |
-| **Dashboard** | KPIs, recent cases, crime distribution, trend chart, quick actions | ✓ Complete |
-| **CRIMA AI** | Natural language query, semantic search, confidence scores, context memory, follow-up refinement | ✓ Complete |
-| **Case Explorer** | List/search/filter cases, case detail (FIR, suspects, witnesses, evidence gallery, timeline) | ✓ Complete |
-| **Evidence Management** | Upload/download/delete evidence, file type validation, 25 MB limit | ✓ Complete |
-| **Analytics** | Crime type distribution, monthly trends, district breakdown, status overview | ✓ Complete |
-| **Heat Map** | Interactive map, crime density overlay, zoom/pan, hotspot identification | ✓ Complete |
-| **User Management** | Admin user CRUD, role assignment, audit logs | ✓ Complete |
-| **Notifications** | In-app notification center, polling-based updates | ✓ Complete |
-| **Settings** | Profile editing, password change, notification preferences | ✓ Complete |
+| Module                        | Key Features                                                                                     | Status      |
+| ----------------------------- | ------------------------------------------------------------------------------------------------ | ----------- |
+| **Authentication**      | Login/logout, JWT sessions, role-based access (4 roles)                                          | ✓ Complete |
+| **Dashboard**           | KPIs, recent cases, crime distribution, trend chart, quick actions                               | ✓ Complete |
+| **CRIMA AI**            | Natural language query, semantic search, confidence scores, context memory, follow-up refinement | ✓ Complete |
+| **Case Explorer**       | List/search/filter cases, case detail (FIR, suspects, witnesses, evidence gallery, timeline)     | ✓ Complete |
+| **Evidence Management** | Upload/download/delete evidence, file type validation, 25 MB limit                               | ✓ Complete |
+| **Analytics**           | Crime type distribution, monthly trends, district breakdown, status overview                     | ✓ Complete |
+| **Heat Map**            | Interactive map, crime density overlay, zoom/pan, hotspot identification                         | ✓ Complete |
+| **User Management**     | Admin user CRUD, role assignment, audit logs                                                     | ✓ Complete |
+| **Notifications**       | In-app notification center, polling-based updates                                                | ✓ Complete |
+| **Settings**            | Profile editing, password change, notification preferences                                       | ✓ Complete |
 
 ---
 
@@ -112,18 +112,21 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 ## 8. Demo Script (8–10 Minutes)
 
 ### Step 1: Login (30 seconds)
+
 - Navigate to the CrimeIntel AI login page
 - Enter demo credentials (inspector / inspector123)
 - Click Login
 - *Expected:* Dashboard loads with KPIs, charts, and recent cases
 
 ### Step 2: Dashboard Overview (1 minute)
+
 - Point to KPI cards: Total Cases, Active Investigations, Solved Rate, Pending Evidence
 - Show the crime distribution pie chart
 - Show the monthly trend line chart
 - Click "View All Cases" quick action button
 
 ### Step 3: CRIMA AI — Semantic Search (2 minutes)
+
 - Navigate to the CRIMA AI page
 - Type: *"Find theft cases in Bangalore"*
 - *Expected:* System returns semantically relevant cases ranked by confidence score
@@ -132,6 +135,7 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 - *Expected:* Results refine to Bangalore + Majestic area, previous context maintained
 
 ### Step 4: Case Explorer (1.5 minutes)
+
 - Click on a case from CRIMA AI results
 - *Expected:* Case detail page loads with all sections
 - Show FIR information panel (case ID, date, type, status, description)
@@ -142,6 +146,7 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 - Point out the back button / breadcrumb navigation
 
 ### Step 5: Evidence Upload (1 minute)
+
 - Navigate back to a case
 - Click "Upload Evidence"
 - Select a sample image file (`sample-evidence.jpg`)
@@ -149,6 +154,7 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 - *Expected:* File appears in the evidence gallery with a thumbnail, upload timestamp, and file size
 
 ### Step 6: Analytics (1 minute)
+
 - Navigate to the Analytics page
 - *Expected:* Four charts rendered with live data
 - Crime Distribution (pie chart): theft, assault, burglary, etc.
@@ -157,6 +163,7 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 - Status Overview (donut chart): open, under investigation, closed, archived
 
 ### Step 7: Heat Map (1 minute)
+
 - Navigate to the Heat Map page
 - *Expected:* Leaflet map centered on Karnataka
 - Crime incidents shown as heatmap overlay
@@ -164,6 +171,7 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 - Zoom in/out and pan to demonstrate interactivity
 
 ### Step 8: Admin — User Management (1 minute)
+
 - Log in as Admin (if not already)
 - Navigate to Admin → User Management
 - Show the user table (name, email, role, status, last login)
@@ -173,6 +181,7 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 - Show the Audit Log tab (timestamped action history)
 
 ### Step 9: Q&A (1 minute)
+
 - "Thank you. We're ready for your questions."
 - *Transition to live Q&A*
 
@@ -181,17 +190,20 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 ## 9. Presentation Talking Points
 
 ### The Problem
+
 - KSP officers spend 30–40% of their time manually searching for case information
 - Related cases are routinely missed — no cross-referencing capability
 - Analytics are compiled manually in Excel
 - No heat maps, no semantic search, no unified case view
 
 ### The Innovation
+
 - **First conversational AI interface** for KSP crime data — officers ask questions in plain English
 - **Semantic search** — understands intent, not just keywords. "Theft" catches "chain snatching," "robbery," "burglary"
 - **Unified Case Graph** — every case linked to suspects, witnesses, evidence, and other cases
 
 ### Technical Depth
+
 - Sentence Transformers (`all-MiniLM-L6-v2`) for embedding
 - FAISS (Facebook AI Similarity Search) for fast vector retrieval
 - Custom intent classification pipeline
@@ -199,12 +211,14 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 - Role-based access with 4 tiers (Admin, Inspector, Officer, Viewer)
 
 ### The Impact
+
 - **80% faster** information retrieval time
 - **Cross-case connections** — catch patterns that keyword search misses
 - **Actionable analytics** — real-time charts, trends, district breakdowns
 - **Geospatial insights** — crime hotspot identification on interactive heat maps
 
 ### The Future
+
 - **Phase 2:** OCR for scanned documents, real-time notifications
 - **Phase 3:** Voice search, predictive crime analytics, Kannada language support
 - **Phase 4:** Mobile app, legacy system integration, facial recognition
@@ -214,27 +228,35 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 ## 10. Judges FAQ
 
 ### Q: How is this different from a simple database search?
+
 **A:** Semantic search understands intent, synonyms, and context. "Find theft cases" also surfaces "chain snatching," "mobile snatching," and "robbery" if contextually related. A keyword search would miss any record that doesn't contain the exact word "theft."
 
 ### Q: Do officers need training to use this?
+
 **A:** Zero training required. CRIMA AI accepts natural language — officers type questions the same way they would ask a colleague. The interface is designed for non-technical users who are not database experts.
 
 ### Q: How accurate is the AI?
+
 **A:** We achieve >85% Precision@10 on our test query set. Results with a confidence score below 60% are flagged with a visual warning, prompting the officer to verify manually.
 
 ### Q: How secure is the data?
+
 **A:** Security is built into every layer. Zoho Catalyst Authentication handles identity. Sessions use signed JWTs. Role-based access control enforces permissions on every endpoint — an Officer cannot access admin functions. All actions are logged to an immutable audit trail. Data is encrypted in transit (TLS) and at rest.
 
 ### Q: Can this be deployed in production?
+
 **A:** Yes. Zoho Catalyst is an enterprise-grade, SOC 2-compliant platform. The architecture is designed to scale horizontally to 100K+ records with no infrastructure changes needed.
 
 ### Q: What about existing KSP systems (FIR databases, legacy records)?
+
 **A:** This prototype demonstrates the core capabilities on a representative dataset. A production deployment would integrate with existing KSP databases via Catalyst's Data Store connectors or custom ETL pipelines.
 
 ### Q: How does context work across follow-up questions?
+
 **A:** CRIMA AI maintains a sliding window of the last 10 conversation turns. Each new query is evaluated against the accumulated context. For example, "Find theft cases in Bangalore" → "What about near Majestic?" refines the location filter while keeping the crime type.
 
 ### Q: What happens if the FAISS index is stale?
+
 **A:** The FAISS index is rebuilt on a configurable schedule (default: every 6 hours). New cases created between rebuilds are searched via a fallback keyword + filter query, so no data is ever missed — just not ranked by semantic similarity until the next rebuild.
 
 ---
@@ -247,18 +269,18 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 
 ## 12. Repository Checklist
 
-- [x] `README.md` — Setup instructions, prerequisites, quick start
-- [x] `LICENSE` — MIT License
-- [x] `CONTRIBUTING.md` — Contribution guidelines
-- [x] `CODE_OF_CONDUCT.md` — Code of conduct
-- [x] `SECURITY.md` — Security policy and disclosure process
-- [x] `CHANGELOG.md` — Version history and release notes
-- [x] `.gitignore` — Comprehensive ignore rules
-- [x] `.github/workflows/ci.yml` — CI pipeline (lint → test → build)
-- [x] `.github/PULL_REQUEST_TEMPLATE.md` — PR template
-- [x] `.github/ISSUE_TEMPLATE/bug_report.md` — Bug report template
-- [x] `.github/ISSUE_TEMPLATE/feature_request.md` — Feature request template
-- [x] `docs/` — Full documentation suite
+- [X] `README.md` — Setup instructions, prerequisites, quick start
+- [X] `LICENSE` — MIT License
+- [X] `CONTRIBUTING.md` — Contribution guidelines
+- [X] `CODE_OF_CONDUCT.md` — Code of conduct
+- [X] `SECURITY.md` — Security policy and disclosure process
+- [X] `CHANGELOG.md` — Version history and release notes
+- [X] `.gitignore` — Comprehensive ignore rules
+- [X] `.github/workflows/ci.yml` — CI pipeline (lint → test → build)
+- [X] `.github/PULL_REQUEST_TEMPLATE.md` — PR template
+- [X] `.github/ISSUE_TEMPLATE/bug_report.md` — Bug report template
+- [X] `.github/ISSUE_TEMPLATE/feature_request.md` — Feature request template
+- [X] `docs/` — Full documentation suite
 
 ---
 
@@ -280,34 +302,37 @@ Data is stored across 10 Catalyst Data Store tables (cases, suspects, witnesses,
 
 ## 14. Known Limitations (MVP)
 
-| Limitation | Impact | Workaround |
-|---|---|---|
-| No OCR | Scanned documents not searchable | Manual data entry for scanned FIRs |
-| No voice search | Text-only queries | Keyboard/mobile input only |
-| No predictive analytics | Reactive reporting only | Manual analysis for predictions |
-| Single language (English) | No Kannada support | English-only interface |
-| No mobile app | Responsive web only | Use mobile browser |
-| No real-time notifications | In-app polling only (30s interval) | Refresh page for updates |
+| Limitation                           | Impact                                       | Workaround                                  |
+| ------------------------------------ | -------------------------------------------- | ------------------------------------------- |
+| No OCR                               | Scanned documents not searchable             | Manual data entry for scanned FIRs          |
+| No voice search                      | Text-only queries                            | Keyboard/mobile input only                  |
+| No predictive analytics              | Reactive reporting only                      | Manual analysis for predictions             |
+| Single language (English)            | No Kannada support                           | English-only interface                      |
+| No mobile app                        | Responsive web only                          | Use mobile browser                          |
+| No real-time notifications           | In-app polling only (30s interval)           | Refresh page for updates                    |
 | FAISS index rebuild on schedule (6h) | New cases not in semantic search immediately | Fallback to keyword search for recent cases |
-| No offline support | Requires internet connection | N/A |
+| No offline support                   | Requires internet connection                 | N/A                                         |
 
 ---
 
 ## 15. Future Roadmap
 
 ### Phase 2 (Next 3 Months)
+
 - OCR integration for scanned FIRs and documents
 - Real-time WebSocket notifications
 - Improved intent classification with fine-tuned model
 - Batch evidence upload
 
 ### Phase 3 (Next 6 Months)
+
 - Voice search — officers dictate queries hands-free
 - Predictive crime analytics — identify emerging crime patterns
 - Multi-language support (Kannada, Hindi)
 - Mobile-responsive PWA with offline cache
 
 ### Phase 4 (Next 12 Months)
+
 - Native mobile app (Android + iOS)
 - Legacy KSP system integration (CCTNS, e-FIR)
 - Facial recognition for suspect identification

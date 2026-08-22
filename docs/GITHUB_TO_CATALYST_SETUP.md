@@ -1,3 +1,4 @@
+
 # GitHub → Zoho Catalyst: End-to-End Setup Guide
 
 This guide walks through creating the GitHub repo, pushing CrimeIntel AI code, creating a Zoho Catalyst project, and deploying.
@@ -50,10 +51,10 @@ Catalyst Console → Project Settings → API & Credentials
 
 Copy these three values:
 
-| Credential | Where to find it |
-|---|---|
-| `CATALYST_PROJECT_ID` | Settings → Project Info → Project ID |
-| `CATALYST_CLIENT_ID` | Settings → API & Credentials → Client ID |
+| Credential                 | Where to find it                               |
+| -------------------------- | ---------------------------------------------- |
+| `CATALYST_PROJECT_ID`    | Settings → Project Info → Project ID         |
+| `CATALYST_CLIENT_ID`     | Settings → API & Credentials → Client ID     |
 | `CATALYST_CLIENT_SECRET` | Settings → API & Credentials → Client Secret |
 
 ---
@@ -66,18 +67,18 @@ Copy these three values:
 
 Create these 10 tables. For each table, click **"Create Table"** and enter the name and primary key.
 
-| # | Table Name | Primary Key |
-|---|---|---|
-| 1 | `ci_users` | USER_ID |
-| 2 | `ci_cases` | CASE_ID |
-| 3 | `ci_suspects` | SUSPECT_ID |
-| 4 | `ci_witnesses` | WITNESS_ID |
-| 5 | `ci_evidence_metadata` | EVIDENCE_ID |
-| 6 | `ci_case_timeline` | EVENT_ID |
-| 7 | `ci_notifications` | NOTIFICATION_ID |
-| 8 | `ci_audit_logs` | LOG_ID |
-| 9 | `ci_faiss_index_meta` | VERSION_ID |
-| 10 | `ci_embedding_cache` | CACHE_ID |
+| #  | Table Name               | Primary Key     |
+| -- | ------------------------ | --------------- |
+| 1  | `ci_users`             | USER_ID         |
+| 2  | `ci_cases`             | CASE_ID         |
+| 3  | `ci_suspects`          | SUSPECT_ID      |
+| 4  | `ci_witnesses`         | WITNESS_ID      |
+| 5  | `ci_evidence_metadata` | EVIDENCE_ID     |
+| 6  | `ci_case_timeline`     | EVENT_ID        |
+| 7  | `ci_notifications`     | NOTIFICATION_ID |
+| 8  | `ci_audit_logs`        | LOG_ID          |
+| 9  | `ci_faiss_index_meta`  | VERSION_ID      |
+| 10 | `ci_embedding_cache`   | CACHE_ID        |
 
 For column definitions, refer to `docs/DATABASE_DESIGN.md` Section 3.
 
@@ -85,11 +86,11 @@ For column definitions, refer to `docs/DATABASE_DESIGN.md` Section 3.
 
 **Console:** Catalyst Console → File Store → Buckets
 
-| Bucket Name | Purpose |
-|---|---|
+| Bucket Name        | Purpose                                        |
+| ------------------ | ---------------------------------------------- |
 | `evidence-files` | Store uploaded evidence (PDFs, images, videos) |
-| `faiss-index` | Store FAISS vector index files |
-| `exports` | Store generated reports |
+| `faiss-index`    | Store FAISS vector index files                 |
+| `exports`        | Store generated reports                        |
 
 ### 3c. Configure Authentication
 
@@ -169,11 +170,13 @@ catalyst deploy --project crimeintel-api --force
 ```
 
 **Your API will be available at:**
+
 ```
 https://{project}-{id}.catalystfunctions.com/crimeintel-api/api/v1/health
 ```
 
 Test it:
+
 ```bash
 curl https://{project}-{id}.catalystfunctions.com/crimeintel-api/api/v1/health
 # Expected: {"status": "ok", "timestamp": "..."}
@@ -206,6 +209,7 @@ catalyst deploy --project crimeintel-frontend --force
 ```
 
 **Your app will be available at:**
+
 ```
 https://{project}-{id}.catalysthost.com
 ```
@@ -230,6 +234,7 @@ python scripts/build_faiss_index.py
 ### Option B: Trigger via API (after deploying)
 
 The backend exposes these endpoints (if you added them):
+
 ```
 POST /admin/seed    → triggers data seeding
 POST /admin/rebuild-index → triggers FAISS rebuild
@@ -263,14 +268,14 @@ The `.github/workflows/deploy.yml` already exists. To use it:
 1. Go to GitHub repo → **Settings** → **Secrets and variables** → **Actions**
 2. Add these repository secrets:
 
-| Secret Name | Value |
-|---|---|
-| `CATALYST_PROJECT_ID` | From Step 2 |
-| `CATALYST_CLIENT_ID` | From Step 2 |
-| `CATALYST_CLIENT_SECRET` | From Step 2 |
-| `JWT_SECRET` | Generate a random string |
-| `CATALYST_FUNCTION_NAME` | `crimeintel-api` |
-| `CATALYST_HOSTING_NAME` | `crimeintel-frontend` |
+| Secret Name                | Value                    |
+| -------------------------- | ------------------------ |
+| `CATALYST_PROJECT_ID`    | From Step 2              |
+| `CATALYST_CLIENT_ID`     | From Step 2              |
+| `CATALYST_CLIENT_SECRET` | From Step 2              |
+| `JWT_SECRET`             | Generate a random string |
+| `CATALYST_FUNCTION_NAME` | `crimeintel-api`       |
+| `CATALYST_HOSTING_NAME`  | `crimeintel-frontend`  |
 
 3. Go to **Actions** → **Deploy to Catalyst** → **Run workflow**
 
@@ -300,12 +305,12 @@ https://crimeintel-abc123.catalystfunctions.com/crimeintel-api/api/v1/
 
 ## Troubleshooting: GitHub → Catalyst Connection
 
-| Symptom | Cause | Fix |
-|---|---|---|
-| `catalyst login` fails | Not authenticated | Run `catalyst login` again |
-| CORS error in browser | ALLOWED_ORIGINS missing hosting URL | Update env var and redeploy |
-| Function times out (502) | Model loading too slow | Set timeout to 30s, memory to 1024MB |
-| "Table not found" | Tables not created | Create all 10 tables in Data Store |
-| 401 on all API calls | JWT_SECRET mismatch | Check JWT_SECRET env var |
-| Blank page in browser | SPA routing not configured | Add the SPA redirect script (already in index.html) |
-| File upload fails | File Store bucket missing | Create `evidence-files` bucket |
+| Symptom                  | Cause                               | Fix                                                 |
+| ------------------------ | ----------------------------------- | --------------------------------------------------- |
+| `catalyst login` fails | Not authenticated                   | Run`catalyst login` again                         |
+| CORS error in browser    | ALLOWED_ORIGINS missing hosting URL | Update env var and redeploy                         |
+| Function times out (502) | Model loading too slow              | Set timeout to 30s, memory to 1024MB                |
+| "Table not found"        | Tables not created                  | Create all 10 tables in Data Store                  |
+| 401 on all API calls     | JWT_SECRET mismatch                 | Check JWT_SECRET env var                            |
+| Blank page in browser    | SPA routing not configured          | Add the SPA redirect script (already in index.html) |
+| File upload fails        | File Store bucket missing           | Create`evidence-files` bucket                     |

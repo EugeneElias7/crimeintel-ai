@@ -7,14 +7,21 @@ from middleware.auth_middleware import get_current_user, require_role
 from models.evidence import EvidenceResponse, EvidenceUploadResponse
 from models.common import SuccessResponse
 from services.evidence_service import EvidenceService
-from adapters.catalyst_db import catalyst_db
-from adapters.catalyst_fs import catalyst_fs
+from adapters.db import db
+from adapters.local_fs import local_fs
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/evidence", tags=["Evidence"])
 
-evidence_service = EvidenceService(db=catalyst_db, fs=catalyst_fs)
+_evidence_service = None
+
+
+def get_evidence_service() -> EvidenceService:
+    global _evidence_service
+    if _evidence_service is None:
+        _evidence_service = EvidenceService(db=db, fs=local_fs)
+    return _evidence_service
 
 
 @router.get(
@@ -27,8 +34,11 @@ async def list_case_evidence(
     case_id: str,
     current_user: dict = Depends(get_current_user),
 ):
+    logger.info(f"Evidence request for case_id: {case_id} by user: {current_user.get('user_id')}")
     try:
-        items = await evidence_service.list_evidence(case_id)
+        svc = get_evidence_service()
+        items = await svc.list_evidence(case_id)
+        logger.info(f"Found {len(items)} evidence items")
         return [EvidenceResponse(**item) for item in items]
     except Exception as e:
         logger.exception("Failed to list evidence for case %s: %s", case_id, e)
@@ -49,7 +59,8 @@ async def get_evidence(
     current_user: dict = Depends(get_current_user),
 ):
     try:
-        result = await evidence_service.get_evidence(evidence_id)
+        svc = get_evidence_service()
+        result = await svc.get_evidence(evidence_id)
         return EvidenceResponse(**result)
     except ValueError as e:
         raise HTTPException(
@@ -78,7 +89,8 @@ async def upload_evidence(
     current_user: dict = Depends(require_role(["officer", "inspector", "admin", "super_admin"])),
 ):
     try:
-        result = await evidence_service.upload_evidence(
+        svc = get_evidence_service()
+        result = await svc.upload_evidence(
             file=file,
             case_id=case_id,
             description=description,
@@ -110,7 +122,8 @@ async def delete_evidence(
     current_user: dict = Depends(require_role(["inspector", "admin", "super_admin"])),
 ):
     try:
-        await evidence_service.delete_evidence(evidence_id, user_id=current_user["user_id"])
+        svc = get_evidence_service()
+        await svc.delete_evidence(evidence_id, user_id=current_user["user_id"])
         return SuccessResponse(data=None, message="Evidence deleted successfully.")
     except ValueError as e:
         raise HTTPException(

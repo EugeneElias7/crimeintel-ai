@@ -11,6 +11,7 @@ class IntentService:
     STATISTICS_KEYWORDS = [
         "statistics", "stats", "dashboard", "overview", "summary", "analytics",
         "clearance rate", "crime rate", "how many", "total cases", "count",
+        "open cases", "closed cases", "filed cases", "number of cases",
     ]
 
     CASE_DETAIL_PATTERNS = [
@@ -52,24 +53,74 @@ class IntentService:
     )
 
     LOCATION_EXTRACTION = re.compile(
-        r"(?:in|near|at|around|from)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)",
+        r"(?:in|near|at|around|from|about|of|on)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)",
         re.I,
     )
+
+    KNOWN_LOCATIONS = [
+        "Jalhalli", "Jalahalli", "Bengaluru", "Bangalore", "Mysore", "Mangalore",
+        "Hubli", "Dharwad", "Gulbarga", "Shimoga", "Tumkur", "Belgaum",
+        "Koramangala", "Indiranagar", "MG Road", "Whitefield", "Hebbal",
+        "Yelahanka", "Marathahalli", "Electronic City", "HSR Layout",
+        "BTM Layout", "JP Nagar", "Jayanagar", "Rajajinagar", "Malleswaram",
+        "Vijayanagar", "Basavanagudi", "Kuvempunagar", "Gokulam", "Vinobanagar",
+        "Saptapur", "MG Road"
+    ]
+
+    CRIME_TYPES = [
+        "theft", "assault", "murder", "robbery", "cybercrime", "fraud",
+        "kidnapping", "rioting", "dacoity",
+    ]
+
+    LOCATION_ALIASES = {
+        "bangalore": "Bangalore",
+        "bengaluru": "Bangalore",
+        "jalhalli": "Jalahalli",
+        "jalahalli": "Jalahalli",
+        "jalahalley": "Jalahalli",
+        "mg road": "MG Road",
+        "m.g. road": "MG Road",
+        "indiranagar": "Indiranagar",
+        "koramangala": "Koramangala",
+        "whitefield": "Whitefield",
+        "hebbal": "Hebbal",
+        "yelahanka": "Yelahanka",
+        "marathahalli": "Marathahalli",
+        "electronic city": "Electronic City",
+        "hsr layout": "HSR Layout",
+        "btm layout": "BTM Layout",
+        "jp nagar": "JP Nagar",
+        "jayanagar": "Jayanagar",
+        "rajajinagar": "Rajajinagar",
+        "malleswaram": "Malleswaram",
+    }
 
     DATE_PATTERNS = [
         re.compile(r"(\d{4}-\d{2}-\d{2})"),
         re.compile(r"(\d{2}/\d{2}/\d{4})"),
-        re.compile(r"(yesterday|today|last week|last month)"),
+        re.compile(r"(yesterday|today|last week| last month)"),
     ]
 
     @staticmethod
     def _score_keywords(text: str, keywords: List[str]) -> int:
+        import re
         text_lower = text.lower()
         score = 0
         for kw in keywords:
-            if kw in text_lower:
+            if re.search(r'\b' + re.escape(kw) + r'\b', text_lower):
                 score += 1
         return score
+
+    def _normalize_location(self, location: str) -> Optional[str]:
+        loc_lower = location.lower().strip()
+        return self.LOCATION_ALIASES.get(loc_lower, location)
+
+    def _normalize_crime_type(self, crime_type: str) -> Optional[str]:
+        ct_lower = crime_type.lower().strip()
+        for ct in self.CRIME_TYPES:
+            if ct == ct_lower or ct in ct_lower:
+                return ct
+        return None
 
     async def classify(self, text: str) -> Tuple[str, Dict]:
         entities: Dict = {}
@@ -85,15 +136,28 @@ class IntentService:
             entities["persons"] = person_matches
 
         location_matches = self.LOCATION_EXTRACTION.findall(text)
-        if location_matches:
-            entities["locations"] = location_matches
-
-        crime_types = [
-            "theft", "assault", "murder", "robbery", "cybercrime", "fraud",
-            "kidnapping", "rioting", "dacoity",
-        ]
+        known_matches = []
         text_lower = text.lower()
-        for ct in crime_types:
+        for loc in self.KNOWN_LOCATIONS:
+            if loc.lower() in text_lower:
+                known_matches.append(loc)
+
+        if known_matches:
+            entities["locations"] = [self._normalize_location(loc) for loc in known_matches]
+        else:
+            location_matches = self.LOCATION_EXTRACTION.findall(text)
+            crime_types_lower = {ct.lower() for ct in self.CRIME_TYPES}
+            filtered = []
+            for loc in location_matches:
+                loc_clean = loc.strip().rstrip(" and or but,.")
+                if loc_clean.lower() not in crime_types_lower and len(loc_clean) > 2:
+                    filtered.append(loc_clean)
+            if filtered:
+                normalized = [self._normalize_location(loc) for loc in filtered]
+                entities["locations"] = normalized
+
+        text_lower = text.lower()
+        for ct in self.CRIME_TYPES:
             if ct in text_lower:
                 entities["crime_type"] = ct
                 break
@@ -113,6 +177,14 @@ class IntentService:
         location_score = self._score_keywords(text, self.LOCATION_QUERY_KEYWORDS)
         case_search_score = self._score_keywords(text, self.CASE_SEARCH_KEYWORDS)
 
+        # Special handling for "how many" + "cases" pattern
+        has_how_many = "how many" in text_lower
+        has_cases = "cases" in text_lower
+        if has_how_many and has_cases:
+            stats_score += 2
+            location_score = max(0, location_score - 1)
+            case_search_score = max(0, case_search_score - 1)
+
         has_case_id = "case_id" in entities
 
         if greeting_score >= 2 or (greeting_score == 1 and len(text.split()) <= 3):
@@ -123,7 +195,7 @@ class IntentService:
             entities["intent_class"] = "case_detail"
             return ("case_detail", entities)
 
-        if stats_score >= 2 or "statistics" in text_lower and stats_score >= 1:
+        if stats_score >= 2 or ("statistics" in text_lower and stats_score >= 1):
             entities["intent_class"] = "statistics"
             return ("statistics", entities)
 

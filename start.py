@@ -60,9 +60,13 @@ def start_frontend() -> subprocess.Popen:
 
 
 def stop(proc: subprocess.Popen) -> None:
+    # Kill the entire process tree (cmd.exe -> npm -> node/vite), not just the shell.
     try:
-        proc.terminate()
-        proc.wait(timeout=5)
+        subprocess.run(
+            ["taskkill", "/F", "/T", "/PID", str(proc.pid)],
+            capture_output=True,
+            timeout=10,
+        )
     except Exception:
         try:
             proc.kill()
@@ -91,6 +95,8 @@ def main():
     try:
         frontend_proc.wait()
     except KeyboardInterrupt:
+        pass
+    finally:
         print("\nStopping servers...")
         stop(frontend_proc)
         stop(backend_proc)

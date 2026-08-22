@@ -1,18 +1,24 @@
 # Dependencies
 node_modules/
-frontend/node_modules/
-backend/venv/
-backend/__pycache__/
-backend/**/__pycache__/
+p-lock
 
-# Build artifacts
-frontend/dist/
-backend/*.egg-info/
-
-# Environment
+# Environment variables
 .env
-.env.local
-.env.*.local
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Database
+*.db
+crimeintel.db
+
+# Frontend build outputs
+dist/
+out/
 
 # IDE
 .vscode/
@@ -20,27 +26,12 @@ backend/*.egg-info/
 *.swp
 *.swo
 
+# Startup script temp files
+temp_body.json
+temp_create_case.json
+temp_officer.json
+temp_predict.json
+temp_register.json
+
 # OS
 .DS_Store
-Thumbs.db
-
-# Logs
-*.log
-backend/logs/
-
-# AI model files (large, downloaded at runtime)
-backend/models/*.bin
-backend/models/*.onnx
-
-# FAISS index (generated)
-backend/faiss_index/
-
-# Uploads (local dev)
-backend/uploads/
-
-# Python
-*.pyc
-*.pyo
-.pytest_cache/
-.coverage
-htmlcov/

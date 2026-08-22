@@ -245,6 +245,23 @@
 - [ ] Frontend builds without errors
 - [ ] Performance measurements recorded
 
+[](https://github.com/EugeneElias7/crimeintel-ai/actions/runs/32557671831/job/96994333978#step:4:1)
+
+<details class="js-checks-log-group"><summary><span class="">Run python -m pip install --upgrade pip
+</span></summary>
+
+</details>
+
+[](https://github.com/EugeneElias7/crimeintel-ai/actions/runs/32557671831/job/96994333978#step:4:13)Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages (26.2.1)
+
+[](https://github.com/EugeneElias7/crimeintel-ai/actions/runs/32557671831/job/96994333978#step:4:14)Looking in indexes: [https://download.pytorch.org/whl/cpu](https://download.pytorch.org/whl/cpu)
+
+[](https://github.com/EugeneElias7/crimeintel-ai/actions/runs/32557671831/job/96994333978#step:4:15)ERROR: Could not find a version that satisfies the requirement fastapi==0.110.1 (from versions: none)
+
+[](https://github.com/EugeneElias7/crimeintel-ai/actions/runs/32557671831/job/96994333978#step:4:16)ERROR: No matching distribution found for fastapi==0.110.1
+
+[](https://github.com/EugeneElias7/crimeintel-ai/actions/runs/32557671831/job/96994333978#step:4:17)Error: Process completed with exit code 1.
+
 ---
 
 **AUDIT COMPLETE. PROCEEDING TO PHASE B — LOCAL DATABASE.**

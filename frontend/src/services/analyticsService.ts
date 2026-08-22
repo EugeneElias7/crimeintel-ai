@@ -1,5 +1,5 @@
-import type { ApiResponse } from "../types/api";
 import type { OverviewData, TrendItem, DistrictItem } from "../types/analytics";
+import type { DistributionItem } from "../types/analytics";
 import api from "./api";
 
 export const getOverview = async (
@@ -15,8 +15,8 @@ export const getOverview = async (
 export const getDistribution = async (
   from?: string,
   to?: string
-): Promise<DistrictItem[]> => {
-  const { data } = await api.get<DistrictItem[]>("/analytics/by-district", {
+): Promise<DistributionItem[]> => {
+  const { data } = await api.get<DistributionItem[]>("/analytics/distribution", {
     params: { from, to },
   });
   return data;

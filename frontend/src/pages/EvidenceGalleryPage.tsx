@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { File, FileImage, FileVideo, ArrowLeft, Download, X } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import { File, FileImage, FileVideo, Download, X } from 'lucide-react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Spinner from '../components/ui/Spinner';
 import EmptyState from '../components/ui/EmptyState';
+import BackButton from '../components/ui/BackButton';
 import { listEvidence } from '../services/evidenceService';
 import type { Evidence } from '../types/evidence';
 
@@ -71,16 +72,23 @@ export default function EvidenceGalleryPage() {
     fetchEvidence();
   }, [fetchEvidence]);
 
+  // Esc closes the preview modal first; only navigates back when no modal is open
+  useEffect(() => {
+    if (!preview) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setPreview(null);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [preview]);
+
   return (
     <div>
       <div className="mb-6 flex items-center gap-4">
-        <Link
-          to="/cases"
-          className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
-        >
-          <ArrowLeft size={16} />
-          Back to Cases
-        </Link>
+        <BackButton fallbackTo="/cases" label="Back to Cases" />
       </div>
 
       <div className="mb-6">

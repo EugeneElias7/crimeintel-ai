@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import { Bell, Menu } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import BackButton from '../ui/BackButton';
 
 const routeTitles: Record<string, string> = {
   '/': 'Dashboard',
@@ -40,6 +41,7 @@ export default function Navbar({ onToggleSidebar, sidebarCollapsed }: NavbarProp
           >
             <Menu size={20} />
           </button>
+          {basePath !== '/' && <BackButton iconOnly fallbackTo="/" />}
           <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
         </div>
 

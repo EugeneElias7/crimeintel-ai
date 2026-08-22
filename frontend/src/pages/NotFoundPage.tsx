@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Shield } from 'lucide-react';
+import BackButton from '../components/ui/BackButton';
 
 export default function NotFoundPage() {
   return (
@@ -15,12 +16,15 @@ export default function NotFoundPage() {
         <p className="mt-2 text-sm text-gray-500">
           The page you are looking for does not exist.
         </p>
-        <Link
-          to="/"
-          className="mt-6 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700"
-        >
-          Go to Dashboard
-        </Link>
+        <div className="mt-6 flex items-center justify-center gap-3">
+          <BackButton fallbackTo="/" />
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700"
+          >
+            Go to Dashboard
+          </Link>
+        </div>
       </div>
     </div>
   );

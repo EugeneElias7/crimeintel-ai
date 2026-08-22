@@ -1,10 +1,24 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 
 export default function Layout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const navigate = useNavigate();
+
+  // Esc key navigates back (unless already handled, e.g. closing a modal)
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      const idx = window.history.state?.idx;
+      if (typeof idx === 'number' && idx > 0) {
+        navigate(-1);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [navigate]);
 
   return (
     <div className="flex h-screen bg-gray-50">

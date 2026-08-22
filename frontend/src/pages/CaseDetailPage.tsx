@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
-  ArrowLeft,
   Edit3,
   User,
   FileText,
@@ -16,6 +15,7 @@ import Badge from '../components/ui/Badge';
 import Spinner from '../components/ui/Spinner';
 import Button from '../components/ui/Button';
 import EmptyState from '../components/ui/EmptyState';
+import BackButton from '../components/ui/BackButton';
 import { useAuth } from '../context/AuthContext';
 import { getCase, getRelatedCases } from '../services/caseService';
 import type { Case, CaseDetail, Suspect, Witness, TimelineEvent } from '../types/case';
@@ -93,9 +93,7 @@ export default function CaseDetailPage() {
         <p className="mt-1 text-sm text-gray-500">
           The case you are looking for does not exist or has been removed.
         </p>
-        <Button variant="outline" className="mt-4" onClick={() => navigate('/cases')}>
-          Back to Cases
-        </Button>
+        <BackButton fallbackTo="/cases" label="Back to Cases" className="mt-4" />
       </div>
     );
   }
@@ -136,10 +134,7 @@ export default function CaseDetailPage() {
           <p className="mt-1 text-lg text-gray-600">{caseDetail.title}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => navigate('/cases')}>
-            <ArrowLeft size={16} />
-            Back
-          </Button>
+          <BackButton fallbackTo="/cases" />
           {canEdit && (
             <Button variant="primary" size="sm">
               <Edit3 size={16} />

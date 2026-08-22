@@ -23,20 +23,6 @@ def start_backend():
     print("Backend API Docs: http://localhost:8000/docs")
     return backend_proc
 
-def start_frontend():
-    """Start the frontend React Vite development server"""
-    print("\n" + "=" * 60)
-    print("Starting CrimeIntel AI Frontend...")
-    print("=" * 60)
-    frontend_cmd = [sys.executable, "-m", "npm", "run", "dev"]
-    frontend_proc = subprocess.Popen(
-        frontend_cmd,
-        cwd=os.path.join(os.path.dirname(__file__), "frontend"),
-    )
-    print(f"Frontend PID: {frontend_proc.pid}")
-    print("Frontend: http://localhost:5173")
-    return frontend_proc
-
 def main():
     print("\nCrimeIntel AI Application Starting...\n")
     
@@ -44,12 +30,6 @@ def main():
     backend_proc = start_backend()
     
     # Wait for backend to start
-    time.sleep(3)
-    
-    # Start frontend server
-    frontend_proc = start_frontend()
-    
-    # Wait a moment for frontend to start
     time.sleep(3)
     
     # Open dashboard in browser
@@ -60,20 +40,17 @@ def main():
     
     print("\nCrimeIntel AI is running!")
     print("  - Backend:  http://localhost:8000")
-    print("  - Frontend: http://localhost:5173")
-    print("  - Press Ctrl+C to stop both servers\n")
+    print("  - Frontend: http://localhost:5173 (start separately with: cd frontend && npm run dev)")
+    print("  - Press Ctrl+C to stop the backend server\n")
     
     try:
-        # Wait for both processes
+        # Wait for backend process
         backend_proc.wait()
-        frontend_proc.wait()
     except KeyboardInterrupt:
-        print("\nStopping servers...")
+        print("\nStopping backend server...")
         backend_proc.terminate()
-        frontend_proc.terminate()
         backend_proc.wait()
-        frontend_proc.wait()
-        print("Both servers stopped.")
+        print("Backend server stopped.")
 
 if __name__ == "__main__":
     main()

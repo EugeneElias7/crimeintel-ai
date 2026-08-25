@@ -1,15 +1,30 @@
-import type { ApiResponse } from '../types/api';
 import type { Evidence } from '../types/evidence';
 import api from './api';
 
-export const listEvidence = async (caseId: string): Promise<ApiResponse<Evidence[]>> => {
-  const { data } = await api.get<ApiResponse<Evidence[]>>(`/evidence/case/${caseId}`);
-  return data;
+// Helper to normalize response - backend returns raw array, not wrapped in ApiResponse
+function normalizeEvidenceListResponse(res: any): Evidence[] {
+  // Backend returns raw array directly
+  if (Array.isArray(res)) return res;
+  // If wrapped in ApiResponse format
+  if (res && Array.isArray(res.data)) return res.data;
+  // Fallback
+  return [];
+}
+
+function normalizeEvidenceResponse(res: any): Evidence | null {
+  if (res && !Array.isArray(res) && res.evidence_id) return res;
+  if (res && res.data && res.data.evidence_id) return res.data;
+  return null;
+}
+
+export const listEvidence = async (caseId: string): Promise<Evidence[]> => {
+  const res = await api.get(`/evidence/case/${caseId}`);
+  return normalizeEvidenceListResponse(res);
 };
 
-export const getEvidence = async (evidenceId: string): Promise<ApiResponse<Evidence>> => {
-  const { data } = await api.get<ApiResponse<Evidence>>(`/evidence/${evidenceId}`);
-  return data;
+export const getEvidence = async (evidenceId: string): Promise<Evidence | null> => {
+  const res = await api.get(`/evidence/${evidenceId}`);
+  return normalizeEvidenceResponse(res);
 };
 
 export const uploadEvidence = async (
@@ -17,17 +32,17 @@ export const uploadEvidence = async (
   caseId: string,
   description?: string,
   sensitive?: boolean,
-): Promise<ApiResponse<Evidence>> => {
+): Promise<Evidence | null> => {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('case_id', caseId);
   if (description) formData.append('description', description);
   if (sensitive !== undefined) formData.append('sensitive', String(sensitive));
 
-  const { data } = await api.post<ApiResponse<Evidence>>('/evidence', formData, {
+  const res = await api.post('/evidence', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
-  return data;
+  return normalizeEvidenceResponse(res);
 };
 
 export const deleteEvidence = async (evidenceId: string): Promise<void> => {

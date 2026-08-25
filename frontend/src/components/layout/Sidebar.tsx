@@ -42,15 +42,20 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed left-0 top-0 z-30 flex h-screen flex-col bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 text-white shadow-2xl shadow-blue-950/40 transition-all duration-300 before:absolute before:right-0 before:top-0 before:h-full before:w-px before:bg-gradient-to-b before:from-transparent before:via-blue-500/40 before:to-transparent ${
+      className={`fixed left-0 top-0 z-30 flex h-screen flex-col bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 text-white shadow-2xl shadow-blue-950/40 transition-all duration-500 ease-out-expo before:absolute before:right-0 before:top-0 before:h-full before:w-px before:bg-gradient-to-b before:from-transparent before:via-blue-500/40 before:to-transparent ${
         collapsed ? 'w-16' : 'w-64'
       }`}
+      style={{
+        transform: collapsed ? 'translateX(0)' : 'translateX(0)',
+        boxShadow: collapsed
+          ? '0 0 30px -10px rgba(30, 58, 138, 0.5), 0 0 60px -20px rgba(99, 102, 241, 0.3)'
+          : '0 0 40px -10px rgba(30, 58, 138, 0.6), 0 0 80px -20px rgba(99, 102, 241, 0.4)',
+      }}
     >
       <div className="relative flex h-16 items-center px-4">
         {!collapsed ? (
           <h1 className="text-lg font-bold tracking-wide">
-            <span className="text-gradient-light">Crime</span>Intel{' '}
-            <span className="text-gradient-light">AI</span>
+            <span className="text-gradient-light">Crime</span>Intel
           </h1>
         ) : (
           <span className="mx-auto text-lg font-bold text-gradient-light">CI</span>
@@ -75,74 +80,79 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1 px-2">
-          {navItems.map((item) => (
-            <li key={item.to}>
+          {navItems.map((item, index) => (
+            <li key={item.to} style={{ transitionDelay: `${collapsed ? 0 : index * 30}ms` }}>
               <NavLink
                 to={item.to}
                 end={item.to === '/'}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                  `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-300 ease-out-expo ${
                     isActive
                       ? 'bg-gradient-to-r from-blue-600 via-indigo-600/90 to-violet-600/70 text-white shadow-lg shadow-blue-950/40'
                       : 'text-slate-400 hover:bg-white/10 hover:text-white'
                   } ${collapsed ? 'justify-center border-l-0' : ''}`
                 }
               >
-                <item.icon size={20} />
-                {!collapsed && <span>{item.label}</span>}
+                <item.icon size={20} className="transition-transform duration-300 ease-out-expo" />
+                {!collapsed && (
+                  <span className="transition-all duration-300 ease-out-expo opacity-100">
+                    {item.label}
+                  </span>
+                )}
+                {collapsed && <span className="sr-only">{item.label}</span>}
               </NavLink>
             </li>
           ))}
 
           {isAdmin && (
             <>
-              <li className={`px-3 pt-4 ${collapsed ? 'text-center' : ''}`}>
+              <li className={`px-3 pt-4 ${collapsed ? 'text-center' : ''}`} style={{ transitionDelay: `${collapsed ? 0 : navItems.length * 30}ms` }}>
                 {!collapsed && (
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 transition-opacity duration-300 ease-out-expo">
                     Admin
                   </span>
                 )}
               </li>
-              {adminItems.map((item) => (
-                <li key={item.to}>
+              {adminItems.map((item, index) => (
+                <li key={item.to} style={{ transitionDelay: `${collapsed ? 0 : (navItems.length + 1 + index) * 30}ms` }}>
                   <NavLink
                     to={item.to}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                      `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-300 ease-out-expo ${
                         isActive
                           ? 'bg-gradient-to-r from-blue-600 via-indigo-600/90 to-violet-600/70 text-white shadow-lg shadow-blue-950/40'
                           : 'text-slate-400 hover:bg-white/10 hover:text-white'
-                      } ${collapsed ? 'justify-center border-l-0' : ''}`
-                    }
+                      } ${collapsed ? 'justify-center border-l-0' : ''}`}
                   >
-                    <item.icon size={20} />
-                    {!collapsed && <span>{item.label}</span>}
+                    <item.icon size={20} className="transition-transform duration-300 ease-out-expo" />
+                    {!collapsed && <span className="transition-all duration-300 ease-out-expo opacity-100">{item.label}</span>}
+                    {collapsed && <span className="sr-only">{item.label}</span>}
                   </NavLink>
                 </li>
               ))}
             </>
           )}
 
-          <li className={`px-3 pt-4 ${collapsed ? 'text-center' : ''}`}>
+          <li className={`px-3 pt-4 ${collapsed ? 'text-center' : ''}`} style={{ transitionDelay: `${collapsed ? 0 : (navItems.length + (isAdmin ? adminItems.length + 1 : 0) + 1) * 30}ms` }}>
             {!collapsed && (
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 transition-opacity duration-300 ease-out-expo">
                 System
               </span>
             )}
           </li>
-          <li>
+          <li style={{ transitionDelay: `${collapsed ? 0 : (navItems.length + (isAdmin ? adminItems.length + 1 : 0) + 2) * 30}ms` }}>
             <NavLink
               to="/settings"
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-300 ease-out-expo ${
                   isActive
                     ? 'bg-gradient-to-r from-blue-600 via-indigo-600/90 to-violet-600/70 text-white shadow-lg shadow-blue-950/40'
                     : 'text-slate-400 hover:bg-white/10 hover:text-white'
-                } ${collapsed ? 'justify-center border-l-0' : ''}`
-              }
+                } ${collapsed ? 'justify-center border-l-0' : ''}`}
             >
-              <Settings size={20} />
-              {!collapsed && <span>Settings</span>}
+              <Settings size={20} className="transition-transform duration-300 ease-out-expo" />
+              {!collapsed && <span className="transition-all duration-300 ease-out-expo opacity-100">Settings</span>}
+              {collapsed && <span className="sr-only">Settings</span>}
             </NavLink>
           </li>
         </ul>

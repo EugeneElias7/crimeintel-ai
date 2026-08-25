@@ -60,7 +60,7 @@ export default function EvidenceGalleryPage() {
     setError(null);
     try {
       const res = await listEvidence(caseId);
-      setEvidence(res.data);
+      setEvidence(res);
     } catch {
       setError('Failed to load evidence');
     } finally {

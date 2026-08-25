@@ -1,5 +1,5 @@
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from adapters.catalyst_auth import CatalystAuthAdapter
 from adapters.catalyst_db import CatalystDBAdapter
@@ -40,6 +40,7 @@ class AuthService:
             "action": AUDIT_USER_LOGIN,
             "module": "auth",
             "details": f"User {email} logged in",
+            "created_at": datetime.utcnow().isoformat(),
         })
 
         return {

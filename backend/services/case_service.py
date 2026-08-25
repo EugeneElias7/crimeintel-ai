@@ -283,6 +283,7 @@ class CaseService:
             "action": AUDIT_CASE_CREATED,
             "module": "cases",
             "details": f"Created case {case_id} for FIR {data.fir_number}",
+            "created_at": datetime.utcnow().isoformat(),
         })
 
         return {**row_data, "ROWID": case_id}
@@ -320,6 +321,7 @@ class CaseService:
                 "action": AUDIT_CASE_STATUS_CHANGED,
                 "module": "cases",
                 "details": f"Case {case_id} status changed from {old_status} to {new_status}",
+                "created_at": datetime.utcnow().isoformat(),
             })
         else:
             await self.db.insert("Audit_Logs", {
@@ -327,6 +329,7 @@ class CaseService:
                 "action": AUDIT_CASE_UPDATED,
                 "module": "cases",
                 "details": f"Updated case {case_id} fields {list(update_data.keys())}",
+                "created_at": datetime.utcnow().isoformat(),
             })
 
         updated = await self.db.get("Cases", case_id)
@@ -347,6 +350,7 @@ class CaseService:
             "action": AUDIT_CASE_DELETED,
             "module": "cases",
             "details": f"Soft-deleted case {case_id} (status set to filed)",
+            "created_at": datetime.utcnow().isoformat(),
         })
 
     async def get_related_cases(self, case_id: str) -> List[dict]:

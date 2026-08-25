@@ -61,7 +61,7 @@ export default function LoginPage() {
             </div>
           </div>
           <h1 className="text-gradient-light text-3xl font-bold tracking-tight">
-            CrimeIntel AI
+            CrimeIntel
           </h1>
           <p className="mt-1.5 text-sm tracking-wide text-slate-400">
             Intelligence Platform

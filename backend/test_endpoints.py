@@ -1,30 +1,24 @@
-import httpx
-import asyncio
+import sys
+sys.path.insert(0, '.')
+from fastapi.testclient import TestClient
 from main import app
 
-async def test():
-    transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url='http://test') as client:
-        # Login
-        r = await client.post('/api/v1/auth/login', json={'email': 'arun.kumar@ksp.gov.in', 'password': 'Test123'})
-        print(f'Login: {r.status_code}')
-        print(f'Login body: {r.text}')
-        token = r.json()['access_token']
-        
-        # Test cases
-        headers = {'Authorization': f'Bearer {token}'}
-        r = await client.get('/api/v1/cases', headers=headers)
-        print(f'Cases: {r.status_code}')
-        print(f'Cases body: {r.text[:500]}')
-        
-        # Test analytics
-        r = await client.get('/api/v1/analytics/overview', headers=headers)
-        print(f'Analytics: {r.status_code}')
-        print(f'Analytics body: {r.text[:500]}')
-        
-        # Test CRIMA
-        r = await client.post('/api/v1/crima/query', headers=headers, json={'text': 'Find vehicle theft cases in Bengaluru'})
-        print(f'CRIMA: {r.status_code}')
-        print(f'CRIMA body: {r.text[:500]}')
+client = TestClient(app)
 
-asyncio.run(test())
+# Test health
+response = client.get('/api/v1/health')
+print(f'Health: {response.status_code} - {response.json()}')
+
+# Login
+token_resp = client.post('/api/v1/auth/login', json={'email': 'arun.kumar@ksp.gov.in', 'password': 'Test123'}, headers={'Origin': 'http://localhost:5173', 'Referer': 'http://localhost:5173'})
+print(f'Login: {token_resp.status_code}')
+token = token_resp.json().get('access_token')
+headers = {'Authorization': f'Bearer {token}'}
+
+# Test cases
+response = client.get('/api/v1/cases', headers={'Authorization': f'Bearer {token}'})
+print(f'Cases: {response.status_code} - {response.text[:200]}')
+
+# Test CRIMA
+crima_resp = client.post('/api/v1/crima/query', json={'text': 'Find theft cases in Bengaluru'}, headers={'Authorization': f'Bearer {token}'})
+print(f'CRIMA: {crima_resp.status_code} - {crima_resp.text[:200]}')

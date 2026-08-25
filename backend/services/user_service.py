@@ -90,6 +90,7 @@ class UserService:
             "action": AUDIT_USER_CREATED,
             "module": "users",
             "details": f"Created user {data.email} with role {data.role}",
+            "created_at": datetime.utcnow().isoformat(),
         })
 
         return {**row_data, "ROWID": inserted_id}
@@ -113,6 +114,7 @@ class UserService:
             "action": AUDIT_USER_UPDATED,
             "module": "users",
             "details": f"Updated user {user_id} with fields {list(update_data.keys())}",
+            "created_at": datetime.utcnow().isoformat(),
         })
 
         updated = await self.db.get("Users", user_id)
@@ -130,4 +132,5 @@ class UserService:
             "action": AUDIT_USER_DELETED,
             "module": "users",
             "details": f"Disabled user {user_id}",
+            "created_at": datetime.utcnow().isoformat(),
         })

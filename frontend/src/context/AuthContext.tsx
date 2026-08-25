@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 import { getMe } from '../services/authService';
 import type { User } from '../types/user';
@@ -25,8 +26,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
           const res = await getMe();
           setUser(res.data);
-        } catch {
-          setToken(null);
+        } catch (error) {
+          // If token is expired/invalid, clear it and redirect to login
+          if (axios.isAxiosError(error) && error.response?.status === 401) {
+            setToken(null);
+          }
         }
       }
       setIsLoading(false);

@@ -1,12 +1,14 @@
 import re
 from typing import Dict, List, Optional, Tuple
 from services.conversation_manager import conversation_manager
+from services.entity_resolution import entity_resolution_service, ResolvedEntity
 
 
 class IntentService:
     GREETING_KEYWORDS = [
         "hello", "hi", "hey", "greetings", "good morning", "good afternoon",
-        "good evening", "howdy", "namaste", "what's up", "sup",
+        "good evening", "howdy", "namaste", "what's up", "sup", "hola",
+        "ola", "saludos", "bonjour", "ciao", "hallo", "ni hao", "konnichiwa",
     ]
 
     STATISTICS_KEYWORDS = [
@@ -18,6 +20,7 @@ class IntentService:
     CASE_DETAIL_PATTERNS = [
         re.compile(r"(?:case|fir|detail|show|get|view|open)\s*(?:number)?\s*[#:]?\s*(FIR-\d+-\d+)", re.I),
         re.compile(r"(FIR-\d+-\d+)", re.I),
+        re.compile(r"(FIR[\s\-:]*[\d\-]+)", re.I),  # FIR followed by digits/dashes (ID-like)
     ]
 
     CASE_SEARCH_KEYWORDS = [
@@ -92,6 +95,10 @@ class IntentService:
     CRIME_TYPES = [
         "theft", "assault", "murder", "robbery", "cybercrime", "fraud",
         "kidnapping", "rioting", "dacoity",
+    ]
+
+    STATUS_TYPES = [
+        "open", "closed", "filed", "under_investigation",
     ]
 
     LOCATION_ALIASES = {
@@ -193,44 +200,14 @@ class IntentService:
         context = self._get_context(session_id)
         entities = self._resolve_entities_with_context(entities, context)
 
-        # Extract entities from text
+        # Extract case ID from text (not done in _extract_entities)
         for pattern in self.CASE_DETAIL_PATTERNS:
             match = pattern.search(text)
             if match:
                 entities["case_id"] = match.group(1)
                 break
 
-        person_matches = self.PERSON_EXTRACTION.findall(text)
-        if person_matches:
-            entities["persons"] = person_matches
-
-        location_matches = self.LOCATION_EXTRACTION.findall(text)
-        known_matches = []
-        text_lower = text.lower()
-        for loc in self.KNOWN_LOCATIONS:
-            if loc.lower() in text_lower:
-                known_matches.append(loc)
-
-        if known_matches:
-            entities["locations"] = [self._normalize_location(loc) for loc in known_matches]
-        else:
-            location_matches = self.LOCATION_EXTRACTION.findall(text)
-            crime_types_lower = {ct.lower() for ct in self.CRIME_TYPES}
-            filtered = []
-            for loc in location_matches:
-                loc_clean = loc.strip().rstrip(" and or but,.")
-                if loc_clean.lower() not in {ct.lower() for ct in self.CRIME_TYPES} and len(loc_clean) > 2:
-                    filtered.append(loc_clean)
-            if filtered:
-                normalized = [self._normalize_location(loc) for loc in filtered]
-                entities["locations"] = normalized
-
-        text_lower = text.lower()
-        for ct in self.CRIME_TYPES:
-            if ct in text_lower:
-                entities["crime_type"] = ct
-                break
-
+        # Extract date reference (not done in _extract_entities)
         for date_pat in self.DATE_PATTERNS:
             match = date_pat.search(text)
             if match:
@@ -272,15 +249,38 @@ class IntentService:
             return ("general_help", entities)
 
         # Explicit summarization with case ID
-        explicit_summarize = any(kw in text.lower() for kw in ["summarize", "summary", "brief"])
-        if has_case_id and summarize_score > 0:
-            entities["intent_class"] = "summarization"
-            return ("summarization", entities)
+        # Check case_detail first if "tell me about" is used with a case ID
+        # This must come BEFORE the summarization check to ensure "tell me about FIR-2026-000097" routes to case_detail
+        wants_detail = any(phrase in text.lower() for phrase in [
+            "tell me about", "detail", "show me", "get info", "lookup", "look up", 
+            "find", "what is", "what's", "info on", "information on", "check", "exists",
+            "nonexistent", "invalid", "missing", "not found"
+        ])
+        has_case_id = "case_id" in entities and entities.get("case_id") != "INVALID"
+        
+        # If "tell me about" + case_id, route to case_detail (before summarization check)
+        # Only apply if case_id is a valid FIR format (FIR-XXXX-XXXXXX), not already INVALID
+        if has_case_id and wants_detail and "FIR-" in text.upper():
+            entities["intent_class"] = "case_detail"
+            return ("case_detail", entities)
+        
+        # If evidence search request with case ID, route to evidence_search (before case_detail check)
+        evidence_phrases = ["what evidence is associated with", "evidence for", "evidence related to"]
+        if any(phrase in text.lower() for phrase in evidence_phrases) and has_case_id:
+            entities["intent_class"] = "evidence_search"
+            return ("evidence_search", entities)
 
         # Statistics queries
         if stats_score >= 2 or ("statistics" in text.lower() and stats_score >= 1):
             entities["intent_class"] = "statistics"
             return ("statistics", entities)
+
+        # Handle "no cases" / empty query patterns
+        no_case_phrases = ["no cases", "no matching cases", "no cases found", "there are no cases"]
+        no_case_score = self._score_keywords(text, no_case_phrases)
+        if no_case_score >= 1:
+            entities["intent_class"] = "empty_query"
+            return ("empty_query", entities)
 
         # Case ID present
         if has_case_id:
@@ -289,6 +289,32 @@ class IntentService:
                 entities["intent_class"] = "summarization"
                 return ("summarization", entities)
             entities["intent_class"] = "case_detail"
+            return ("case_detail", entities)
+
+        # Check for "FIR" or "case" without valid ID - treat as case_detail but will return not found
+        has_fir_keyword = "fir" in text.lower()
+        has_case_keyword = "case" in text.lower()
+        # Trigger case_detail for: tell me about, detail, show me, get info on, lookup, find FIR/case
+        wants_detail = any(phrase in text.lower() for phrase in [
+            "tell me about", "detail", "show me", "get info", "lookup", "look up", 
+            "find", "what is", "what's", "info on", "information on", "check", "exists",
+            "nonexistent", "invalid", "missing", "not found"
+        ])
+        # Check if this looks like a search query (has location + crime_type or "case"/"cases")
+        has_location = bool(entities.get("locations"))
+        has_crime_type = bool(entities.get("crime_type"))
+        has_case_term = "case" in text.lower() or "cases" in text.lower()
+        is_search_query = has_location and (has_crime_type or has_case_term)
+        
+        if has_fir_keyword and (wants_detail or summarize_score > 0) and not is_search_query:
+            # Looks like they want case detail but didn't provide valid FIR ID
+            entities["intent_class"] = "case_detail"
+            entities["case_id"] = "INVALID"
+            return ("case_detail", entities)
+        # Also handle "case" keyword with detail intent (but not "cases" plural which is search)
+        if has_case_keyword and not "cases" in text.lower() and wants_detail and not is_search_query:
+            entities["intent_class"] = "case_detail"
+            entities["case_id"] = "INVALID"
             return ("case_detail", entities)
 
         # Suspect search
@@ -326,8 +352,33 @@ class IntentService:
             entities["intent_class"] = "crime_trend"
             return ("crime_trend", entities)
 
+        # Aggregation queries: "which district has the highest number of theft cases?",
+        # "which district has the most theft?", "what district reports the most theft cases?",
+        # "where are theft cases highest?"
+        aggregation_phrases = [
+            "which district has the highest",
+            "which district has the most",
+            "what district reports the most",
+            "where are",
+            "highest cases?",
+        ]
+        aggregation_score = self._score_keywords(text, aggregation_phrases)
+        if aggregation_score >= 1:
+            # Ensure we have a crime type for meaningful aggregation
+            if entities.get("crime_type"):
+                entities["intent_class"] = "statistics"
+                return ("statistics", entities)
+            # If no crime type specified, still route to statistics for general aggregation
+            entities["intent_class"] = "statistics"
+            return ("statistics", entities)
+
         # case_search takes priority over location_query when crime_type is present
         if case_search_score >= 1 and entities.get("crime_type"):
+            entities["intent_class"] = "case_search"
+            return ("case_search", entities)
+
+        # When both crime_type and location are present, case_search takes priority
+        if entities.get("crime_type") and entities.get("locations") and case_search_score >= 0:
             entities["intent_class"] = "case_search"
             return ("case_search", entities)
 
@@ -344,7 +395,11 @@ class IntentService:
         return ("case_search", entities)
     
     async def _extract_entities(self, text: str) -> Dict:
-        """Extract entities from text with improved extraction."""
+        """Extract entities from text with improved extraction using entity resolution service."""
+        # Ensure entity resolution service is initialized
+        if not entity_resolution_service._initialized:
+            await entity_resolution_service.initialize()
+        
         entities: Dict = {}
         text_lower = text.lower()
 
@@ -360,63 +415,70 @@ class IntentService:
         if person_matches:
             entities["persons"] = person_matches
 
-        # Extract locations
+        # Extract locations using entity resolution service
         location_matches = self.LOCATION_EXTRACTION.findall(text)
         known_matches = []
-        text_lower = text.lower()
         for loc in self.KNOWN_LOCATIONS:
             if loc.lower() in text_lower:
                 known_matches.append(loc)
 
         if known_matches:
-            normalized = [self._normalize_location(loc) for loc in known_matches]
-            entities["locations"] = normalized
+            # Use entity resolution for each match
+            resolved_locations = []
+            for loc in known_matches:
+                resolved = entity_resolution_service.resolve_location(loc)
+                if resolved and resolved.confidence >= 0.70:
+                    print(f"DEBUG: location resolved: '{loc}' -> '{resolved.canonical}' (confidence: {resolved.confidence:.2f}, method: {resolved.method})")
+                if resolved and resolved.confidence >= 0.80:  # Only use high confidence matches
+                    resolved_locations.append(resolved.canonical)
+            if resolved_locations:
+                entities['locations'] = resolved_locations
+            else:
+                entities['locations'] = None
         else:
+            # No known locations matched - try extraction with entity resolution
             location_matches = self.LOCATION_EXTRACTION.findall(text)
             crime_types_lower = {ct.lower() for ct in self.CRIME_TYPES}
+            crime_compounds = crime_types_lower | {f"{ct} cases" for ct in crime_types_lower} | {f"{ct} case" for ct in crime_types_lower}
             filtered = []
             for loc in location_matches:
-                loc_clean = loc.strip().rstrip(" and or but,.")
-                if loc_clean.lower() not in {ct.lower() for ct in self.CRIME_TYPES} and len(loc_clean) > 2:
+                # Strip trailing punctuation and common words, but not individual characters
+                loc_clean = loc.strip().rstrip(".,!?;:")
+                # Remove trailing common words
+                for word in [" and", " or", " but"]:
+                    if loc_clean.endswith(word):
+                        loc_clean = loc_clean[:-len(word)]
+                if loc_clean.lower() not in crime_compounds and len(loc_clean) > 2:
                     filtered.append(loc_clean)
-            if filtered:
-                normalized = [self._normalize_location(loc) for loc in filtered]
-                entities["locations"] = normalized
+            
+            resolved_locations = []
+            for loc in filtered:
+                resolved = entity_resolution_service.resolve_location(loc)
+                if resolved and resolved.confidence >= 0.70:
+                    print(f"DEBUG: location resolved: '{loc}' -> '{resolved.canonical}' (confidence: {resolved.confidence:.2f}, method: {resolved.method})")
+                if resolved and resolved.confidence >= 0.80:
+                    resolved_locations.append(resolved.canonical)
+            
+            if resolved_locations:
+                entities["locations"] = resolved_locations
+            else:
+                entities["locations"] = None
 
-        # Extract crime type
-        for ct in self.CRIME_TYPES:
-            if ct in text_lower:
-                entities["crime_type"] = ct
-                break
+        # Extract crime type using entity resolution service
+        resolved_crime = entity_resolution_service.resolve_crime_type(text)
+        if resolved_crime and resolved_crime.confidence >= 0.70:
+            entities["crime_type"] = resolved_crime.canonical
+            print(f"DEBUG: crime_type resolved: '{resolved_crime.raw}' -> '{resolved_crime.canonical}' (confidence: {resolved_crime.confidence:.2f}, method: {resolved_crime.method})")
 
-        # Extract date reference
-        for date_pat in self.DATE_PATTERNS:
-            match = date_pat.search(text)
-            if match:
-                entities["date_ref"] = match.group(1)
-                break
+        # Extract status using entity resolution service
+        resolved_status = entity_resolution_service.resolve_status(text)
+        if resolved_status and resolved_status.confidence >= 0.70:
+            entities["status"] = resolved_status.canonical
+            print(f"DEBUG: status resolved: '{resolved_status.raw}' -> '{resolved_status.canonical}' (confidence: {resolved_status.confidence:.2f}, method: {resolved_status.method})")
 
         # Extract persons
         person_matches = self.PERSON_EXTRACTION.findall(text)
         if person_matches:
             entities["persons"] = person_matches
 
-        # Extract date reference
-        for date_pat in self.DATE_PATTERNS:
-            match = date_pat.search(text)
-            if match:
-                entities["date_ref"] = match.group(1)
-                break
-
         return entities
-
-        if location_score >= 1:
-            entities["intent_class"] = "location_query"
-            return ("location_query", entities)
-
-        if summarize_score >= 1:
-            entities["intent_class"] = "summarization"
-            return ("summarization", entities)
-
-        entities["intent_class"] = "case_search"
-        return ("case_search", entities)

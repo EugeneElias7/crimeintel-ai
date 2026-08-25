@@ -26,7 +26,7 @@ export default function Navbar({ onToggleSidebar, sidebarCollapsed }: NavbarProp
   const { user } = useAuth();
 
   const basePath = '/' + (location.pathname.split('/')[1] || '');
-  const title = routeTitles[basePath] || 'CrimeIntel AI';
+  const title = routeTitles[basePath] || 'CrimeIntel';
 
   return (
     <header

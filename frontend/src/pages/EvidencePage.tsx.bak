@@ -95,7 +95,7 @@ export default function EvidencePage() {
     setError(null);
     try {
       const res = await listEvidence(selectedCaseId);
-      setEvidence(res);
+      setEvidence(res.data);
     } catch {
       setError('Failed to load evidence');
     } finally {
@@ -438,7 +438,7 @@ export default function EvidencePage() {
                   Preview not available
                 </p>
                 <a
-                  href={preview.file_url || ""}
+                  href={preview.file_url}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

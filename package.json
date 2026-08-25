@@ -1,0 +1,25 @@
+{
+  "name": "crimeintel-ai",
+  "private": true,
+  "version": "1.0.0",
+  "description": "CrimeIntel AI - Intelligent Conversational Crime Intelligence Platform",
+  "scripts": {
+    "dev": "npm run pre-dev && concurrently -k -n \"BACKEND,FRONTEND\" -c \"blue,green\" \"npm run backend\" \"npm run frontend\"",
+    "pre-dev": "npx kill-port --port 8000 5173 5174 5175 2>nul || true",
+    "backend": "cd backend && python -m uvicorn main:app --host 0.0.0.0 --port 8000",
+    "frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "lint": "cd frontend && npm run lint",
+    "test": "cd backend && python -m pytest tests/ -v",
+    "test:backend": "cd backend && python -m pytest tests/ -v",
+    "test:frontend": "cd frontend && npm run lint",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && pip install -r requirements.txt"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "kill-port": "^2.0.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

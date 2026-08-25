@@ -139,6 +139,7 @@ class EvidenceService:
             "action": AUDIT_EVIDENCE_UPLOADED,
             "module": "evidence",
             "details": f"Uploaded evidence '{file.filename}' to case {case_id}",
+            "created_at": datetime.utcnow().isoformat(),
         })
 
         return {
@@ -168,4 +169,5 @@ class EvidenceService:
             "action": AUDIT_EVIDENCE_DELETED,
             "module": "evidence",
             "details": f"Deleted evidence {evidence_id} ('{record.get('file_name', '')}') from case {record.get('case_id', '')}",
+            "created_at": datetime.utcnow().isoformat(),
         })

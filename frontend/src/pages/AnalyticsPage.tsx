@@ -322,9 +322,7 @@ export default function AnalyticsPage() {
                       innerRadius={36}
                       dataKey="value"
                       isAnimationActive={true}
-                      animationDuration={900}
-                      startAngle={90}
-                      endAngle={-270}
+                      animationDuration={700}
                       activeIndex={live && preset !== 'custom' && distribution.length > 0 ? (pieActive % distribution.length as any) : undefined as any}
                       activeShape={(props: any) => {
                         const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;

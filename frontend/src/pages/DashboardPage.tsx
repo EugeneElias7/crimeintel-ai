@@ -297,13 +297,14 @@ export default function DashboardPage() {
                     dataKey="value"
                     isAnimationActive={true}
                     animationDuration={700}
+                    startAngle={90}
+                    endAngle={-270}
                     activeIndex={live && distributionData.length > 0 ? pieActive % distributionData.length : undefined as any}
                     activeShape={(props: any) => {
                       const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
-                      // single raised sector – smooth, no blink, just lift
+                      // single raised sector – clockwise, smooth, no blink, just lift
                       return <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 8} startAngle={startAngle} endAngle={endAngle} fill={fill} stroke="white" strokeWidth={1} opacity={1} />;
                     }}
-                    // show only active slice prominently, others faint – one by one clockwise
                     label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                     labelLine={false}
                   >

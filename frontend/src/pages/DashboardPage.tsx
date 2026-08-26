@@ -303,19 +303,11 @@ export default function DashboardPage() {
                       // single raised sector – smooth, no blink, just lift
                       return <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 8} startAngle={startAngle} endAngle={endAngle} fill={fill} stroke="white" strokeWidth={1} opacity={1} />;
                     }}
-                    // show only active slice prominently, others faint – one by one clockwise
                     label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                     labelLine={false}
                   >
-                    {distributionData.map((entry, idx) => (
-                      <Cell
-                        key={`${entry.name}-${entry.value}`}
-                        fill={entry.color}
-                        stroke="white"
-                        strokeWidth={1.5}
-                        fillOpacity={live ? (idx === pieActive % distributionData.length ? 1 : 0.12) : 1}
-                        strokeOpacity={live ? (idx === pieActive % distributionData.length ? 1 : 0.3) : 1}
-                      />
+                    {distributionData.map((entry) => (
+                      <Cell key={`${entry.name}-${entry.value}`} fill={entry.color} stroke="white" strokeWidth={1.5} />
                     ))}
                   </Pie>
                   <Tooltip />

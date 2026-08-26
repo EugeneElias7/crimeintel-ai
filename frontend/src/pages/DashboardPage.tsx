@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -16,7 +15,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  Sector,
   Tooltip,
   Legend,
   ResponsiveContainer,
@@ -88,7 +86,6 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [live, setLive] = useState(true);
-  const [pieActive, setPieActive] = useState(0);
 
   const fetchData = useCallback(async (showLoader = true) => {
     if (showLoader) setLoading(true);
@@ -125,12 +122,7 @@ export default function DashboardPage() {
     return () => clearInterval(id);
   }, [live, fetchData]);
 
-  // Live: show individual pie section by raising it for 3s, then next, repeat smoothly – no blink
-  useEffect(() => {
-    if (!live || distribution.length === 0) return;
-    const id = setInterval(() => setPieActive((i) => (i + 1) % distribution.length), 3000);
-    return () => clearInterval(id);
-  }, [live, distribution.length]);
+
 
   if (loading) {
     return (
@@ -237,16 +229,7 @@ export default function DashboardPage() {
           </Button>
         </div>
       </div>
-      {live && distributionData.length > 0 && (
-        <div className="mb-4 flex items-center justify-center gap-2 rounded-full border border-indigo-100 bg-indigo-50/60 px-4 py-1.5 backdrop-blur">
-          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-mono-industrial text-[11px] tracking-widest text-indigo-700">
-            LIVE PIE • {distributionData[pieActive % distributionData.length]?.name} • {distributionData[pieActive % distributionData.length]?.value} cases
-          </span>
-          <span className="h-1 w-1 rounded-full bg-slate-300" />
-          <span className="font-mono-industrial text-[10px] text-slate-500">smooth cycling</span>
-        </div>
-      )}
+
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kpiCards.map((card, idx) => (
@@ -287,7 +270,6 @@ export default function DashboardPage() {
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  {/* @ts-ignore – recharts Pie activeIndex typed as any for live continuous highlight */}
                   <Pie
                     data={distributionData}
                     cx="50%"
@@ -295,14 +277,7 @@ export default function DashboardPage() {
                     outerRadius={78}
                     innerRadius={42}
                     dataKey="value"
-                    isAnimationActive={true}
-                    animationDuration={700}
-                    activeIndex={live && distributionData.length > 0 ? pieActive % distributionData.length : undefined as any}
-                    activeShape={(props: any) => {
-                      const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
-                      // single raised sector – smooth, no blink, just lift
-                      return <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 8} startAngle={startAngle} endAngle={endAngle} fill={fill} stroke="white" strokeWidth={1} opacity={1} />;
-                    }}
+                    isAnimationActive={false}
                     label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                     labelLine={false}
                   >

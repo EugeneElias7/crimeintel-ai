@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
 import {
   BarChart,
@@ -12,7 +11,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  Sector,
   LineChart,
   Line,
 } from 'recharts';
@@ -62,7 +60,6 @@ export default function AnalyticsPage() {
   const [customTo, setCustomTo] = useState('');
   const [live, setLive] = useState(true);
   const [cycleLive, setCycleLive] = useState(0);
-  const [pieActive, setPieActive] = useState(0);
 
   const [overview, setOverview] = useState<OverviewData | null>(null);
   const [distribution, setDistribution] = useState<DistributionItem[]>([]);
@@ -123,13 +120,6 @@ export default function AnalyticsPage() {
     const id = setInterval(() => setCycleLive((c) => (c + 1) % 4), 3500);
     return () => clearInterval(id);
   }, [live, preset]);
-
-  // Smooth: raise individual pie section for 3s, then next, repeat – no blink, real app feel
-  useEffect(() => {
-    if (!live || preset === 'custom' || distribution.length === 0) return;
-    const id = setInterval(() => setPieActive((i) => (i + 1) % distribution.length), 3000);
-    return () => clearInterval(id);
-  }, [live, preset, distribution.length]);
 
   const kpiCards = [
     {
@@ -305,11 +295,10 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <Card title="Crime Distribution" subtitle={live && preset !== 'custom' && distribution.length > 0 ? `Live • ${distribution[pieActive % distribution.length]?.crime_type} • smooth` : undefined} className="transition-all duration-300">
+            <Card title="Crime Distribution" className="transition-all duration-300">
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    {/* @ts-ignore – recharts Pie activeIndex for smooth continuous highlight */}
                     <Pie
                       data={distribution.map((d, i) => ({
                         name: d.crime_type,
@@ -321,13 +310,7 @@ export default function AnalyticsPage() {
                       outerRadius={78}
                       innerRadius={36}
                       dataKey="value"
-                      isAnimationActive={true}
-                      animationDuration={700}
-                      activeIndex={live && preset !== 'custom' && distribution.length > 0 ? (pieActive % distribution.length as any) : undefined as any}
-                      activeShape={(props: any) => {
-                        const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
-                        return <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 8} startAngle={startAngle} endAngle={endAngle} fill={fill} stroke="white" strokeWidth={1} opacity={1} />;
-                      }}
+                      isAnimationActive={false}
                       label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                       labelLine={false}
                     >

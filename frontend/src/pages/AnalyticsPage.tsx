@@ -58,6 +58,8 @@ export default function AnalyticsPage() {
   const [preset, setPreset] = useState<Preset>('30d');
   const [customFrom, setCustomFrom] = useState('');
   const [customTo, setCustomTo] = useState('');
+  const [live, setLive] = useState(true);
+  const [cycleLive, setCycleLive] = useState(0);
 
   const [overview, setOverview] = useState<OverviewData | null>(null);
   const [distribution, setDistribution] = useState<DistributionItem[]>([]);
@@ -65,9 +67,10 @@ export default function AnalyticsPage() {
   const [byDistrict, setByDistrict] = useState<DistrictItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastLiveUpdate, setLastLiveUpdate] = useState<Date | null>(null);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
+  const fetchData = useCallback(async (showLoader = true) => {
+    if (showLoader) setLoading(true);
     setError(null);
     try {
       const range = preset === 'custom' ? { from: customFrom, to: customTo } : getDateRange(preset);
@@ -81,16 +84,42 @@ export default function AnalyticsPage() {
       setDistribution(distRes);
       setTrends(trendsRes);
       setByDistrict(districtRes);
+      setLastLiveUpdate(new Date());
     } catch {
       setError('Failed to load analytics data');
     } finally {
-      setLoading(false);
+      if (showLoader) setLoading(false);
     }
   }, [preset, customFrom, customTo]);
 
   useEffect(() => {
-    fetchData();
+    fetchData(true);
   }, [fetchData]);
+
+  // Live: poll real reports/analytics every 12s + cycle charts every 4s
+  useEffect(() => {
+    if (!live || preset === 'custom') return;
+    const id = setInterval(() => fetchData(false), 12000);
+    return () => clearInterval(id);
+  }, [live, preset, fetchData]);
+
+  useEffect(() => {
+    if (!live || preset === 'custom') return;
+    const order: Preset[] = ['7d', '30d', '12m'];
+    const id = setInterval(() => {
+      setPreset((prev) => {
+        const idx = order.indexOf(prev as Preset);
+        return idx === -1 ? '30d' : order[(idx + 1) % order.length];
+      });
+    }, 10000);
+    return () => clearInterval(id);
+  }, [live, preset]);
+
+  useEffect(() => {
+    if (!live || preset === 'custom') return;
+    const id = setInterval(() => setCycleLive((c) => (c + 1) % 4), 3500);
+    return () => clearInterval(id);
+  }, [live, preset]);
 
   const kpiCards = [
     {
@@ -129,12 +158,30 @@ export default function AnalyticsPage() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            Analytics
+            {live && preset !== 'custom' && <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-[11px] font-mono-industrial font-bold tracking-widest text-emerald-700"><span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />LIVE</span>}
+          </h1>
+          <p className="mt-1 text-sm text-gray-500 flex items-center gap-2">
             Crime data analysis and insights
+            {live && preset !== 'custom' ? (
+              <>
+                <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
+                Live cycling {preset} • {lastLiveUpdate ? lastLiveUpdate.toLocaleTimeString() : 'syncing'} • real reports/analytics
+              </>
+            ) : (
+              <><span className="h-1 w-1 rounded-full bg-gray-300" /> Paused</>
+            )}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => setLive((v) => !v)}
+            className={`inline-flex items-center gap-1.5 rounded-[8px] border px-3 py-1.5 text-xs font-mono-industrial font-bold tracking-widest transition-colors ${live ? 'bg-[#0F172A] text-white border-[#1E293B]' : 'bg-white text-slate-600 border-[#E2E8F0]'}`}
+          >
+            <span className={`h-2 w-2 rounded-full ${live ? 'bg-emerald-400 animate-pulse' : 'bg-slate-400'}`} />
+            {live ? 'LIVE ON' : 'LIVE OFF'}
+          </button>
           {(['7d', '30d', '12m'] as Preset[]).map((p) => (
             <button
               key={p}
@@ -160,6 +207,16 @@ export default function AnalyticsPage() {
           </button>
         </div>
       </div>
+      {live && preset !== 'custom' && (
+        <div className="mb-4 flex items-center justify-center gap-1.5">
+          {[0,1,2,3].map((i) => (
+            <span key={i} className={`h-1.5 rounded-full transition-all duration-500 ${cycleLive === i ? 'w-6 bg-[#6366F1]' : 'w-1.5 bg-slate-200'}`} />
+          ))}
+          <span className="ml-2 font-mono-industrial text-[11px] tracking-widest text-slate-400">
+            {cycleLive === 0 ? 'DISTRIBUTION' : cycleLive === 1 ? 'TREND' : cycleLive === 2 ? 'DISTRICT' : 'STATUS'} • Real-time
+          </span>
+        </div>
+      )}
 
       {preset === 'custom' && (
         <Card className="mb-6">
@@ -186,7 +243,7 @@ export default function AnalyticsPage() {
                 onChange={(e) => setCustomTo(e.target.value)}
               />
             </div>
-            <Button size="sm" className="mt-5" onClick={fetchData}>
+            <Button size="sm" className="mt-5" onClick={() => fetchData(true)}>
               Apply
             </Button>
           </div>
@@ -213,7 +270,7 @@ export default function AnalyticsPage() {
       ) : error ? (
         <div className="flex flex-col items-center py-16">
           <p className="mb-4 text-red-600">{error}</p>
-          <Button onClick={fetchData}>Retry</Button>
+          <Button onClick={() => fetchData(true)}>Retry</Button>
         </div>
       ) : !overview || overview.total_cases === 0 ? (
         <EmptyState
@@ -238,7 +295,7 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <Card title="Crime Distribution">
+            <Card title="Crime Distribution" className={`transition-all duration-500 ${live && preset !== 'custom' && cycleLive === 0 ? 'ring-2 ring-indigo-400 shadow-lg scale-[1.01]' : ''}`}>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -252,15 +309,12 @@ export default function AnalyticsPage() {
                       cy="50%"
                       outerRadius={80}
                       dataKey="value"
-                      label={({ name, percent }) =>
-                        `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
-                      }
+                      isAnimationActive={true}
+                      animationDuration={900}
+                      label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                     >
                       {distribution.map((_, i) => (
-                        <Cell
-                          key={i}
-                          fill={COLORS[i % COLORS.length]}
-                        />
+                        <Cell key={`${distribution[i]?.crime_type}-${i}`} fill={COLORS[i % COLORS.length]} />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -270,7 +324,7 @@ export default function AnalyticsPage() {
               </div>
             </Card>
 
-            <Card title="Monthly Trend">
+            <Card title="Monthly Trend" className={`transition-all duration-500 ${live && preset !== 'custom' && cycleLive === 1 ? 'ring-2 ring-cyan-400 shadow-lg scale-[1.01]' : ''}`}>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={trends}>
@@ -279,36 +333,15 @@ export default function AnalyticsPage() {
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip />
                     <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="total"
-                      stroke="#3B82F6"
-                      strokeWidth={2}
-                      dot={{ r: 3 }}
-                      name="Total"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="open"
-                      stroke="#F59E0B"
-                      strokeWidth={2}
-                      dot={{ r: 3 }}
-                      name="Open"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="closed"
-                      stroke="#10B981"
-                      strokeWidth={2}
-                      dot={{ r: 3 }}
-                      name="Closed"
-                    />
+                    <Line type="monotone" dataKey="total" stroke="#3B82F6" strokeWidth={2} dot={{ r: 3 }} name="Total" isAnimationActive={true} animationDuration={800} />
+                    <Line type="monotone" dataKey="open" stroke="#F59E0B" strokeWidth={2} dot={{ r: 3 }} name="Open" isAnimationActive={true} animationDuration={800} />
+                    <Line type="monotone" dataKey="closed" stroke="#10B981" strokeWidth={2} dot={{ r: 3 }} name="Closed" isAnimationActive={true} animationDuration={800} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             </Card>
 
-            <Card title="Cases by District">
+            <Card title="Cases by District" className={`transition-all duration-500 ${live && preset !== 'custom' && cycleLive === 2 ? 'ring-2 ring-amber-400 shadow-lg scale-[1.01]' : ''}`}>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={byDistrict}>
@@ -316,13 +349,13 @@ export default function AnalyticsPage() {
                     <XAxis dataKey="district" tick={{ fontSize: 12 }} />
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip />
-                    <Bar dataKey="count" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="count" fill="#3B82F6" radius={[4, 4, 0, 0]} isAnimationActive={true} animationDuration={900} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </Card>
 
-            <Card title="Status Breakdown">
+            <Card title="Status Breakdown" className={`transition-all duration-500 ${live && preset !== 'custom' && cycleLive === 3 ? 'ring-2 ring-violet-400 shadow-lg scale-[1.01]' : ''}`}>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={statusData}>
@@ -330,7 +363,7 @@ export default function AnalyticsPage() {
                     <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip />
-                    <Bar dataKey="value" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="value" fill="#8B5CF6" radius={[4, 4, 0, 0]} isAnimationActive={true} animationDuration={900} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

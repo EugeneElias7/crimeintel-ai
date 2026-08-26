@@ -23,14 +23,16 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
+  BarChart,
+  Bar,
 } from 'recharts';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import EmptyState from '../components/ui/EmptyState';
-import { getOverview, getTrends } from '../services/analyticsService';
+import { getOverview, getTrends, getDistribution, getByDistrict } from '../services/analyticsService';
 import { listCases } from '../services/caseService';
-import type { OverviewData, TrendItem } from '../types/analytics';
+import type { OverviewData, TrendItem, DistributionItem, DistrictItem } from '../types/analytics';
 import type { Case } from '../types/case';
 
 const COLORS = ['#3B82F6', '#EF4444', '#F59E0B', '#10B981', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
@@ -77,34 +79,56 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const [overview, setOverview] = useState<OverviewData | null>(null);
   const [trends, setTrends] = useState<TrendItem[]>([]);
+  const [distribution, setDistribution] = useState<DistributionItem[]>([]);
+  const [byDistrict, setByDistrict] = useState<DistrictItem[]>([]);
   const [recentCases, setRecentCases] = useState<Case[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [live, setLive] = useState(true);
+  const [cycleIdx, setCycleIdx] = useState(0);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
+  const fetchData = useCallback(async (showLoader = true) => {
+    if (showLoader) setLoading(true);
     setError(null);
     try {
-      const [overviewRes, casesRes, trendsRes] = await Promise.all([
+      const [overviewRes, casesRes, trendsRes, distRes, districtRes] = await Promise.all([
         getOverview(),
         listCases({ page: 1, limit: 10 }),
         getTrends(),
+        getDistribution(),
+        getByDistrict(),
       ]);
       setOverview(overviewRes);
       setRecentCases(casesRes.data);
       setTrends(trendsRes);
+      setDistribution(distRes);
+      setByDistrict(districtRes);
       setLastUpdated(new Date());
     } catch {
       setError('Failed to load dashboard data');
     } finally {
-      setLoading(false);
+      if (showLoader) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchData();
+    fetchData(true);
   }, [fetchData]);
+
+  // Live: poll real data from reports/analytics every 12s
+  useEffect(() => {
+    if (!live) return;
+    const id = setInterval(() => fetchData(false), 12000);
+    return () => clearInterval(id);
+  }, [live, fetchData]);
+
+  // Live cycle: rotate highlighted chart every 4s
+  useEffect(() => {
+    if (!live) return;
+    const id = setInterval(() => setCycleIdx((i) => (i + 1) % 3), 4000);
+    return () => clearInterval(id);
+  }, [live]);
 
   if (loading) {
     return (
@@ -132,26 +156,21 @@ export default function DashboardPage() {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <p className="mb-4 text-red-600">{error}</p>
-        <Button onClick={fetchData}>Retry</Button>
+        <Button onClick={() => fetchData(true)}>Retry</Button>
       </div>
     );
   }
 
-  const distributionData = recentCases.reduce<
-    { name: string; value: number; color: string }[]
-  >((acc, c) => {
-    const existing = acc.find((d) => d.name === c.crime_type);
-    if (existing) {
-      existing.value++;
-    } else {
-      acc.push({
-        name: c.crime_type,
-        value: 1,
-        color: COLORS[acc.length % COLORS.length],
-      });
-    }
-    return acc;
-  }, []);
+  // Live real data: distribution & byDistrict from reports/analytics – not just 10 recent
+  const distributionData: { name: string; value: number; color: string }[] =
+    distribution.length > 0
+      ? distribution.map((d, i) => ({ name: d.crime_type, value: d.count, color: COLORS[i % COLORS.length] }))
+      : recentCases.reduce<{ name: string; value: number; color: string }[]>((acc, c) => {
+          const ex = acc.find((d) => d.name === c.crime_type);
+          if (ex) ex.value++;
+          else acc.push({ name: c.crime_type, value: 1, color: COLORS[acc.length % COLORS.length] });
+          return acc;
+        }, []);
 
   const kpiCards = [
     {
@@ -190,18 +209,42 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            Dashboard
+            {live && <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-[11px] font-mono-industrial font-bold tracking-widest text-emerald-700"><span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />LIVE</span>}
+          </h1>
+          <p className="mt-1 text-sm text-gray-500 flex items-center gap-2">
             Last updated: {formatTime(lastUpdated)}
+            <span className={`h-1 w-1 rounded-full ${live ? 'bg-emerald-400 animate-pulse' : 'bg-gray-300'}`} />
+            {live ? 'Live cycling real report data every 12s' : 'Paused'}
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={fetchData}>
-          <RefreshCw size={16} />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setLive((v) => !v)}
+            className={`inline-flex items-center gap-1.5 rounded-[8px] border px-3 py-1.5 text-xs font-mono-industrial font-bold tracking-widest transition-colors ${live ? 'bg-[#0F172A] text-white border-[#1E293B] shadow' : 'bg-white text-slate-600 border-[#E2E8F0] hover:border-[#0EA5E9]'}`}
+          >
+            <span className={`h-2 w-2 rounded-full ${live ? 'bg-emerald-400 animate-pulse' : 'bg-slate-400'}`} />
+            {live ? 'LIVE ON' : 'LIVE OFF'}
+          </button>
+          <Button variant="outline" size="sm" onClick={() => fetchData(true)}>
+            <RefreshCw size={16} />
+            Refresh
+          </Button>
+        </div>
       </div>
+      {live && (
+        <div className="mb-4 flex items-center justify-center gap-1.5">
+          {[0, 1, 2].map((i) => (
+            <span key={i} className={`h-1.5 rounded-full transition-all duration-500 ${cycleIdx === i ? 'w-6 bg-[#6366F1]' : 'w-1.5 bg-slate-200'}`} />
+          ))}
+          <span className="ml-2 font-mono-industrial text-[11px] tracking-widest text-slate-400">
+            {cycleIdx === 0 ? 'DISTRIBUTION' : cycleIdx === 1 ? 'TREND' : 'DISTRICT'} • Real reports/analytics
+          </span>
+        </div>
+      )}
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kpiCards.map((card, idx) => (
@@ -230,8 +273,12 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card title="Crime Type Distribution" subtitle="Case breakdown by type">
+      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <Card
+          title="Crime Type Distribution"
+          subtitle={`Real • ${distributionData.reduce((a, b) => a + b.value, 0)} total`}
+          className={`transition-all duration-500 ${live && cycleIdx === 0 ? 'ring-2 ring-indigo-400 shadow-lg scale-[1.01]' : ''}`}
+        >
           {distributionData.length === 0 ? (
             <p className="py-8 text-center text-sm text-gray-400">No data</p>
           ) : (
@@ -244,12 +291,12 @@ export default function DashboardPage() {
                     cy="50%"
                     outerRadius={80}
                     dataKey="value"
-                    label={({ name, percent }) =>
-                      `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
-                    }
+                    isAnimationActive={true}
+                    animationDuration={900}
+                    label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                   >
-                    {distributionData.map((entry, i) => (
-                      <Cell key={i} fill={entry.color} />
+                    {distributionData.map((entry) => (
+                      <Cell key={`${entry.name}-${entry.value}`} fill={entry.color} />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -260,7 +307,11 @@ export default function DashboardPage() {
           )}
         </Card>
 
-        <Card title="Monthly Case Trend" subtitle="Cases filed per month">
+        <Card
+          title="Monthly Case Trend"
+          subtitle="Live from analytics"
+          className={`transition-all duration-500 ${live && cycleIdx === 1 ? 'ring-2 ring-cyan-400 shadow-lg scale-[1.01]' : ''}`}
+        >
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -274,34 +325,31 @@ export default function DashboardPage() {
                 ]}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} />
+                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="total"
-                  stroke="#3B82F6"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  name="Total"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="open"
-                  stroke="#F59E0B"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  name="Open"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="closed"
-                  stroke="#10B981"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  name="Closed"
-                />
+                <Line type="monotone" dataKey="total" stroke="#3B82F6" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={true} animationDuration={800} name="Total" />
+                <Line type="monotone" dataKey="open" stroke="#F59E0B" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={true} animationDuration={800} name="Open" />
+                <Line type="monotone" dataKey="closed" stroke="#10B981" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={true} animationDuration={800} name="Closed" />
               </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        <Card
+          title="Cases by District"
+          subtitle="Live from reports"
+          className={`transition-all duration-500 ${live && cycleIdx === 2 ? 'ring-2 ring-amber-400 shadow-lg scale-[1.01]' : ''}`}
+        >
+          <div className="h-72">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={byDistrict.length > 0 ? byDistrict : [{ district: 'No data', count: 0 }]} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                <XAxis dataKey="district" tick={{ fontSize: 10 }} interval={0} angle={-22} textAnchor="end" height={60} />
+                <YAxis tick={{ fontSize: 11 }} />
+                <Tooltip />
+                <Bar dataKey="count" fill="#6366F1" radius={[6, 6, 0, 0]} isAnimationActive={true} animationDuration={900} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </Card>

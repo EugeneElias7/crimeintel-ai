@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate, Link } from 'react-router-dom';
-import { Shield, Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import Button from '../components/ui/Button';
 
@@ -53,19 +53,15 @@ export default function LoginPage() {
       <div className="bg-grid pointer-events-none absolute inset-0 z-0" />
 
       <div className="relative w-full max-w-md">
-        {/* Brand */}
+        {/* Brand – new CrimeIntel AI logo, noticeable forensic shield */}
         <div className="animate-scale-in mb-8 text-center">
-          <div className="relative mx-auto mb-5 h-20 w-20">
+          <div className="relative mx-auto mb-4 flex h-20 w-20 items-center justify-center">
             <div className="absolute inset-0 animate-pulse rounded-[1.4rem] bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600 opacity-60 blur-xl" />
-            <div className="animate-pulse-glow relative flex h-20 w-20 items-center justify-center rounded-[1.4rem] bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 ring-1 ring-white/20 transition-transform duration-300 hover:scale-105 hover:rotate-3">
-              <Shield className="h-9 w-9 text-white" strokeWidth={2.2} />
-            </div>
+            <img src="/logo-icon.svg" alt="CrimeIntel AI Logo" className="animate-pulse-glow relative h-20 w-20 rounded-[1.4rem] bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 p-2 ring-1 ring-white/20 shadow-xl object-contain" />
           </div>
-          <h1 className="text-gradient-light text-3xl font-bold tracking-tight">
-            CrimeIntel
-          </h1>
-          <p className="mt-1.5 text-sm tracking-wide text-slate-400">
-            Intelligence Platform
+          <img src="/logo.svg" alt="CrimeIntel AI" className="mx-auto h-9 w-auto object-contain brightness-125" />
+          <p className="mt-1.5 text-sm tracking-wide text-slate-300">
+            Intelligence Platform • Karnataka State Police
           </p>
         </div>
 

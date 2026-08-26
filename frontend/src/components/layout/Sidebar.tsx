@@ -42,7 +42,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed left-0 top-0 z-30 flex h-screen flex-col bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 text-white shadow-2xl shadow-blue-950/40 transition-all duration-500 ease-out-expo before:absolute before:right-0 before:top-0 before:h-full before:w-px before:bg-gradient-to-b before:from-transparent before:via-blue-500/40 before:to-transparent ${
+      className={`texture-sidebar fixed left-0 top-0 z-30 flex h-screen flex-col bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 text-white shadow-2xl shadow-blue-950/40 transition-all duration-500 ease-out-expo before:absolute before:right-0 before:top-0 before:h-full before:w-px before:bg-gradient-to-b before:from-transparent before:via-blue-500/40 before:to-transparent ${
         collapsed ? 'w-16' : 'w-64'
       }`}
       style={{
@@ -52,13 +52,11 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           : '0 0 40px -10px rgba(30, 58, 138, 0.6), 0 0 80px -20px rgba(99, 102, 241, 0.4)',
       }}
     >
-      <div className="relative flex h-16 items-center px-4">
+      <div className="relative z-10 flex h-16 items-center px-4">
         {!collapsed ? (
-          <h1 className="text-lg font-bold tracking-wide">
-            <span className="text-gradient-light">Crime</span>Intel
-          </h1>
+          <img src="/logo.svg" alt="CrimeIntel AI" className="h-9 w-auto object-contain brightness-110 contrast-125" />
         ) : (
-          <span className="mx-auto text-lg font-bold text-gradient-light">CI</span>
+          <img src="/logo-icon.svg" alt="CI" className="mx-auto h-8 w-8 object-contain" />
         )}
         <button
           onClick={onToggle}

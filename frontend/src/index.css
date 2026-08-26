@@ -361,11 +361,10 @@
     -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
   }
 
-  /* ===== CrimeIntel Forensic Motive Texture System =====
-     Layer 1: paper/film grain noise (depth)
-     Layer 2: forensic grid + topographical contour
-     Layer 3: faint fingerprint / shield watermark (motive)
-     Layer 4: vignette */
+  /* ===== CrimeIntel Forensic Motive Texture System – VISIBLE & ATTRACTIVE =====
+     Forensic evidence-board + cyber-intelligence + map topography
+     Every surface gets feeling texture – not subtle, but professional */
+  /* Global feeling texture – applied to body via .texture-app / body */
   .texture-app {
     position: relative;
     isolation: isolate;
@@ -378,19 +377,20 @@
     opacity: 1;
     z-index: 0;
     background-image:
-      /* noise grain */
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"),
-      /* forensic grid – horizontal */
-      linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
-      /* forensic grid – vertical */
-      linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px),
-      /* topographical contour – soft concentric */
-      radial-gradient(ellipse 900px 600px at 20% 0%, rgba(99,102,241,0.06), transparent 60%),
-      radial-gradient(ellipse 800px 500px at 85% 100%, rgba(6,182,214,0.05), transparent 55%);
-    background-size: 200px 200px, 56px 56px, 56px 56px, auto, auto;
-    background-repeat: repeat, repeat, repeat, no-repeat, no-repeat;
-    mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+      /* film grain – visible */
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.09'/%3E%3C/svg%3E"),
+      /* forensic grid – attractive blue */
+      linear-gradient(rgba(99,102,241,0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,102,241,0.09) 1px, transparent 1px),
+      /* diagonal evidence tape hint */
+      repeating-linear-gradient(135deg, transparent 0 28px, rgba(99,102,241,0.03) 28px 29px),
+      /* topographic contour – indigo */
+      radial-gradient(ellipse 950px 620px at 18% 8%, rgba(99,102,241,0.14), transparent 62%),
+      radial-gradient(ellipse 820px 520px at 88% 92%, rgba(6,182,214,0.12), transparent 58%),
+      /* circuit dot pattern */
+      radial-gradient(circle, rgba(59,130,246,0.18) 1.2px, transparent 1.2px);
+    background-size: 180px 180px, 52px 52px, 52px 52px, 52px 52px, auto, auto, 22px 22px;
+    background-repeat: repeat, repeat, repeat, repeat, no-repeat, no-repeat, repeat;
   }
   .texture-app::after {
     content: "";
@@ -398,13 +398,13 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.06;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%233b82f6' stroke-width='0.7' opacity='0.9'%3E%3Cpath d='M60 18 C36 18 18 36 18 60 C18 84 36 102 60 102 C84 102 102 84 102 60 C102 36 84 18 60 18 Z M60 26 C70 26 79 31 84 40 M60 34 C66 34 72 38 75 44 M60 42 C63 42 66 44 67 48 M36 60 C36 74 48 86 60 86 M84 60 C84 68 79 75 72 79'/%3E%3Cpath d='M60 52 L60 88 M52 62 L68 62' stroke='%236366f1' stroke-width='0.5'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.14;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='640' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%233b82f6' stroke-width='0.9' opacity='1'%3E%3Cpath d='M80 18 C52 18 24 38 24 72 C24 102 46 128 80 140 C114 128 136 102 136 72 C136 38 108 18 80 18 Z'/%3E%3Cpath d='M80 30 C62 30 38 46 38 72 C38 96 54 118 80 126 C106 118 122 96 122 72 C122 46 98 30 80 30 Z' opacity='0.55'/%3E%3Cpath d='M80 42 C68 42 54 52 54 68 C54 84 64 100 80 106 C96 100 106 84 106 68 C106 52 92 42 80 42 Z' opacity='0.35'/%3E%3Cg stroke='%238b5cf6' stroke-width='0.7'%3E%3Cpath d='M80 54 C71 54 64 61 64 70 C64 78 70 85 80 88 C90 85 96 78 96 70 C96 61 89 54 80 54 Z' opacity='0.9'/%3E%3Ccircle cx='80' cy='70' r='3' fill='%238b5cf6' stroke='none' opacity='0.9'/%3E%3C/g%3E%3Cg fill='%230ea5e9' opacity='0.9'%3E%3Ccircle cx='52' cy='48' r='2.2'/%3E%3Ccircle cx='108' cy='52' r='2'/%3E%3Ccircle cx='58' cy='108' r='1.8'/%3E%3Ccircle cx='104' cy='100' r='2.1'/%3E%3C/g%3E%3Cpath d='M80 88 L88 98 L96 106' stroke='%23f59e0b' stroke-width='2.2' stroke-linecap='round' opacity='0.9'/%3E%3C/g%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: center 42%;
-    background-size: 520px 520px;
+    background-position: center 46%;
+    background-size: 640px 640px;
   }
-  /* Dark variant – login / auth screens: fingerprint + shield watermark on slate */
+  /* Dark variant – login / auth: deep forensic night, more visible grain + shield */
   .texture-dark {
     position: relative;
     isolation: isolate;
@@ -417,10 +417,12 @@
     z-index: 0;
     opacity: 1;
     background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E"),
-      linear-gradient(rgba(148,163,184,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(148,163,184,0.05) 1px, transparent 1px);
-    background-size: 200px 200px, 48px 48px, 48px 48px;
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.11'/%3E%3C/svg%3E"),
+      linear-gradient(rgba(148,163,184,0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148,163,184,0.09) 1px, transparent 1px),
+      repeating-linear-gradient(135deg, transparent 0 30px, rgba(139,92,246,0.035) 30px 31px),
+      radial-gradient(ellipse 900px 600px at 50% 38%, rgba(99,102,241,0.22), transparent 65%);
+    background-size: 180px 180px, 48px 48px, 48px 48px, 48px 48px, auto;
   }
   .texture-dark::after {
     content: "";
@@ -428,15 +430,16 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.07;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='560' height='560' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%2381a6ff' stroke-width='0.65'%3E%3Cpath d='M60 14 L84 26 L84 62 C84 82 72 96 60 106 C48 96 36 82 36 62 L36 26 Z'/%3E%3Cpath d='M60 22 C42 22 28 38 28 60 C28 78 40 94 60 98 C80 94 92 78 92 60 C92 38 78 22 60 22 Z' opacity='0.6'/%3E%3Cpath d='M60 30 C50 30 42 38 42 50 C42 62 50 72 60 76 C70 72 78 62 78 50 C78 38 70 30 60 30 Z' opacity='0.45'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.16;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='720' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%2381a6ff' stroke-width='0.85'%3E%3Cpath d='M80 12 L112 28 L112 72 C112 98 96 118 80 132 C64 118 48 98 48 72 L48 28 Z'/%3E%3Cpath d='M80 24 C58 24 38 42 38 64 C38 86 52 106 80 118 C108 106 122 86 122 64 C122 42 102 24 80 24 Z' opacity='0.6'/%3E%3Cpath d='M80 36 C64 36 50 48 50 62 C50 76 60 90 80 98 C100 90 110 76 110 62 C110 48 96 36 80 36 Z' opacity='0.42'/%3E%3C/g%3E%3Cg fill='none' stroke='%23c4b5fd' stroke-width='0.6' opacity='0.95'%3E%3Cpath d='M80 48 C70 48 62 56 62 66 C62 75 70 82 80 85 C90 82 98 75 98 66 C98 56 90 48 80 48 Z'/%3E%3C/g%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: center 38%;
-    background-size: 560px 560px;
+    background-position: center 36%;
+    background-size: 720px 720px;
   }
-  /* Card paper grain – subtle forensic file texture */
+  /* Full UI feeling texture – cards, sidebar, navbar get grain + forensic tint */
   .texture-card {
     position: relative;
+    overflow: hidden;
   }
   .texture-card::before {
     content: "";
@@ -444,11 +447,13 @@
     inset: 0;
     border-radius: inherit;
     pointer-events: none;
-    opacity: 0.5;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-    background-size: 180px 180px;
+    opacity: 0.85;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"),
+      linear-gradient(180deg, rgba(99,102,241,0.06), transparent 55%);
+    background-size: 160px 160px, auto;
   }
-  /* Evidence-tag diagonal accent – crime-scene motive */
+  /* Evidence-tag diagonal accent – crime-scene motive, more visible */
   .evidence-tag {
     position: relative;
     overflow: hidden;
@@ -457,11 +462,42 @@
     content: "";
     position: absolute;
     top: 0;
-    right: -20px;
-    width: 56px;
+    right: -18px;
+    width: 72px;
     height: 100%;
-    background: repeating-linear-gradient(135deg, rgba(245,158,11,0.0) 0 6px, rgba(245,158,11,0.08) 6px 7px);
+    background: repeating-linear-gradient(135deg, rgba(245,158,11,0.0) 0 7px, rgba(245,158,11,0.14) 7px 8px);
     pointer-events: none;
+  }
+  /* Sidebar forensic texture – carbon + grid */
+  .texture-sidebar {
+    position: relative;
+  }
+  .texture-sidebar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.9;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E"),
+      linear-gradient(rgba(99,102,241,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,102,241,0.07) 1px, transparent 1px);
+    background-size: 140px 140px, 28px 28px, 28px 28px;
+  }
+  /* Navbar glass with forensic tint */
+  .texture-navbar {
+    position: relative;
+  }
+  .texture-navbar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.7;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+      linear-gradient(90deg, rgba(59,130,246,0.04), transparent 60%);
+    background-size: 160px 160px, auto;
   }
 
   .animate-fade-up {

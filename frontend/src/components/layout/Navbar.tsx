@@ -30,7 +30,7 @@ export default function Navbar({ onToggleSidebar, sidebarCollapsed }: NavbarProp
 
   return (
     <header
-      className="fixed right-0 top-0 z-20 flex h-16 items-center bg-white/80 backdrop-blur-md transition-all duration-300"
+      className="texture-navbar fixed right-0 top-0 z-20 flex h-16 items-center bg-white/80 backdrop-blur-md transition-all duration-300"
       style={{ left: sidebarCollapsed ? '4rem' : '16rem' }}
     >
       <div className="gradient-line absolute inset-x-0 bottom-0" />

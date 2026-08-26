@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="CrimeIntel AI">
+  <defs>
+    <linearGradient id="gShield" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="50%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="gGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#A78BFA" stop-opacity="0.9"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#4F46E5" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <!-- Shield outer -->
+  <path d="M60 8 L96 22 L96 66 C96 90 82 106 60 116 C38 106 24 90 24 66 L24 22 Z" fill="url(#gShield)" stroke="white" stroke-width="2.2" filter="url(#shadow)"/>
+  <!-- Shield inner highlight -->
+  <path d="M60 16 C42 16 30 30 30 52 C30 68 38 84 60 98 C82 84 90 68 90 52 C90 30 78 16 60 16 Z" fill="none" stroke="white" stroke-opacity="0.22" stroke-width="1.2"/>
+  <!-- Fingerprint arcs - forensic motive -->
+  <g fill="none" stroke="white" stroke-linecap="round" opacity="0.95">
+    <path d="M60 36 C46 36 36 46 36 60 C36 70 42 78 50 83" stroke-width="1.6"/>
+    <path d="M60 44 C50 44 44 50 44 60 C44 66 46 71 51 74" stroke-width="1.4"/>
+    <path d="M60 52 C54 52 50 56 50 60 C50 62 51 64 52 66" stroke-width="1.3"/>
+    <!-- mirrored right -->
+    <path d="M60 36 C74 36 84 46 84 60 C84 70 78 78 70 83" stroke-width="1.6"/>
+    <path d="M60 44 C70 44 76 50 76 60 C76 66 74 71 69 74" stroke-width="1.4"/>
+    <path d="M60 52 C66 52 70 56 70 60 C70 62 69 64 68 66" stroke-width="1.3"/>
+  </g>
+  <!-- Central AI eye / lens -->
+  <g>
+    <circle cx="60" cy="60" r="11" fill="white" opacity="0.96"/>
+    <circle cx="60" cy="60" r="7" fill="url(#gShield)"/>
+    <circle cx="60" cy="60" r="3.2" fill="white"/>
+    <circle cx="62" cy="58" r="1.1" fill="white" opacity="0.9"/>
+    <!-- circuit nodes around lens -->
+    <circle cx="48" cy="46" r="2.1" fill="#22D3EE" stroke="white" stroke-width="0.6"/>
+    <circle cx="72" cy="46" r="2.1" fill="#22D3EE" stroke="white" stroke-width="0.6"/>
+    <circle cx="50" cy="74" r="1.8" fill="#F59E0B" stroke="white" stroke-width="0.5"/>
+    <circle cx="70" cy="74" r="1.8" fill="#F59E0B" stroke="white" stroke-width="0.5"/>
+    <path d="M48 46 L54 52 M72 46 L66 52 M50 74 L54 68 M70 74 L66 68" stroke="white" stroke-width="0.9" opacity="0.85"/>
+  </g>
+  <!-- Magnifying handle – investigation -->
+  <path d="M70 72 L86 88 L84 90 L68 74 Z" fill="white" opacity="0.95"/>
+  <path d="M72 74 L84 86" stroke="#1E293B" stroke-width="1.1" stroke-linecap="round" opacity="0.9"/>
+  <!-- Bottom AI spark -->
+  <g fill="white" opacity="0.95">
+    <path d="M60 92 L57 98 L60 96 L63 98 Z"/>
+  </g>
+</svg>

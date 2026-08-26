@@ -42,14 +42,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-10">
+    <div className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-10">
+      {/* forensic motive texture: grain + shield watermark via .texture-dark ::before/::after */}
       {/* Ambient gradient orbs */}
-      <div className="pointer-events-none absolute -left-40 -top-40 h-[30rem] w-[30rem] animate-[float-orb_16s_ease-in-out_infinite] rounded-full bg-gradient-to-br from-blue-600/40 via-indigo-600/25 to-transparent blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-48 -right-32 h-[34rem] w-[34rem] animate-[float-orb_20s_ease-in-out_infinite_reverse] rounded-full bg-gradient-to-tr from-violet-600/35 via-fuchsia-500/15 to-cyan-500/25 blur-3xl" />
-      <div className="pointer-events-none absolute left-1/2 top-1/4 h-72 w-72 -translate-x-1/2 animate-pulse rounded-full bg-cyan-400/10 blur-3xl" />
+      <div className="pointer-events-none absolute -left-40 -top-40 z-0 h-[30rem] w-[30rem] animate-[float-orb_16s_ease-in-out_infinite] rounded-full bg-gradient-to-br from-blue-600/40 via-indigo-600/25 to-transparent blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-48 -right-32 z-0 h-[34rem] w-[34rem] animate-[float-orb_20s_ease-in-out_infinite_reverse] rounded-full bg-gradient-to-tr from-violet-600/35 via-fuchsia-500/15 to-cyan-500/25 blur-3xl" />
+      <div className="pointer-events-none absolute left-1/2 top-1/4 z-0 h-72 w-72 -translate-x-1/2 animate-pulse rounded-full bg-cyan-400/10 blur-3xl" />
 
-      {/* Blueprint grid overlay */}
-      <div className="bg-grid pointer-events-none absolute inset-0" />
+      {/* Blueprint grid overlay + forensic watermark */}
+      <div className="bg-grid pointer-events-none absolute inset-0 z-0" />
 
       <div className="relative w-full max-w-md">
         {/* Brand */}

@@ -10,7 +10,7 @@ interface CardProps {
 
 export default function Card({ title, subtitle, actions, children, className = '' }: CardProps) {
   return (
-    <div className={`gradient-border rounded-xl bg-white shadow-[0_1px_2px_rgba(11,18,32,0.05),0_4px_16px_rgba(11,18,32,0.06)] transition-shadow duration-300 hover:shadow-[0_4px_12px_rgba(11,18,32,0.06),0_16px_40px_-12px_rgba(79,70,229,0.22)] ${className}`}>
+    <div className={`texture-card gradient-border evidence-tag rounded-xl bg-white shadow-[0_1px_2px_rgba(11,18,32,0.05),0_4px_16px_rgba(11,18,32,0.06)] transition-shadow duration-300 hover:shadow-[0_4px_12px_rgba(11,18,32,0.06),0_16px_40px_-12px_rgba(79,70,229,0.22)] ${className}`}>
       {(title || subtitle || actions) && (
         <>
           <div className="flex items-start justify-between px-5 py-4">

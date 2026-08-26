@@ -46,13 +46,22 @@ class EntityResolutionService:
         """Initialize by loading canonical entities from database."""
         if self._initialized:
             return True
-            
+
+        # Always set defaults first so service works even without DB
+        self._canonical_crime_types = [
+            "theft", "assault", "murder", "robbery", "cybercrime", "fraud",
+            "kidnapping", "rioting", "dacoity"
+        ]
+        self._canonical_statuses = [
+            "open", "closed", "filed", "under_investigation"
+        ]
+
         try:
             # Load canonical locations from database
             cases = await sqlite_db.get_all("Cases")
             locations: Set[str] = set()
             districts: Set[str] = set()
-            
+
             for case in cases or []:
                 loc = case.get("location")
                 if loc:
@@ -60,30 +69,32 @@ class EntityResolutionService:
                 dist = case.get("district")
                 if dist:
                     districts.add(dist.strip())
-                    
+
             self._canonical_locations = sorted(locations)
             self._canonical_districts = sorted(districts)
-            
-            # Crime types and statuses are from intent service
-            self._canonical_crime_types = [
-                "theft", "assault", "murder", "robbery", "cybercrime", "fraud",
-                "kidnapping", "rioting", "dacoity"
-            ]
-            self._canonical_statuses = [
-                "open", "closed", "filed", "under_investigation"
-            ]
-            
-            # Build alias maps
-            self._build_alias_maps()
-            
-            self._initialized = True
-            logger.info("EntityResolutionService initialized with %d locations, %d districts, %d crime types",
-                       len(self._canonical_locations), len(self._canonical_districts), len(self._canonical_crime_types))
-            return True
-            
+
         except Exception as e:
-            logger.error("EntityResolutionService initialization failed: %s", e)
-            return False
+            logger.warning("EntityResolutionService DB load failed, using defaults: %s", e)
+            # Ensure lists are at least empty but aliases still work
+            if not hasattr(self, '_canonical_locations') or self._canonical_locations is None:
+                self._canonical_locations = []
+            if not hasattr(self, '_canonical_districts') or self._canonical_districts is None:
+                self._canonical_districts = []
+            # Fallback: seed with known locations so alias resolution works without DB
+            if len(self._canonical_locations) == 0:
+                self._canonical_locations = [
+                    "Bangalore", "Mysore", "Mangalore", "Hubli", "Dharwad",
+                    "Jalahalli", "Koramangala", "Indiranagar", "MG Road",
+                    "Whitefield", "Hebbal", "Yelahanka", "Marathahalli",
+                ]
+
+        # Build alias maps (always)
+        self._build_alias_maps()
+
+        self._initialized = True
+        logger.info("EntityResolutionService initialized with %d locations, %d districts, %d crime types",
+                   len(self._canonical_locations), len(self._canonical_districts), len(self._canonical_crime_types))
+        return True
     
     def _build_alias_maps(self) -> None:
         """Build alias maps from canonical entities."""

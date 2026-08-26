@@ -124,10 +124,10 @@ export default function AnalyticsPage() {
     return () => clearInterval(id);
   }, [live, preset]);
 
-  // Smooth pie: continuously highlight one slice at a time, no blink
+  // Smooth: raise individual pie section for 3s, then next, repeat – no blink, real app feel
   useEffect(() => {
     if (!live || preset === 'custom' || distribution.length === 0) return;
-    const id = setInterval(() => setPieActive((i) => (i + 1) % distribution.length), 1800);
+    const id = setInterval(() => setPieActive((i) => (i + 1) % distribution.length), 3000);
     return () => clearInterval(id);
   }, [live, preset, distribution.length]);
 
@@ -322,16 +322,11 @@ export default function AnalyticsPage() {
                       innerRadius={36}
                       dataKey="value"
                       isAnimationActive={true}
-                      animationDuration={900}
+                      animationDuration={700}
                       activeIndex={live && preset !== 'custom' && distribution.length > 0 ? (pieActive % distribution.length as any) : undefined as any}
                       activeShape={(props: any) => {
                         const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
-                        return (
-                          <g>
-                            <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 8} startAngle={startAngle} endAngle={endAngle} fill={fill} opacity={0.96} />
-                            <Sector cx={cx} cy={cy} innerRadius={outerRadius + 10} outerRadius={outerRadius + 12} startAngle={startAngle} endAngle={endAngle} fill={fill} opacity={0.32} />
-                          </g>
-                        );
+                        return <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 8} startAngle={startAngle} endAngle={endAngle} fill={fill} stroke="white" strokeWidth={1} opacity={1} />;
                       }}
                       label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                       labelLine={false}

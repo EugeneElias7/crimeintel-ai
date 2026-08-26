@@ -332,7 +332,14 @@ export default function AnalyticsPage() {
                       labelLine={false}
                     >
                       {distribution.map((_, i) => (
-                        <Cell key={`${distribution[i]?.crime_type}-${i}`} fill={COLORS[i % COLORS.length]} stroke="white" strokeWidth={1.2} />
+                        <Cell
+                          key={`${distribution[i]?.crime_type}-${i}`}
+                          fill={COLORS[i % COLORS.length]}
+                          stroke="white"
+                          strokeWidth={1.2}
+                          fillOpacity={live && preset !== 'custom' ? (i === pieActive % distribution.length ? 1 : 0.12) : 1}
+                          strokeOpacity={live && preset !== 'custom' ? (i === pieActive % distribution.length ? 1 : 0.3) : 1}
+                        />
                       ))}
                     </Pie>
                     <Tooltip />

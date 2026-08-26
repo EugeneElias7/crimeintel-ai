@@ -53,23 +53,29 @@ export default function LoginPage() {
       <div className="bg-grid pointer-events-none absolute inset-0 z-0" />
 
       <div className="relative w-full max-w-md">
-        {/* Brand – new CrimeIntel AI logo, noticeable forensic shield */}
+        {/* Brand – industrial badge, highly noticeable */}
         <div className="animate-scale-in mb-8 text-center">
-          <div className="relative mx-auto mb-4 flex h-20 w-20 items-center justify-center">
-            <div className="absolute inset-0 animate-pulse rounded-[1.4rem] bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600 opacity-60 blur-xl" />
-            <img src="/logo-icon.svg" alt="CrimeIntel AI Logo" className="animate-pulse-glow relative h-20 w-20 rounded-[1.4rem] bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 p-2 ring-1 ring-white/20 shadow-xl object-contain" />
+          <div className="relative mx-auto mb-3 flex h-[84px] w-[84px] items-center justify-center rounded-[14px] bg-[#0F172A] border border-[#1E293B] shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.06)]">
+            <div className="rivet rivet-tl !w-1.5 !h-1.5" /> <div className="rivet rivet-tr !w-1.5 !h-1.5" /> <div className="rivet rivet-bl !w-1.5 !h-1.5" /> <div className="rivet rivet-br !w-1.5 !h-1.5" />
+            <img src="/logo-icon.svg" alt="CrimeIntel AI Logo" className="h-[64px] w-[64px] object-contain drop-shadow-[0_4px_12px_rgba(6,182,214,0.4)]" />
+            <div className="absolute -top-1.5 -right-1.5 h-3 w-3 rounded-full bg-emerald-500 border-2 border-[#020617] shadow-[0_0_8px_rgba(16,185,129,0.9)] animate-pulse" />
           </div>
-          <img src="/logo.svg" alt="CrimeIntel AI" className="mx-auto h-9 w-auto object-contain brightness-125" />
-          <p className="mt-1.5 text-sm tracking-wide text-slate-300">
-            Intelligence Platform • Karnataka State Police
-          </p>
+          <img src="/logo.svg" alt="CrimeIntel AI" className="mx-auto mt-3 h-10 w-auto object-contain brightness-125 drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]" />
+          <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-[#1E293B] bg-[#0F172A]/80 px-3 py-1 backdrop-blur">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-mono-industrial text-[11px] tracking-[0.12em] text-slate-300">KARNATAKA STATE POLICE • SECURE ACCESS</span>
+          </div>
         </div>
 
-        {/* Card */}
-        <div className="gradient-border gradient-border-animated glass-card animate-fade-up p-8 shadow-2xl shadow-indigo-950/60 backdrop-blur-xl">
-          <h2 className="mb-6 text-center text-lg font-semibold text-white">
-            Sign In
-          </h2>
+        {/* Industrial steel login card – rivets + hazard */}
+        <div className="relative overflow-hidden rounded-[12px] border border-[#1E293B] bg-[#0F172A]/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
+          <div className="rivet rivet-tl" /> <div className="rivet rivet-tr" /> <div className="rivet rivet-bl" /> <div className="rivet rivet-br" />
+          <div className="hazard-stripe opacity-80" />
+          <div className="p-8">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="font-mono-industrial text-[13px] font-bold tracking-[0.16em] text-white">SECURE LOGIN</h2>
+              <span className="rounded bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 font-mono-industrial text-[10px] font-bold tracking-widest text-amber-400">CLASSIFIED</span>
+            </div>
 
           {error && (
             <div className="mb-4 rounded-lg border border-red-400/30 bg-red-500/15 px-4 py-3 text-sm text-red-300 backdrop-blur-sm">
@@ -146,6 +152,7 @@ export default function LoginPage() {
             </Button>
           </form>
         </div>
+      </div>
 
         <p className="animate-fade-in mt-6 text-center text-xs text-slate-500">
           Powered by Pixel Pirates | KSP Hackathon 2026

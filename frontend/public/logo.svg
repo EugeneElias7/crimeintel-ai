@@ -1,41 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" width="420" height="120" role="img" aria-label="CrimeIntel AI">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" width="520" height="120" role="img" aria-label="CrimeIntel AI">
   <defs>
     <linearGradient id="gShield" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2563EB"/>
-      <stop offset="50%" stop-color="#6366F1"/>
-      <stop offset="100%" stop-color="#7C3AED"/>
+      <stop offset="0%" stop-color="#0EA5E9"/>
+      <stop offset="55%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
     </linearGradient>
-    <linearGradient id="gText" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#1E3A8A"/>
-      <stop offset="50%" stop-color="#4F46E5"/>
-      <stop offset="100%" stop-color="#7C3AED"/>
+    <linearGradient id="gSteel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
     </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#4F46E5" flood-opacity="0.3"/>
-    </filter>
   </defs>
-  <!-- Icon -->
-  <g transform="translate(4,6)">
-    <path d="M48 6 L78 16 L78 52 C78 72 68 86 48 96 C28 86 18 72 18 52 L18 16 Z" fill="url(#gShield)" stroke="white" stroke-width="1.6" filter="url(#shadow)"/>
-    <path d="M48 14 C36 14 26 24 26 40 C26 52 32 64 48 76 C64 64 70 52 70 40 C70 24 60 14 48 14 Z" fill="none" stroke="white" stroke-opacity="0.22" stroke-width="1"/>
-    <g fill="none" stroke="white" stroke-linecap="round" opacity="0.95">
-      <path d="M48 28 C38 28 30 36 30 46 C30 54 34 60 40 64" stroke-width="1.4"/>
-      <path d="M48 34 C42 34 36 38 36 46 C36 50 38 54 41 57" stroke-width="1.2"/>
-      <path d="M48 28 C58 28 66 36 66 46 C66 54 62 60 56 64" stroke-width="1.4"/>
-      <path d="M48 34 C54 34 60 38 60 46 C60 50 58 54 55 57" stroke-width="1.2"/>
-    </g>
-    <circle cx="48" cy="46" r="9" fill="white" opacity="0.96"/>
-    <circle cx="48" cy="46" r="5.5" fill="url(#gShield)"/>
-    <circle cx="48" cy="46" r="2.4" fill="white"/>
-    <circle cx="38" cy="36" r="1.7" fill="#22D3EE" stroke="white" stroke-width="0.5"/>
-    <circle cx="58" cy="36" r="1.7" fill="#22D3EE" stroke="white" stroke-width="0.5"/>
-    <path d="M56 56 L66 66 L64 68 L54 58 Z" fill="white" opacity="0.95"/>
+  <!-- Icon – industrial badge -->
+  <g transform="translate(6,8)">
+    <path d="M48 4 L64 10 L78 12 L72 24 L78 36 L72 48 L78 60 L64 68 L48 76 L32 68 L18 60 L24 48 L18 36 L24 24 L18 12 L32 10 Z" fill="url(#gSteel)" stroke="url(#gShield)" stroke-width="1.6"/>
+    <path d="M48 14 L62 20 L62 44 C62 56 55 66 48 72 C41 66 34 56 34 44 L34 20 Z" fill="#0F172A" stroke="#334155" stroke-width="0.9"/>
+    <text x="48" y="40" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono, monospace" font-weight="800" font-size="16" fill="white" letter-spacing="-1">CI</text>
+    <rect x="40" y="48" width="16" height="8" rx="1" fill="#F59E0B" stroke="#92400E" stroke-width="0.5"/>
+    <text x="48" y="53.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="800" font-size="5.5" fill="#1E293B" letter-spacing="1">AI</text>
+    <circle cx="48" cy="38" r="10" fill="none" stroke="#38BDF8" stroke-width="0.7" opacity="0.5"/>
+    <circle cx="48" cy="38" r="1" fill="#38BDF8"/>
   </g>
-  <!-- Text -->
-  <g font-family="Inter, Segoe UI, sans-serif">
-    <text x="102" y="52" font-size="30" font-weight="800" letter-spacing="-0.8" fill="url(#gText)">Crime<tspan fill="#0F172A">Intel</tspan></text>
-    <text x="102" y="74" font-size="16" font-weight="700" letter-spacing="3.2" fill="#6366F1">AI</text>
-    <text x="132" y="74" font-size="10.5" font-weight="600" letter-spacing="1.8" fill="#64748B">INTELLIGENCE  PLATFORM</text>
-    <rect x="102" y="82" width="68" height="2.2" rx="1" fill="url(#gShield)" opacity="0.9"/>
+  <!-- Wordmark – industrial -->
+  <g font-family="Inter, sans-serif">
+    <text x="104" y="42" font-size="28" font-weight="900" letter-spacing="-1.2" fill="#0F172A">CRIME<tspan fill="#4F46E5">INTEL</tspan></text>
+    <g transform="translate(104,52)">
+      <rect x="0" y="0" width="36" height="18" rx="2" fill="#0F172A" stroke="#334155" stroke-width="0.8"/>
+      <rect x="1" y="1" width="34" height="6" rx="1" fill="url(#gShield)" opacity="0.95"/>
+      <text x="18" y="13.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="800" font-size="11" fill="white" letter-spacing="1.5">AI</text>
+    </g>
+    <text x="148" y="65" font-size="9.5" font-weight="700" letter-spacing="3.8" fill="#64748B">INTELLIGENCE PLATFORM</text>
+    <text x="148" y="78" font-size="7" font-weight="600" letter-spacing="1.6" fill="#94A3B8">KARNATAKA STATE POLICE • PIXEL PIRATES • 2026</text>
+    <rect x="104" y="86" width="120" height="1.2" rx="0.6" fill="url(#gShield)" opacity="0.85"/>
+    <rect x="104" y="89" width="84" height="1" rx="0.5" fill="#CBD5E1"/>
   </g>
 </svg>

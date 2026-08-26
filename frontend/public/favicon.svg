@@ -1,22 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="CrimeIntel AI">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
     <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2563EB"/>
-      <stop offset="50%" stop-color="#6366F1"/>
-      <stop offset="100%" stop-color="#7C3AED"/>
+      <stop offset="0%" stop-color="#0EA5E9"/>
+      <stop offset="100%" stop-color="#6366F1"/>
     </linearGradient>
   </defs>
-  <rect width="96" height="96" rx="18" fill="url(#g)"/>
-  <path d="M48 14 L72 24 L72 54 C72 70 62 82 48 88 C34 82 24 70 24 54 L24 24 Z" fill="none" stroke="white" stroke-width="3" opacity="0.95"/>
-  <g fill="none" stroke="white" stroke-linecap="round" opacity="0.95">
-    <path d="M48 30 C38 30 32 38 32 48 C32 56 36 62 42 66" stroke-width="1.6"/>
-    <path d="M48 36 C42 36 38 40 38 48 C38 52 40 56 43 58" stroke-width="1.3"/>
-    <path d="M48 30 C58 30 64 38 64 48 C64 56 60 62 54 66" stroke-width="1.6"/>
-  </g>
-  <circle cx="48" cy="48" r="10" fill="white" opacity="0.97"/>
-  <circle cx="48" cy="48" r="6" fill="url(#g)"/>
-  <circle cx="48" cy="48" r="2.8" fill="white"/>
-  <path d="M56 56 L66 66" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
-  <circle cx="34" cy="38" r="1.8" fill="#22D3EE" stroke="white" stroke-width="0.6"/>
-  <circle cx="62" cy="36" r="1.8" fill="#22D3EE" stroke="white" stroke-width="0.6"/>
+  <rect width="64" height="64" rx="14" fill="#0F172A" stroke="url(#g)" stroke-width="1.6"/>
+  <path d="M32 10 L44 15 L44 33 C44 42 38 50 32 54 C26 50 20 42 20 33 L20 15 Z" fill="none" stroke="white" stroke-width="1.6" opacity="0.95"/>
+  <text x="32" y="30" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="800" font-size="11" fill="white">CI</text>
+  <rect x="26" y="34" width="12" height="7" rx="1" fill="#F59E0B"/>
+  <text x="32" y="39.2" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="800" font-size="4.5" fill="#1E293B">AI</text>
+  <circle cx="32" cy="28" r="6" fill="none" stroke="#38BDF8" stroke-width="0.7" opacity="0.4"/>
 </svg>

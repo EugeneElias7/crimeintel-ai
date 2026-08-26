@@ -30,40 +30,41 @@ export default function Navbar({ onToggleSidebar, sidebarCollapsed }: NavbarProp
 
   return (
     <header
-      className="texture-navbar fixed right-0 top-0 z-20 flex h-16 items-center bg-white/80 backdrop-blur-md transition-all duration-300"
+      className="texture-navbar fixed right-0 top-0 z-20 flex h-[60px] items-center bg-[#F8FAFC]/90 backdrop-blur-md border-b border-[#E2E8F0] transition-all duration-300"
       style={{ left: sidebarCollapsed ? '4rem' : '16rem' }}
     >
-      <div className="gradient-line absolute inset-x-0 bottom-0" />
-      <div className="flex w-full items-center justify-between px-6">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={onToggleSidebar}
-            className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-blue-50 hover:text-indigo-600 lg:hidden"
-          >
-            <Menu size={20} />
+      <div className="hazard-stripe absolute inset-x-0 top-0 h-[3px] opacity-60" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-[#E2E8F0]" />
+      <div className="flex w-full items-center justify-between px-5">
+        <div className="flex items-center gap-3">
+          <button onClick={onToggleSidebar} className="rounded-[6px] border border-[#E2E8F0] bg-white p-2 text-slate-500 hover:border-[#0EA5E9] hover:text-[#0EA5E9] transition-colors lg:hidden">
+            <Menu size={18} />
           </button>
           {basePath !== '/' && <BackButton iconOnly fallbackTo="/" />}
-          <h2 className="relative text-xl font-semibold text-gray-800">
-            {title}
-            <span className="absolute -bottom-1 left-0 h-[3px] w-8 rounded-full bg-gradient-to-r from-blue-500 to-violet-500" />
-          </h2>
+          <div>
+            <h2 className="font-mono-industrial text-[13px] font-bold tracking-[0.14em] text-[#0F172A] flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)] animate-pulse" />
+              {title.toUpperCase()}
+              <span className="hidden sm:inline font-mono-industrial text-[10px] font-normal tracking-widest text-slate-400">• SECTOR {basePath || '/'}</span>
+            </h2>
+            <div className="mt-0.5 h-[2px] w-12 rounded-full bg-gradient-to-r from-[#0EA5E9] to-[#F59E0B]" />
+          </div>
         </div>
-
-        <div className="flex items-center gap-4">
-          <button className="group relative rounded-lg p-2 text-gray-500 transition-colors hover:bg-blue-50 hover:text-indigo-600">
-            <Bell size={20} />
-            <span className="absolute right-1.5 top-1.5 flex h-4 w-4 animate-pulse items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-rose-500 text-[10px] font-bold text-white shadow-sm shadow-red-300">
-              3
-            </span>
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2 rounded-[6px] border border-[#E2E8F0] bg-white px-3 py-1.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-mono-industrial text-[11px] text-slate-600">SYS ONLINE</span>
+            <span className="font-mono-industrial text-[10px] text-slate-400">12:42 IST</span>
+          </div>
+          <button className="group relative rounded-[8px] border border-[#E2E8F0] bg-white p-2 text-slate-500 hover:border-amber-300 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+            <Bell size={18} />
+            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#EF4444] text-[10px] font-mono-industrial font-bold text-white border border-white shadow-sm">3</span>
           </button>
-
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600 text-sm font-medium text-white ring-2 ring-indigo-100 transition-shadow hover:shadow-lg hover:shadow-indigo-200">
-              {user?.display_name?.charAt(0)?.toUpperCase() || 'U'}
-            </div>
-            <div className="hidden md:block">
-              <p className="text-sm font-medium text-gray-700">{user?.display_name || 'User'}</p>
-              <p className="text-xs text-gray-500">{user?.role || ''}</p>
+          <div className="hidden md:flex items-center gap-2.5 rounded-[8px] border border-[#E2E8F0] bg-white px-2.5 py-1.5 shadow-sm">
+            <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-[#0F172A] border border-[#1E293B] text-[11px] font-mono-industrial font-bold text-amber-400">{user?.display_name?.charAt(0)?.toUpperCase() || 'U'}</div>
+            <div className="leading-none">
+              <p className="text-[12px] font-semibold text-[#0F172A] leading-none">{user?.display_name || 'Operator'}</p>
+              <p className="font-mono-industrial text-[10px] text-amber-600 leading-none">{(user?.role || 'OFFICER').toUpperCase()}</p>
             </div>
           </div>
         </div>

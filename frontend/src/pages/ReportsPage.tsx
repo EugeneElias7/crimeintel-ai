@@ -11,7 +11,18 @@ import { getOverview, getTrends, getByDistrict } from '../services/analyticsServ
 import type { Case, CaseDetail } from '../types/case';
 import type { OverviewData, TrendItem, DistrictItem } from '../types/analytics';
 
-const DISTRICTS = ['North', 'South', 'East', 'West', 'Central'];
+const DISTRICTS = [
+  'Bangalore Urban',
+  'Bangalore Rural',
+  'Belgaum',
+  'Dharwad',
+  'Gulbarga',
+  'Hubli',
+  'Mangalore',
+  'Mysore',
+  'Shimoga',
+  'Tumkur',
+];
 
 type ReportMode = 'case' | 'summary';
 
@@ -32,10 +43,19 @@ export default function ReportsPage() {
 
   const printRef = useRef<HTMLDivElement>(null);
 
+  const [loadingCases, setLoadingCases] = useState(true);
+  const [casesError, setCasesError] = useState<string | null>(null);
+
   useEffect(() => {
-    listCases({ limit: 200 })
+    setLoadingCases(true);
+    setCasesError(null);
+    listCases({ limit: 100 })
       .then((res) => setCases(res.data))
-      .catch(() => {});
+      .catch((err) => {
+        const msg = (err as any)?.response?.data?.detail || 'Failed to load cases';
+        setCasesError(typeof msg === 'string' ? msg : 'Failed to load cases');
+      })
+      .finally(() => setLoadingCases(false));
   }, []);
 
   const handleGenerateCase = async () => {
@@ -114,24 +134,27 @@ export default function ReportsPage() {
       {mode === 'case' && (
         <Card>
           <div className="mb-4 flex flex-wrap items-end gap-4">
-            <div className="min-w-[240px] flex-1">
+            <div className="min-w-[280px] flex-1">
               <label className="mb-1 block text-sm font-medium text-gray-700">
-                Select Case
+                Select Case <span className="font-mono-industrial text-[11px] text-slate-400">• {cases.length} loaded</span>
               </label>
               <select
                 className="input-field w-full"
                 value={selectedCaseId}
                 onChange={(e) => setSelectedCaseId(e.target.value)}
+                disabled={loadingCases}
               >
-                <option value="">Choose a case...</option>
+                <option value="">{loadingCases ? 'Loading cases...' : casesError ? casesError : 'Choose a case...'}</option>
                 {cases.map((c) => (
-                  <option key={c.case_id} value={c.case_id}>
-                    {c.case_number} - {c.title}
+                  <option key={c.case_id} value={c.case_id} title={`${c.case_number} – ${c.title}`}>
+                    {c.case_number} • {c.crime_type} @ {c.district} — {c.title.slice(0, 48)}{c.title.length > 48 ? '…' : ''}
                   </option>
                 ))}
               </select>
+              {casesError && !loadingCases && <p className="mt-1 text-xs text-red-500">{casesError} — showing 0 cases. Try refreshing.</p>}
+              {!casesError && !loadingCases && cases.length === 0 && <p className="mt-1 text-xs text-amber-600">No cases found.</p>}
             </div>
-            <Button onClick={handleGenerateCase} isLoading={loadingCase}>
+            <Button onClick={handleGenerateCase} isLoading={loadingCase} disabled={!selectedCaseId || loadingCases}>
               Generate
             </Button>
           </div>

@@ -50,10 +50,6 @@ PROJECT\ DIARY.docx
 build_full_report_with_images.py
 build_full_diary.py
 build_specialization_diary.py
-fix_specialization.py
-check_spec.py
-verify_docx.py
-fix_docx.py
 generate_assets.py
 generate_real_charts.py
 fig_*.png

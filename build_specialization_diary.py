@@ -82,21 +82,21 @@ for idx,(sl,reg,name) in enumerate(students):
     body(r[1], reg, size=8, align=WD_ALIGN_PARAGRAPH.CENTER)
     body(r[2], name, size=7.5, align=WD_ALIGN_PARAGRAPH.LEFT)
 
-# Abstract
+# Abstract — PAGE ONE (as requested)
 p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_before=Pt(12)
 r=p.add_run("ABSTRACT"); r.bold=True; r.font.size=Pt(12); r.font.color.rgb=CHRIST_BLUE
 p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.JUSTIFY; p.paragraph_format.space_before=Pt(4)
-abstract="CrimeIntel AI is an AI-powered crime intelligence and investigation platform designed as a forensic-grade Command-Center for law-enforcement. The system unifies case management, AI-driven conversational intelligence (CRIMA — Conversational Intelligence Orchestrator), entity resolution with FAISS-based retrieval-augmented generation, heat-map crime density analytics with marker clustering, evidence gallery, and role-based administration. Built on a modern full-stack of FastAPI (Python 3.12) and React + Vite + Tailwind, the platform ingests synthetic FIR-derived seed data, builds FAISS vector indices, grounds LLM responses via a grounding validator and Gemini/Ollama adapters, and delivers live dashboards, district-wise analytics, and selectable reports. The project follows an adapter pattern for persistence (Zoho Catalyst / local SQLite) and a phased delivery from Phase 0 foundation through Phase 1 data modelling, Phase 2 CRIMA, to Phase 5 heat-map and industrial forensic UI. This diary records weekly progress from 28 Jul to 06 Sep 2026, extracted from git log --all --exclude=refs/stash (80 commits across 6 branches, 5 active weeks) and per-file name-status, with daily breakdowns and explicit member contributions: Om Prakash Suthar (@opbsuthar — 43 commits), Eugene Elias (@EugeneElias7 — 22 commits) and Mohammed Hamil P R (@hamilwt — 12 commits). Artefacts (report docx, fig_*.png, christ logos) are stashed local-only to avoid branch conflicts."
+abstract="CrimeIntel AI is an AI-powered crime intelligence and investigation platform designed as a forensic-grade Command-Center for law-enforcement. The system unifies case management, AI-driven conversational intelligence (CRIMA — Conversational Intelligence Orchestrator), entity resolution with FAISS-based retrieval-augmented generation, heat-map crime density analytics with marker clustering, evidence gallery, and role-based administration. Built on a modern full-stack of FastAPI (Python 3.12) and React + Vite + Tailwind, the platform ingests synthetic FIR-derived seed data, builds FAISS vector indices, grounds LLM responses via a grounding validator and Gemini/Ollama adapters, and delivers live dashboards, district-wise analytics, and selectable reports. The project follows an adapter pattern for persistence (Zoho Catalyst / local SQLite) and a phased delivery from Phase 0 foundation through Phase 1 data modelling, Phase 2 CRIMA, to Phase 5 heat-map and industrial forensic UI. This diary records weekly progress from 28 Jul to 06 Sep 2026, extracted from git log --all --exclude=refs/stash (83 commits across 6 branches, 5 active weeks) and per-file name-status, with daily breakdowns and explicit member contributions: Om Prakash Suthar (@opbsuthar — 43 commits), Eugene Elias (@EugeneElias7 — 22 commits) and Mohammed Hamil P R (@hamilwt — 12 commits). Artefacts (report docx, fig_*.png, christ logos) are stashed local-only to avoid branch conflicts."
 r=p.add_run(abstract); r.font.size=Pt(8.5); r.font.name="Calibri"; r.font.color.rgb=RGBColor(0x1E,0x2A,0x3A)
+# Abstract on PAGE ONE — page break after abstract
+doc.add_page_break()
 
-# Review heading
+# Review heading — starts new page after abstract
 p=doc.add_paragraph(); pPr=p._p.get_or_add_pPr(); pPr.append(parse_xml(f'<w:pStyle {nsdecls("w")} w:val="Heading1"/>'))
-p.alignment=WD_ALIGN_PARAGRAPH.LEFT; p.paragraph_format.space_before=Pt(14)
+p.alignment=WD_ALIGN_PARAGRAPH.LEFT; p.paragraph_format.space_before=Pt(6)
 r=p.add_run("Review"); r.bold=True; r.font.size=Pt(11); r.font.color.rgb=CHRIST_BLUE
-
-# Review Table — ONLY weekly logs, Word-safe, widths 10400 fit
-t1=styled(doc, 1, 4, widths=[1.15, 3.6, 1.4, 1.4])
-header(t1.rows[0].cells, ["Date","Work Done (to be filled by student)","Supervisor's Remarks","Student's Signature"], sz=7.5)
+p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.LEFT; p.paragraph_format.space_after=Pt(2)
+r=p.add_run("Weekly logs — each weekly table on individual page as requested (every single log from all branches included)"); r.italic=True; r.font.size=Pt(6.5); r.font.color.rgb=RGBColor(0x5A,0x6A,0x7A)
 
 # helpers
 from docx.oxml import parse_xml as px
@@ -136,10 +136,19 @@ weeks=[
     ("Weekly Log 5 — Phase 5: Heat-Map, Forensic UI & Live Charts  (25 – 30 Aug 2026) — 18 commits",[("25 Aug","Heat-Map land 1062c8a — 44 files: marker clustering, hotspot info, entity_resolution\n— Eugene Elias @EugeneElias7\n— Files: backend/services/*, HeatMapPage.tsx","Heat-Map done","Eugene Elias"),("26 Aug","CI resilience 91d027d + cef3cc3 + forensic texture f154525\n— Om Prakash Suthar @opbsuthar","Resilient","Om Prakash Suthar"),("26 Aug","Industrial command-center 9bdd08d + premium logo + grain polish\n— Om Prakash Suthar @opbsuthar","Premium UI","Om Prakash Suthar"),("26 Aug","Reports selectable (7b73be9) + live charts cycling (2046dbd, 3f43385)\n— Om Prakash Suthar @opbsuthar","Live charts","Om Prakash Suthar"),("26 Aug","Pie saga f5bb176→437f3ba→74be6de→Reverts→7151893 static fix\n— Om Prakash Suthar @opbsuthar","Pie fixed","Om Prakash Suthar"),("30 Aug","Stash hygiene 9a28282 — .gitignore hides fig_*.png/christ_*.png/docx\n— Om Prakash Suthar @opbsuthar","Stash ok","Om Prakash Suthar")]),
     ("Weekly Log 6 — Report, Live Figures & Diary Finalization  (28 Aug – 06 Sep 2026) — 5 diary commits",[("28 Aug","Diary commits bcec914/425c5fc/c0e4806 — .gitignore + abstract & margins fix\n— Om Prakash Suthar @opbsuthar","Diary fix","Om Prakash Suthar"),("01 Sep","Live fig pipeline — generate_real_charts.py: fig_distribution_live\n— Om Prakash Suthar @opbsuthar","Figs live","Om Prakash Suthar"),("02 Sep","Full report build — build_full_report_with_images.py (60 pages, 3 certs)\n— Om Prakash Suthar @opbsuthar","Report done","Om Prakash Suthar"),("03 Sep","Manual QA — 100-case pagination, CRIMA grounding, heat-map ≤120ms\n— Eugene Elias @EugeneElias7","QA passed","Eugene Elias"),("05 Sep","Stash strategy — diary regenerated fresh per CHRIST format\n— Om Prakash Suthar @opbsuthar","Stashed","Om Prakash Suthar"),("06 Sep","Viva slides + Catalyst deploy checklist\n— All 3: Om @opbsuthar, Eugene @EugeneElias7, Hamil @hamilwt","Ready","All members")]),
 ]
-for title, days in weeks:
-    add_weekly(t1, title)
+# Each weekly log table on INDIVIDUAL PAGE as requested
+for w_idx, (title, days) in enumerate(weeks):
+    if w_idx > 0:
+        doc.add_page_break()
+    # Weekly title bar
+    p=doc.add_paragraph(); pr=p._p.get_or_add_pPr(); pr.append(parse_xml(f'<w:shd {nsdecls("w")} w:val="clear" w:color="auto" w:fill="{LIGHT_BLUE}"/>'))
+    p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_before=Pt(2); p.paragraph_format.space_after=Pt(2)
+    r=p.add_run(f'  {title}  '); r.bold=True; r.font.size=Pt(8.5); r.font.color.rgb=RGBColor(0xFF,0xFF,0xFF)
+    # Individual Review table for this week (1 header + 6 daily rows = 7 rows, on its own page)
+    t = styled(doc, 1, 4, widths=[1.15, 3.6, 1.4, 1.4])
+    header(t.rows[0].cells, ["Date","Work Done (to be filled by student)","Supervisor's Remarks","Student's Signature"], sz=7.5)
     for date, work, remarks, sig in days:
-        add_daily(t1, date, work, remarks, sig)
+        add_daily(t, date, work, remarks, sig)
 
 # Signature
 p=doc.add_paragraph(); p.paragraph_format.space_before=Pt(12)

@@ -39,14 +39,21 @@ temp_register.json
 # Database
 backend/data/*.db
 
-# Project report – local only, stashed (keep in parent root, hide from Source Control)
+# Project report & diary – local only, stashed (keep in parent root, hide from Source Control)
 BCA-Project\ Report-Format.pdf
 CrimeIntel_AI_Project_Reference_Document.docx
 CrimeIntel_AI_Project_Report.docx
+CrimeIntel_AI_Full_Project_Diary.docx
+SPECIALIZATION-Project\ Diary-2026.docx
+PROJECT\ DIARY.docx
 build_full_report_with_images.py
+build_full_diary.py
+build_project_diary.py
 generate_assets.py
 generate_real_charts.py
 fig_*.png
 christ_*.png
 christ_logo_top_clean.png
 christ_seal_clean.png
+
+build_minimal_project_diary.py

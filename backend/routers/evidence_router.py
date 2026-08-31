@@ -1,7 +1,9 @@
 import logging
+import os
 from typing import Optional
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi.responses import FileResponse
 
 from middleware.auth_middleware import get_current_user, require_role
 from models.evidence import EvidenceResponse, EvidenceUploadResponse
@@ -109,6 +111,47 @@ async def upload_evidence(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to upload evidence.",
         )
+
+
+@router.get(
+    "/{evidence_id}/file",
+    summary="Download evidence file",
+)
+async def download_evidence_file(
+    evidence_id: str,
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        svc = get_evidence_service()
+        record = await svc.get_evidence(evidence_id)
+        file_url = record.get("file_url", "")
+        # file_url is file:// path from local_fs
+        if file_url.startswith("file://"):
+            file_path = file_url[7:]
+        else:
+            file_path = file_url
+        if not os.path.exists(file_path):
+            raise HTTPException(status_code=404, detail="File not found on server")
+        # Guess mime type from stored file_type or extension
+        import mimetypes
+        mime, _ = mimetypes.guess_type(file_path)
+        return FileResponse(path=file_path, media_type=mime or "application/octet-stream", filename=record.get("file_name", "file"))
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Failed to download evidence file %s: %s", evidence_id, e)
+        raise HTTPException(status_code=500, detail="Failed to download file")
+
+
+@router.get(
+    "/{evidence_id}/download",
+    summary="Download evidence file (alias)",
+)
+async def download_evidence_alias(
+    evidence_id: str,
+    current_user: dict = Depends(get_current_user),
+):
+    return await download_evidence_file(evidence_id, current_user)
 
 
 @router.delete(

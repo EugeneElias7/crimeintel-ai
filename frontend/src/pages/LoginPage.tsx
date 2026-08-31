@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate, Link } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
-import Button from '../components/ui/Button';
+import PageTransition from '../components/ui/PageTransition';
 
 const loginSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -16,9 +16,19 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const login = useAuthStore((s) => s.login);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    const state = location.state as { fromRegistration?: boolean; message?: string } | null;
+    if (state?.fromRegistration) {
+      setSuccess(state.message || 'Account created successfully! Please sign in to continue.');
+      setTimeout(() => setSuccess(null), 5000);
+    }
+  }, [location]);
 
   const {
     register,
@@ -34,16 +44,49 @@ export default function LoginPage() {
       await login(data.email, data.password);
       navigate('/', { replace: true });
     } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
-        'Invalid credentials. Please try again.';
-      setError(msg);
+      const axiosError = err as {
+        response?: {
+          status?: number;
+          data?: { detail?: string | { message?: string; user_id?: number; account_status?: string } };
+        };
+        message?: string;
+      };
+
+      if (axiosError.response?.status === 401) {
+        setError('Invalid credentials. Please check your email and password.');
+      } else if (axiosError.response?.status === 403) {
+        const detail = axiosError.response.data?.detail || '';
+        // Handle new response format with user_id
+        if (typeof detail === 'object' && detail.user_id) {
+          if (detail.account_status === 'PENDING_DOCUMENT' || detail.account_status === 'PENDING_VERIFICATION') {
+            navigate('/verify-identity', { replace: true, state: { userId: detail.user_id } });
+            return;
+          }
+        }
+        // Handle old string format
+        const detailStr = typeof detail === 'string' ? detail : JSON.stringify(detail);
+        if (detailStr.toLowerCase().includes('pending verification')) {
+          // We need to get user_id from email - try to extract from error or redirect
+          navigate('/verify-identity', { replace: true });
+          return;
+        }
+        if (detailStr.toLowerCase().includes('pending document')) {
+          navigate('/verify-identity', { replace: true });
+          return;
+        }
+        setError('Access denied. Please contact your administrator.');
+      } else if (axiosError.response?.status === 429) {
+        setError('Too many login attempts. Please wait a moment and try again.');
+      } else if (axiosError.message?.includes('Network Error') || axiosError.response?.status === 405) {
+        setError('Unable to reach authentication server. Please try again later.');
+      } else {
+        setError('Unable to sign in. Please try again.');
+      }
     }
   };
 
   return (
-    <div className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-10">
-      {/* forensic motive texture: grain + shield watermark via .texture-dark ::before/::after */}
+    <PageTransition className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--color-navy-950)] px-4 py-10">
       {/* Ambient gradient orbs */}
       <div className="pointer-events-none absolute -left-40 -top-40 z-0 h-[30rem] w-[30rem] animate-[float-orb_16s_ease-in-out_infinite] rounded-full bg-gradient-to-br from-blue-600/40 via-indigo-600/25 to-transparent blur-3xl" />
       <div className="pointer-events-none absolute -bottom-48 -right-32 z-0 h-[34rem] w-[34rem] animate-[float-orb_20s_ease-in-out_infinite_reverse] rounded-full bg-gradient-to-tr from-violet-600/35 via-fuchsia-500/15 to-cyan-500/25 blur-3xl" />
@@ -53,111 +96,144 @@ export default function LoginPage() {
       <div className="bg-grid pointer-events-none absolute inset-0 z-0" />
 
       <div className="relative w-full max-w-md">
-        {/* Brand – industrial badge, highly noticeable */}
-        <div className="animate-scale-in mb-8 text-center">
-          <div className="relative mx-auto mb-3 flex h-[84px] w-[84px] items-center justify-center rounded-[14px] bg-[#0F172A] border border-[#1E293B] shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.06)]">
-            <div className="rivet rivet-tl !w-1.5 !h-1.5" /> <div className="rivet rivet-tr !w-1.5 !h-1.5" /> <div className="rivet rivet-bl !w-1.5 !h-1.5" /> <div className="rivet rivet-br !w-1.5 !h-1.5" />
-            <img src="/logo-icon.svg" alt="CrimeIntel AI Logo" className="h-[64px] w-[64px] object-contain drop-shadow-[0_4px_12px_rgba(6,182,214,0.4)]" />
-            <div className="absolute -top-1.5 -right-1.5 h-3 w-3 rounded-full bg-emerald-500 border-2 border-[#020617] shadow-[0_0_8px_rgba(16,185,129,0.9)] animate-pulse" />
-          </div>
-          <img src="/logo.svg" alt="CrimeIntel AI" className="mx-auto mt-3 h-10 w-auto object-contain brightness-125 drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]" />
-          <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-[#1E293B] bg-[#0F172A]/80 px-3 py-1 backdrop-blur">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="font-mono-industrial text-[11px] tracking-[0.12em] text-slate-300">KARNATAKA STATE POLICE • SECURE ACCESS</span>
-          </div>
-        </div>
-
-        {/* Industrial steel login card – rivets + hazard */}
-        <div className="relative overflow-hidden rounded-[12px] border border-[#1E293B] bg-[#0F172A]/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
+        {/* Industrial steel login card – rivets + hazard stripe */}
+        <div className="relative overflow-hidden rounded-[12px] border border-[var(--color-border-sidebar)] bg-[var(--color-navy-900)]/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
           <div className="rivet rivet-tl" /> <div className="rivet rivet-tr" /> <div className="rivet rivet-bl" /> <div className="rivet rivet-br" />
           <div className="hazard-stripe opacity-80" />
-          <div className="p-8">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-mono-industrial text-[13px] font-bold tracking-[0.16em] text-white">SECURE LOGIN</h2>
-              <span className="rounded bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 font-mono-industrial text-[10px] font-bold tracking-widest text-amber-400">CLASSIFIED</span>
+<div className="p-6">
+            {/* Brand – clean and prominent - moved inside card */}
+            <div className="animate-scale-in text-center mb-2">
+              <img src="/Crime-Icon.png" alt="CrimeIntel" className="mx-auto w-40 drop-shadow-2xl" />
             </div>
+            <h2 className="mb-1 text-center text-xl font-semibold text-white tracking-tight">Sign in to CrimeIntel</h2>
+            <p className="mb-1 text-center text-sm text-slate-400">Sign in with your authorized account to continue</p>
 
-          {error && (
-            <div className="mb-4 rounded-lg border border-red-400/30 bg-red-500/15 px-4 py-3 text-sm text-red-300 backdrop-blur-sm">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-200">
-                Email
-              </label>
-              <div className="relative group">
-                <Mail
-                  size={18}
-                  className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-indigo-400"
-                />
-                <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="Enter your email"
-                  {...register('email')}
-                  className={`input-dark pl-10 ${errors.email ? 'border-red-400/60' : ''}`}
-                />
+            {error && (
+              <div className="mb-4 flex items-center gap-2 rounded-lg border border-red-400/30 bg-red-500/15 px-3 py-2.5 text-sm text-red-300 backdrop-blur-sm">
+                <svg className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77-1.333.192 3 1.732 3z" />
+                </svg>
+                <span>{error}</span>
               </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="password" className="mb-1 block text-sm font-medium text-slate-200">
-                Password
-              </label>
-              <div className="relative group">
-                <Lock
-                  size={18}
-                  className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-indigo-400"
-                />
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  placeholder="Enter your password"
-                  {...register('password')}
-                  className={`input-dark pl-10 pr-10 ${errors.password ? 'border-red-400/60' : ''}`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((p) => !p)}
-                  className="absolute right-3 top-1/2 z-10 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-200"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+            )}
+            {success && (
+              <div className="mb-4 flex items-center gap-2 rounded-lg border border-emerald-400/30 bg-emerald-500/15 px-3 py-2.5 text-sm text-emerald-300 backdrop-blur-sm animate-fade-in">
+                <CheckCircle className="h-4 w-4 flex-shrink-0" />
+                <span>{success}</span>
               </div>
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>
-              )}
-            </div>
+            )}
 
-            <div className="flex items-center justify-end">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div>
+                <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-300">
+                  Official Email Address
+                </label>
+                <div className="relative group">
+                  <svg
+                    className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 h-5 w-5 text-slate-500 transition-colors duration-300 group-focus-within:text-[var(--color-accent-primary)]"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,12 2,12" />
+                  </svg>
+                  <input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    {...register('email')}
+                    className={`w-full rounded-lg border border-white bg-white px-4 py-3 pl-10 text-sm text-black placeholder-slate-500 focus:outline-none focus:border-[var(--color-accent-primary)] focus:ring-2 focus:ring-[var(--color-accent-primary)]/20 ${errors.email ? 'border-red-400/60' : ''}`}
+                    placeholder="name@department.gov.in"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-300">
+                  Password
+                </label>
+                <div className="relative group">
+                  <svg
+                    className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 h-5 w-5 text-slate-500 transition-colors duration-300 group-focus-within:text-[var(--color-accent-primary)]"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    {...register('password')}
+                    className={`w-full rounded-lg border border-white bg-white px-4 py-3 pl-10 pr-10 text-sm text-black placeholder-slate-500 focus:outline-none focus:border-[var(--color-accent-primary)] focus:ring-2 focus:ring-[var(--color-accent-primary)]/20 ${errors.password ? 'border-red-400/60' : ''}`}
+                    placeholder="Enter your password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((p) => !p)}
+                    className="absolute right-3 top-1/2 z-10 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-300"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full rounded-lg bg-[var(--color-accent-primary)] py-3 text-sm font-semibold text-white shadow-[0_4px_14px_-4px_rgba(37,99,235,0.4)] hover:bg-[var(--color-accent-primary-hover)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-navy-900)] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0"
+                      />
+                    </svg>
+                    Signing in...
+                  </>
+                ) : (
+                  'Sign in to CrimeIntel'
+                )}
+              </button>
+            </form>
+
+            <div className="mt-4 flex items-center justify-between">
               <Link
                 to="/forgot-password"
-                className="bg-gradient-to-r from-sky-400 via-indigo-400 to-violet-400 bg-clip-text text-sm font-medium text-transparent transition-all hover:from-sky-300 hover:to-violet-300 hover:underline hover:underline-offset-4"
+                className="text-sm font-medium text-[var(--color-accent-primary)] hover:underline hover:underline-offset-2"
               >
                 Forgot Password?
               </Link>
+              <Link
+                to="/register"
+                className="relative text-sm font-medium text-slate-400 hover:text-white transition-all duration-300"
+              >
+                Create an account
+                <span className="absolute -top-1 right-[-16px] h-3 w-3 rounded-full bg-gradient-to-br from-[var(--color-accent-primary)] to-[var(--color-amber-500)] opacity-0 translate-x-1 transition-all duration-300 hover:opacity-100 hover:translate-x-0" aria-hidden="true" />
+              </Link>
             </div>
 
-            <Button type="submit" isLoading={isSubmitting} className="w-full !py-2.5">
-              Sign In
-              {!isSubmitting && <ArrowRight size={16} />}
-            </Button>
-          </form>
+            <p className="mt-4 text-center text-xs text-slate-500">
+              © 2026 CrimeIntel · Authorized Investigation Platform
+            </p>
+          </div>
         </div>
       </div>
-
-        <p className="animate-fade-in mt-6 text-center text-xs text-slate-500">
-          Powered by Pixel Pirates | KSP Hackathon 2026
-        </p>
-      </div>
-    </div>
+    </PageTransition>
   );
 }

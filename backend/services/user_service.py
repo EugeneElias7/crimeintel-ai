@@ -1,4 +1,7 @@
 import logging
+import os
+from datetime import datetime
+from pathlib import Path
 from typing import Optional
 
 from adapters.catalyst_auth import CatalystAuthAdapter
@@ -50,7 +53,79 @@ class UserService:
         end = start + limit
         page_items = filtered[start:end]
 
-        return {"data": page_items, "total": total, "page": page, "pages": pages}
+        # Enrich with verification / id_proof metadata to avoid N+1 frontend calls
+        enriched = []
+        for u in page_items:
+            uid = u.get("user_id") or u.get("ROWID") or u.get("id")
+            status_raw = (u.get("status") or "active").lower()
+            # Map account_status for UI
+            status_map = {
+                "active": "ACTIVE",
+                "approved": "ACTIVE",
+                "pending_document": "PENDING",
+                "pending_verification": "PENDING",
+                "pending": "PENDING",
+                "rejected": "REJECTED",
+                "suspended": "SUSPENDED",
+                "disabled": "DISABLED",
+            }
+            account_status = status_map.get(status_raw, status_raw.upper())
+            # Check id proof storage
+            id_proof_attached = False
+            id_proof_file_name = None
+            verification_status = "NOT_SUBMITTED"
+            if uid:
+                # New SQLite storage
+                storage_path = Path(__file__).parent.parent / "storage" / "verification_documents" / str(uid)
+                # Legacy storage with user_ prefix
+                alt_path = Path(__file__).parent.parent / "storage" / "verification_documents" / f"user_{uid}"
+                check_paths = [storage_path, alt_path]
+                # Also try numeric extraction for usr_001 -> 1
+                if isinstance(uid, str) and uid.startswith("usr_"):
+                    try:
+                        num = uid.split("_")[1].lstrip("0") or "0"
+                        check_paths.append(Path(__file__).parent.parent / "storage" / "verification_documents" / f"user_{num}")
+                    except Exception:
+                        pass
+                for p in check_paths:
+                    if p.exists() and any(p.iterdir()):
+                        id_proof_attached = True
+                        try:
+                            files = list(p.iterdir())
+                            if files:
+                                id_proof_file_name = files[0].name
+                        except Exception:
+                            pass
+                        break
+                if id_proof_attached:
+                    if status_raw in ("pending_verification", "pending"):
+                        verification_status = "PENDING"
+                    elif status_raw in ("active", "approved"):
+                        verification_status = "VERIFIED"
+                    elif status_raw == "rejected":
+                        verification_status = "REJECTED"
+                    else:
+                        verification_status = "PENDING"
+                else:
+                    verification_status = "NOT_SUBMITTED" if status_raw in ("pending_document", "active") else "NOT_SUBMITTED"
+            enriched.append({
+                **u,
+                "id": uid,
+                "user_id": uid,
+                "full_name": u.get("display_name") or u.get("full_name") or u.get("email", "").split("@")[0],
+                "username": u.get("username") or u.get("display_name", "").lower().replace(" ", "_") or u.get("email", "").split("@")[0],
+                "employee_id": u.get("badge_number") or u.get("employee_id") or "",
+                "department": u.get("department") or "Karnataka State Police",
+                "designation": u.get("designation") or u.get("role") or "Officer",
+                "account_status": account_status,
+                "verification_status": verification_status,
+                "id_proof_attached": id_proof_attached,
+                "id_proof_file_name": id_proof_file_name,
+                "is_active": u.get("status") not in ("disabled", "suspended", "rejected"),
+                # Keep original for compatibility
+                "status": account_status,
+            })
+        return {"data": enriched, "total": total, "page": page, "pages": pages}
 
     async def create_user(self, data: UserCreate) -> dict:
         existing = await self.db.query("Users", {"email": data.email})

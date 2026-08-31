@@ -10,13 +10,14 @@ import {
   X,
   AlertCircle,
   Image,
+  Search,
 } from 'lucide-react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Spinner from '../components/ui/Spinner';
 import EmptyState from '../components/ui/EmptyState';
 import Badge from '../components/ui/Badge';
-import { listCases } from '../services/caseService';
+import { listCases, searchCases } from '../services/caseService';
 import { listEvidence, uploadEvidence, deleteEvidence } from '../services/evidenceService';
 import type { Evidence } from '../types/evidence';
 import type { Case } from '../types/case';
@@ -40,7 +41,33 @@ function getFileIcon(fileType: string) {
   if (t.includes('pdf')) {
     return <File className="h-8 w-8 text-red-500" />;
   }
-  return <File className="h-8 w-8 text-gray-500" />;
+  return <File className="h-8 w-8 text-[var(--color-text-tertiary)]" />;
+}
+
+function EvidenceThumb({ evidence }: { evidence: Evidence }) {
+  const [thumbUrl, setThumbUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (!isImageType(evidence.file_type)) return;
+    let url: string | null = null;
+    const fetchThumb = async () => {
+      try {
+        const token = localStorage.getItem('crimeintel_token');
+        const res = await fetch(`/api/v1/evidence/${evidence.evidence_id}/file`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        if (!res.ok) return;
+        const blob = await res.blob();
+        url = URL.createObjectURL(blob);
+        setThumbUrl(url);
+      } catch {}
+    };
+    fetchThumb();
+    return () => { if (url) URL.revokeObjectURL(url); };
+  }, [evidence.evidence_id, evidence.file_type]);
+  if (thumbUrl) {
+    return <img src={thumbUrl} alt={evidence.file_name} className="h-full w-full object-cover rounded-lg" />;
+  }
+  return getFileIcon(evidence.file_type);
 }
 
 function isImageType(fileType: string) {
@@ -67,13 +94,58 @@ function isPdfType(fileType: string) {
 
 const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp', 'application/pdf', 'video/mp4', 'video/mov', 'video/avi', 'video/webm'];
 
+function PreviewContent({ evidence }: { evidence: Evidence }) {
+  const [url, setUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    let objUrl: string | null = null;
+    const load = async () => {
+      try {
+        const token = localStorage.getItem('crimeintel_token');
+        const res = await fetch(`/api/v1/evidence/${evidence.evidence_id}/file`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+        if (!res.ok) throw new Error('fetch failed');
+        const blob = await res.blob();
+        objUrl = URL.createObjectURL(blob);
+        setUrl(objUrl);
+      } catch {
+        setUrl(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+    return () => { if (objUrl) URL.revokeObjectURL(objUrl); };
+  }, [evidence.evidence_id]);
+  if (loading) return <div className="flex justify-center py-12"><Spinner text="Loading preview..." /></div>;
+  if (isImageType(evidence.file_type) && url) {
+    return <img src={url} alt={evidence.file_name} className="max-h-[70vh] w-full rounded-lg object-contain bg-black" />;
+  }
+  if (isVideoType(evidence.file_type) && url) {
+    return <video controls src={url} className="max-h-[70vh] w-full rounded-lg bg-black" />;
+  }
+  if (isPdfType(evidence.file_type) && url) {
+    return <iframe src={url} title={evidence.file_name} className="h-[70vh] w-full rounded-lg border" />;
+  }
+  return (
+    <div className="flex flex-col items-center py-12">
+      {getFileIcon(evidence.file_type)}
+      <p className="mt-4 text-sm text-[var(--color-text-tertiary)]">{url ? 'Preview not available for this file type' : 'Unable to load preview'}</p>
+      {url && <a href={url} download={evidence.file_name} className="mt-4 inline-flex items-center gap-2 rounded-lg border bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"><Download size={16}/> Download File</a>}
+    </div>
+  );
+}
+
 export default function EvidencePage() {
   const [cases, setCases] = useState<Case[]>([]);
   const [selectedCaseId, setSelectedCaseId] = useState<string>('');
+  const [caseSearch, setCaseSearch] = useState('');
+  const [searchResults, setSearchResults] = useState<Case[] | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
   const [evidence, setEvidence] = useState<Evidence[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fileTypeFilter, setFileTypeFilter] = useState<FileTypeFilter>('all');
+  const [evidenceSearch, setEvidenceSearch] = useState('');
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -84,10 +156,50 @@ export default function EvidencePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    listCases({ limit: 100 })
+    listCases({ limit: 500 })
       .then((res) => setCases(res?.data || []))
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!caseSearch) {
+      setSearchResults(null);
+      return;
+    }
+    setIsSearching(true);
+    const t = setTimeout(async () => {
+      try {
+        const res = await searchCases(caseSearch, 1, 20);
+        setSearchResults(res.data);
+      } catch {
+        const q = caseSearch.toLowerCase();
+        setSearchResults(
+          cases.filter(
+            (c) =>
+              c.case_number.toLowerCase().includes(q) ||
+              c.title.toLowerCase().includes(q) ||
+              c.crime_type.toLowerCase().includes(q) ||
+              c.district.toLowerCase().includes(q),
+          ),
+        );
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+    return () => clearTimeout(t);
+  }, [caseSearch, cases]);
+
+  const filteredCases = searchResults !== null ? searchResults : cases.filter((c) => {
+    if (!caseSearch) return true;
+    const q = caseSearch.toLowerCase();
+    return (
+      c.case_number.toLowerCase().includes(q) ||
+      c.title.toLowerCase().includes(q) ||
+      c.crime_type.toLowerCase().includes(q) ||
+      c.district.toLowerCase().includes(q) ||
+      c.location.toLowerCase().includes(q)
+    );
+  });
 
   const fetchEvidence = useCallback(async () => {
     if (!selectedCaseId) return;
@@ -108,6 +220,11 @@ export default function EvidencePage() {
   }, [fetchEvidence]);
 
   const filteredEvidence = evidence.filter((e) => {
+    if (evidenceSearch) {
+      const q = evidenceSearch.toLowerCase();
+      const hay = `${e.file_name} ${e.description || ''} ${e.file_type}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
     if (fileTypeFilter === 'all') return true;
     if (fileTypeFilter === 'pdf') return isPdfType(e.file_type);
     if (fileTypeFilter === 'image') return isImageType(e.file_type);
@@ -169,44 +286,154 @@ export default function EvidencePage() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Evidence</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Evidence</h1>
+          <p className="mt-1 text-sm text-[var(--color-text-tertiary)]">
             Upload and manage case evidence
           </p>
         </div>
       </div>
 
       <Card className="mb-6">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="min-w-[240px] flex-1">
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Select Case
+        <div className="mb-4">
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-semibold text-[var(--color-text-primary)]">
+              Select Case to Manage Evidence
             </label>
-            <select
-              className="input-field w-full"
-              value={selectedCaseId}
-              onChange={(e) => setSelectedCaseId(e.target.value)}
-            >
-              <option value="">Choose a case...</option>
-              {cases.map((c) => (
-                <option key={c.case_id} value={c.case_id}>
-                  {c.case_number} - {c.title}
-                </option>
-              ))}
-            </select>
+            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+              {cases.length} cases • {filteredCases.length} matches
+            </span>
           </div>
+          <p className="mt-1 text-xs text-slate-500">
+            Relevant cases sorted by crime trend • Search by case ID, title, crime type or district for suggestions
+          </p>
+          <div className="relative mt-3">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              className="input-field w-full pl-9 pr-9"
+              placeholder="Search cases — e.g. KSP-2024, theft, Mysore, assault..."
+              value={caseSearch}
+              onChange={(e) => setCaseSearch(e.target.value)}
+            />
+            {caseSearch && (
+              <button
+                onClick={() => setCaseSearch('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+          {selectedCaseId && (
+            <div className="mt-3 flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2">
+              <span className="rounded bg-blue-600 px-2 py-1 text-xs font-bold text-white">
+                {cases.find((x) => x.case_id === selectedCaseId)?.case_number}
+              </span>
+              <span className="flex-1 truncate text-sm font-medium text-blue-900">
+                {cases.find((x) => x.case_id === selectedCaseId)?.title}
+              </span>
+              <span className="hidden sm:inline text-xs text-blue-700">
+                {cases.find((x) => x.case_id === selectedCaseId)?.crime_type} @ {cases.find((x) => x.case_id === selectedCaseId)?.district}
+              </span>
+              <button
+                onClick={() => {
+                  setSelectedCaseId('');
+                  setCaseSearch('');
+                }}
+                className="ml-2 rounded p-1 text-blue-600 hover:bg-blue-100"
+                title="Clear selection"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          )}
         </div>
+
+        <div className="grid max-h-[520px] grid-cols-1 gap-3 overflow-y-auto pr-1 sm:grid-cols-2 lg:grid-cols-3">
+          {isSearching ? (
+            <div className="col-span-full flex flex-col items-center py-12 text-slate-500">
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600" />
+              <p className="mt-3 text-sm">Searching cases...</p>
+            </div>
+          ) : filteredCases.length === 0 ? (
+            <div className="col-span-full flex flex-col items-center py-12 text-slate-500">
+              <Search size={32} className="mb-3 text-slate-300" />
+              <p className="text-sm font-medium">No cases match “{caseSearch}”</p>
+              <p className="text-xs">Try different keywords for crime, district or ID</p>
+            </div>
+          ) : (
+            filteredCases
+              .slice()
+              .sort((a, b) => {
+                if (!caseSearch) {
+                  // crime trend relevance: theft/assault/murder etc higher
+                  const trendScore = (c: Case) => {
+                    const t = c.crime_type.toLowerCase();
+                    if (t === 'theft') return 5;
+                    if (t === 'assault') return 4;
+                    if (t === 'murder') return 4;
+                    if (t === 'cybercrime') return 3;
+                    return 1;
+                  };
+                  return trendScore(b) - trendScore(a);
+                }
+                const q = caseSearch.toLowerCase();
+                const score = (c: Case) => {
+                  let s = 0;
+                  if (c.case_number.toLowerCase().includes(q)) s += 10;
+                  if (c.case_number.toLowerCase().startsWith(q)) s += 6;
+                  if (c.title.toLowerCase().includes(q)) s += 4;
+                  if (c.crime_type.toLowerCase().includes(q)) s += 3;
+                  if (c.district.toLowerCase().includes(q)) s += 3;
+                  if (c.location.toLowerCase().includes(q)) s += 2;
+                  return s;
+                };
+                return score(b) - score(a);
+              })
+              .slice(0, 12)
+              .map((c) => {
+                const isSelected = selectedCaseId === c.case_id;
+                return (
+                  <button
+                    key={c.case_id}
+                    onClick={() => setSelectedCaseId(c.case_id)}
+                    className={`group relative flex flex-col rounded-xl border p-4 text-left transition-all duration-300 hover:shadow-md ${
+                      isSelected ? 'border-blue-500 bg-blue-50/20 shadow-sm ring-2 ring-blue-200' : 'border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/50'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <span className={`rounded px-2 py-1 font-mono text-xs font-bold ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-900 text-white'}`}>{c.case_number}</span>
+                      <span className={`rounded-full px-2 py-1 text-xs font-medium border ${isSelected ? 'bg-white text-blue-700 border-blue-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>{c.crime_type}</span>
+                    </div>
+                    <p className="mt-3 line-clamp-2 min-h-[40px] text-sm font-semibold leading-snug text-slate-900 group-hover:text-blue-900">{c.title}</p>
+                    <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
+                      <span className="rounded bg-slate-100 px-1.5 py-0.5 font-medium">{c.district}</span>
+                      <span className="truncate">{c.location}</span>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between text-xs">
+                      <span className="text-slate-400">{new Date(c.date_filed).toLocaleDateString()} • {c.status}</span>
+                      {isSelected && <span className="flex items-center gap-1 font-medium text-blue-700">● Selected</span>}
+                    </div>
+                  </button>
+                );
+              })
+          )}
+        </div>
+        {filteredCases.length > 12 && (
+          <p className="mt-3 text-center text-xs text-slate-500">
+            Showing 12 of {filteredCases.length} • {caseSearch ? 'refine search for more precise suggestions' : 'type to search all 501 cases'}
+          </p>
+        )}
       </Card>
 
       {uploadProgress > 0 && (
         <Card className="mb-6">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Uploading...</span>
-            <span className="text-sm text-gray-500">{uploadProgress}%</span>
+            <span className="text-sm font-medium text-[var(--color-text-secondary)]">Uploading...</span>
+            <span className="text-sm text-[var(--color-text-tertiary)]">{uploadProgress}%</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--color-border-primary)]">
             <div
-              className="h-full rounded-full bg-blue-600 transition-all duration-300"
+              className="h-full rounded-full bg-[var(--color-accent-primary)] transition-all duration-300"
               style={{ width: `${uploadProgress}%` }}
             />
           </div>
@@ -216,7 +443,7 @@ export default function EvidencePage() {
       {selectedCaseId && (
         <>
           <Card className="mb-6">
-            <h3 className="mb-3 text-sm font-semibold text-gray-700">
+            <h3 className="mb-3 text-sm font-semibold text-[var(--color-text-secondary)]">
               Upload Evidence
             </h3>
             <div
@@ -229,14 +456,14 @@ export default function EvidencePage() {
               className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors ${
                 dragOver
                   ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-300 bg-gray-50'
+                  : 'border-gray-300 bg-[var(--color-slate-50)]'
               }`}
             >
-              <Upload className="mb-3 h-8 w-8 text-gray-400" />
-              <p className="text-sm font-medium text-gray-700">
+              <Upload className="mb-3 h-8 w-8 text-[var(--color-text-tertiary)]" />
+              <p className="text-sm font-medium text-[var(--color-text-secondary)]">
                 Drop files here or click to browse
               </p>
-              <p className="mt-1 text-xs text-gray-400">
+              <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">
                 PNG, JPG, GIF, WebP, PDF, MP4, MOV, AVI, WebM (max 50MB)
               </p>
               <input
@@ -270,7 +497,7 @@ export default function EvidencePage() {
 
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">
                   Description
                 </label>
                 <input
@@ -286,24 +513,41 @@ export default function EvidencePage() {
                     type="checkbox"
                     checked={sensitive}
                     onChange={(e) => setSensitive(e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="h-4 w-4 rounded border-gray-300 text-[var(--color-intel-blue-600)] focus:ring-blue-500"
                   />
-                  <span className="text-gray-700">Sensitive</span>
+                  <span className="text-[var(--color-text-secondary)]">Sensitive</span>
                 </label>
               </div>
             </div>
           </Card>
 
-          <div className="mb-4 flex items-center gap-2">
-            <Filter size={16} className="text-gray-400" />
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <div className="relative min-w-[200px] flex-1 max-w-xs">
+              <input
+                className="input-field w-full pl-8 pr-3 py-1.5 text-sm"
+                placeholder="Search evidence by name or description..."
+                value={evidenceSearch}
+                onChange={(e) => setEvidenceSearch(e.target.value)}
+              />
+              <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              {evidenceSearch && (
+                <button
+                  onClick={() => setEvidenceSearch('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-slate-400 hover:bg-gray-100 hover:text-gray-600"
+                >
+                  <X size={12} />
+                </button>
+              )}
+            </div>
+            <Filter size={16} className="text-[var(--color-text-tertiary)] ml-2" />
             {(['all', 'pdf', 'image', 'video'] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setFileTypeFilter(f)}
                 className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
                   fileTypeFilter === f
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? 'bg-[var(--color-accent-primary)] text-white'
+                    : 'bg-gray-100 text-[var(--color-text-secondary)] hover:bg-[var(--color-border-primary)]'
                 }`}
               >
                 {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
@@ -338,13 +582,13 @@ export default function EvidencePage() {
                     className="cursor-pointer"
                     onClick={() => setPreview(e)}
                   >
-                    <div className="mb-3 flex items-center justify-center rounded-lg bg-gray-50 py-6">
-                      {getFileIcon(e.file_type)}
+                    <div className="mb-3 flex items-center justify-center overflow-hidden rounded-lg bg-[var(--color-slate-50)] h-[120px]">
+                      {isImageType(e.file_type) ? <EvidenceThumb evidence={e} /> : getFileIcon(e.file_type)}
                     </div>
-                    <p className="truncate text-sm font-medium text-gray-900">
+                    <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
                       {e.file_name}
                     </p>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
+                    <div className="mt-1 flex items-center gap-2 text-xs text-[var(--color-text-tertiary)]">
                       <span>{formatFileSize(e.file_size)}</span>
                       <span>·</span>
                       <span>
@@ -352,7 +596,7 @@ export default function EvidencePage() {
                       </span>
                     </div>
                     {e.description && (
-                      <p className="mt-1 truncate text-xs text-gray-500">
+                      <p className="mt-1 truncate text-xs text-[var(--color-text-tertiary)]">
                         {e.description}
                       </p>
                     )}
@@ -360,21 +604,29 @@ export default function EvidencePage() {
                       {e.sensitive && (
                         <Badge variant="critical">Sensitive</Badge>
                       )}
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-[var(--color-text-tertiary)]">
                         by {e.uploaded_by.display_name}
                       </span>
                     </div>
                   </div>
                   <div className="mt-3 flex items-center gap-2 border-t border-gray-100 pt-3">
-                    <a
-                      href={e.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700"
+                    <button
+                      onClick={async () => {
+                        try {
+                          const token = localStorage.getItem('crimeintel_token');
+                          const res = await fetch(`/api/v1/evidence/${e.evidence_id}/file`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+                          if (!res.ok) throw new Error('Download failed');
+                          const blob = await res.blob();
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url; a.download = e.file_name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 1000);
+                        } catch {}
+                      }}
+                      className="flex items-center gap-1 text-xs font-medium text-[var(--color-intel-blue-600)] hover:text-blue-700"
                     >
                       <Download size={14} />
                       Download
-                    </a>
+                    </button>
                     <button
                       onClick={() => handleDelete(e.evidence_id)}
                       className="ml-auto flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700"
@@ -408,47 +660,17 @@ export default function EvidencePage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">
                 {preview.file_name}
               </h3>
               <button
                 onClick={() => setPreview(null)}
-                className="rounded p-1 text-gray-400 hover:text-gray-600"
+                className="rounded p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)]"
               >
                 <X size={20} />
               </button>
             </div>
-            {isImageType(preview.file_type) ? (
-              <img
-                src={preview.file_url}
-                alt={preview.file_name}
-                className="max-h-[70vh] w-full rounded-lg object-contain"
-              />
-            ) : isVideoType(preview.file_type) ? (
-              <video
-                controls
-                className="max-h-[70vh] w-full rounded-lg"
-              >
-                <source src={preview.file_url} type={preview.file_type} />
-              </video>
-            ) : (
-              <div className="flex flex-col items-center py-12">
-                {getFileIcon(preview.file_type)}
-                <p className="mt-4 text-sm text-gray-500">
-                  Preview not available
-                </p>
-                <a
-                  href={preview.file_url || ""}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button variant="outline" size="sm" className="mt-4">
-                    <Download size={16} />
-                    Download File
-                  </Button>
-                </a>
-              </div>
-            )}
+            <PreviewContent evidence={preview} />
           </div>
         </div>
       )}

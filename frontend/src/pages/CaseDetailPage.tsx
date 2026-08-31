@@ -9,6 +9,7 @@ import {
   AlertTriangle,
   Star,
   Image,
+  Trash2,
 } from 'lucide-react';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
@@ -17,6 +18,8 @@ import Button from '../components/ui/Button';
 import EmptyState from '../components/ui/EmptyState';
 import BackButton from '../components/ui/BackButton';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../components/ui/Toast';
+import api from '../services/api';
 import { getCase, getRelatedCases } from '../services/caseService';
 import type { Case, CaseDetail, Suspect, Witness, TimelineEvent } from '../types/case';
 
@@ -56,7 +59,22 @@ export default function CaseDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const canEdit = user && ['inspector', 'admin', 'super_admin'].includes(user.role);
+  const canEdit = user && ['inspector', 'admin', 'super_admin'].includes((user.role as string).toLowerCase());
+  const canDelete = user && ['admin', 'super_admin'].includes((user.role as string).toLowerCase());
+  const { addToast } = useToast();
+
+  const handleDeleteCase = async () => {
+    if (!id || !canDelete) return;
+    if (!confirm(`Delete case ${caseDetail?.case_number || id}? This will permanently remove the case and all its evidence/suspects/witnesses. Cannot be undone.`)) return;
+    try {
+      await api.delete(`/cases/${id}`);
+      addToast('success', 'Case deleted successfully');
+      navigate('/cases', { replace: true });
+    } catch (err: any) {
+      const msg = err?.response?.data?.detail || 'Failed to delete case';
+      addToast('error', typeof msg === 'string' ? msg : 'Failed to delete case');
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -139,6 +157,12 @@ export default function CaseDetailPage() {
             <Button variant="primary" size="sm">
               <Edit3 size={16} />
               Edit
+            </Button>
+          )}
+          {canDelete && (
+            <Button variant="danger" size="sm" onClick={handleDeleteCase}>
+              <Trash2 size={16} />
+              Delete
             </Button>
           )}
         </div>
@@ -230,26 +254,78 @@ function FIRInfoTab({ detail }: { detail: CaseDetail }) {
   ];
 
   return (
-    <Card>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {rows.map((r) => (
-          <div key={r.label}>
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-              {r.label}
-            </p>
-            <p className="mt-1 text-sm font-medium text-gray-900">{r.value}</p>
-          </div>
-        ))}
-      </div>
-      {detail.description && (
-        <div className="mt-6 border-t border-gray-100 pt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-            Description
-          </p>
-          <p className="mt-1 text-sm text-gray-700">{detail.description}</p>
+    <div className="space-y-6">
+      <Card>
+        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-900 border-b border-gray-100 pb-2">Case Information</h3>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {rows.map((r) => (
+            <div key={r.label}>
+              <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
+                {r.label}
+              </p>
+              <p className="mt-1 text-sm font-medium text-gray-900">{r.value}</p>
+            </div>
+          ))}
         </div>
-      )}
-    </Card>
+        {detail.description && (
+          <div className="mt-6 border-t border-gray-100 pt-4">
+            <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
+              Description
+            </p>
+            <p className="mt-1 text-sm text-gray-700 whitespace-pre-wrap">{detail.description}</p>
+          </div>
+        )}
+      </Card>
+
+      <Card>
+        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-900 border-b border-gray-100 pb-2">Incident Location</h3>
+        <div className="space-y-3">
+          <div className="flex items-start gap-2 text-sm">
+            <span className="mt-0.5">📍</span>
+            <div>
+              <p className="font-medium text-gray-900">{detail.location || '—'}</p>
+              {detail.district && <p className="text-xs text-gray-500">{detail.district}</p>}
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3 text-xs">
+            <div className="rounded-lg bg-slate-50 border border-gray-200 p-2.5">
+              <p className="text-gray-400">Latitude</p>
+              <p className="font-mono font-medium text-gray-900">{detail.latitude != null ? Number(detail.latitude).toFixed(6) : '—'}</p>
+            </div>
+            <div className="rounded-lg bg-slate-50 border border-gray-200 p-2.5">
+              <p className="text-gray-400">Longitude</p>
+              <p className="font-mono font-medium text-gray-900">{detail.longitude != null ? Number(detail.longitude).toFixed(6) : '—'}</p>
+            </div>
+          </div>
+          {detail.latitude != null && detail.longitude != null ? (
+            <div className="h-[300px] overflow-hidden rounded-lg border border-gray-200">
+              <ReadOnlyMap lat={Number(detail.latitude)} lng={Number(detail.longitude)} />
+            </div>
+          ) : (
+            <p className="text-xs text-gray-400 italic">No GPS coordinates stored for this case (created before map feature).</p>
+          )}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function ReadOnlyMap({ lat, lng }: { lat: number; lng: number }) {
+  // Lazy import leaflet to avoid SSR issues - use dynamic
+  const [Ready, setReady] = useState(false);
+  useEffect(() => { setReady(true); }, []);
+  if (!Ready) return <div className="h-full w-full bg-slate-100 animate-pulse" />;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  return (
+    <div className="h-full w-full">
+      {/* Use iframe fallback for read-only to avoid extra bundle if leaflet not ready */}
+      <iframe
+        title="Incident Location"
+        className="h-full w-full border-0"
+        loading="lazy"
+        src={`https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01}%2C${lat - 0.01}%2C${lng + 0.01}%2C${lat + 0.01}&layer=mapnik&marker=${lat}%2C${lng}`}
+      />
+    </div>
   );
 }
 
@@ -432,16 +508,59 @@ function TimelineTab({ timeline }: { timeline: TimelineEvent[] }) {
 
 function EvidenceTab({ caseId }: { caseId: string }) {
   const navigate = useNavigate();
+  const [evidence, setEvidence] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const { listEvidence } = await import('../services/evidenceService');
+        const items: any = await listEvidence(caseId);
+        const arr = Array.isArray(items) ? items : (items as any)?.data || [];
+        if (mounted) setEvidence(arr);
+      } catch {
+        if (mounted) setEvidence([]);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [caseId]);
+
+  if (loading) {
+    return <div className="flex justify-center py-8"><span className="text-sm text-gray-500">Loading evidence...</span></div>;
+  }
+  if (evidence.length === 0) {
+    return (
+      <EmptyState
+        icon={<Image size={48} />}
+        title="No evidence uploaded"
+        description="Evidence will appear here once uploaded."
+        action={{
+          label: 'Go to Evidence',
+          onClick: () => navigate(`/evidence/${caseId}`),
+        }}
+      />
+    );
+  }
   return (
-    <EmptyState
-      icon={<Image size={48} />}
-      title="No evidence uploaded"
-      description="Evidence will appear here once uploaded."
-      action={{
-        label: 'Go to Evidence',
-        onClick: () => navigate(`/evidence/${caseId}`),
-      }}
-    />
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {evidence.map((ev: any) => (
+        <Card key={ev.evidence_id || ev.id} className="p-3">
+          <div className="mb-2 flex h-20 items-center justify-center rounded bg-slate-50">
+            {ev.file_type?.includes('image') ? <Image size={24} className="text-green-500"/> : <FileText size={24} className="text-red-500"/>}
+          </div>
+          <p className="truncate text-sm font-medium">{ev.file_name || ev.original_file_name}</p>
+          <p className="text-xs text-gray-500">{ev.description || 'No description'}</p>
+          <p className="text-xs text-gray-400 mt-1">{ev.mime_type || ev.file_type} • {(ev.file_size/1024).toFixed(1)} KB</p>
+          {ev.is_sensitive && <div className="mt-1"><Badge variant="critical">Sensitive</Badge></div>}
+          <div className="mt-2 flex gap-2">
+            <a href={ev.file_url || ev.storage_path} target="_blank" rel="noopener" className="text-xs text-blue-600 hover:underline">Download</a>
+            <button onClick={() => navigate(`/evidence/${caseId}`)} className="text-xs text-gray-500 hover:underline ml-auto">Manage</button>
+          </div>
+        </Card>
+      ))}
+    </div>
   );
 }

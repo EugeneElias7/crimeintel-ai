@@ -36,15 +36,18 @@ case_service = CaseService(db=db)
 async def list_cases(
     current_user: dict = Depends(get_current_user),
     page: int = Query(default=1, ge=1, description="Page number"),
-    limit: int = Query(default=20, ge=1, le=100, description="Items per page"),
+    limit: int = Query(default=20, ge=1, le=1000, description="Items per page"),
     crime_type: Optional[str] = Query(default=None, description="Filter by crime type"),
     status: Optional[str] = Query(default=None, description="Filter by case status"),
     district: Optional[str] = Query(default=None, description="Filter by district"),
     date_from: Optional[str] = Query(default=None, description="Filter from date (ISO format)"),
     date_to: Optional[str] = Query(default=None, description="Filter to date (ISO format)"),
     officer_id: Optional[str] = Query(default=None, description="Filter by officer ID"),
+    priority: Optional[str] = Query(default=None, description="Filter by priority"),
     sort_by: Optional[str] = Query(default="created_at", description="Sort field"),
     sort_order: Optional[str] = Query(default="desc", description="Sort order (asc or desc)"),
+    q: Optional[str] = Query(default=None, description="Search query"),
+    search: Optional[str] = Query(default=None, description="Alias for search"),
 ):
     try:
         filters = {}
@@ -60,8 +63,13 @@ async def list_cases(
             filters["date_to"] = date_to
         if officer_id:
             filters["officer_id"] = officer_id
+        if priority:
+            filters["priority"] = priority
         filters["sort_by"] = sort_by
         filters["sort_order"] = sort_order
+        search_q = q or search
+        if search_q:
+            filters["search"] = search_q
 
         result = await case_service.list_cases(page=page, limit=limit, filters=filters)
         return PaginatedResponse(
@@ -88,7 +96,7 @@ async def search_cases(
     current_user: dict = Depends(get_current_user),
     q: str = Query(..., min_length=1, description="Search query"),
     page: int = Query(default=1, ge=1),
-    limit: int = Query(default=20, ge=1, le=100),
+    limit: int = Query(default=20, ge=1, le=1000),
 ):
     try:
         result = await case_service.search_cases(query=q, page=page, limit=limit)
@@ -140,7 +148,7 @@ async def get_case(
 )
 async def create_case(
     body: CaseCreate,
-    current_user: dict = Depends(require_role(["inspector", "admin", "super_admin"])),
+    current_user: dict = Depends(require_role(["officer", "inspector", "admin", "super_admin"])),
 ):
     try:
         result = await case_service.create_case(body, user_id=current_user["user_id"])
@@ -309,7 +317,7 @@ async def get_related_cases(
 async def add_suspect(
     case_id: str,
     body: SuspectCreate,
-    current_user: dict = Depends(require_role(["inspector", "admin", "super_admin"])),
+    current_user: dict = Depends(require_role(["officer", "inspector", "admin", "super_admin"])),
 ):
     try:
         from utils.helpers import generate_uuid
@@ -383,7 +391,7 @@ async def get_witnesses(
 async def add_witness(
     case_id: str,
     body: WitnessCreate,
-    current_user: dict = Depends(require_role(["inspector", "admin", "super_admin"])),
+    current_user: dict = Depends(require_role(["officer", "inspector", "admin", "super_admin"])),
 ):
     try:
         from utils.helpers import generate_uuid

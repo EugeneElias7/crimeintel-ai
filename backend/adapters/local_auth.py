@@ -1,6 +1,7 @@
 import logging
-from typing import Optional
 import hashlib
+from datetime import datetime
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -44,13 +45,27 @@ class LocalAuthAdapter:
         # JWT is stateless, no server-side logout needed
         pass
 
-    async def reset_password(self, email: str) -> None:
+    async def reset_password(self, email: str) -> dict:
         await self._ensure_initialized()
         from adapters.sqlite_db import sqlite_db
         users = await sqlite_db.query("Users", {"email": email})
         if users:
             # In a real implementation, send reset email
-            logger.debug("Password reset requested for %s", email)
+            # For testing, generate a temporary password and log it
+            import string
+            import random
+            import hashlib
+            temporary_password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
+            password_hash = hashlib.sha256(temporary_password.encode()).hexdigest()
+            user = users[0]
+            user_id = user.get("ROWID") or user.get("user_id")
+            await sqlite_db.update("Users", user_id, {
+                "password_hash": password_hash,
+                "updated_at": datetime.utcnow().isoformat()
+            })
+            logger.debug("Temporary password generated for %s: %s", email, temporary_password)
+        else:
+            logger.debug("Password reset requested for non-existent email: %s", email)
 
     async def verify_token(self, token: str) -> dict:
         # Token verification is handled by JWT middleware
@@ -70,7 +85,6 @@ class LocalAuthAdapter:
             raise ValueError("Email already registered")
 
         from utils.helpers import generate_uuid
-        from datetime import datetime
 
         user_id = generate_uuid()
         now = datetime.utcnow().isoformat()

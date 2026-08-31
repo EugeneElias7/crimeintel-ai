@@ -23,10 +23,10 @@ export default function ProtectedRoute({ requiredRole }: ProtectedRouteProps) {
 
   if (requiredRole && user) {
     const roleHierarchy: Record<UserRole, number> = {
-      officer: 0,
-      inspector: 1,
-      admin: 2,
-      super_admin: 3,
+      OFFICER: 0,
+      INSPECTOR: 1,
+      ADMIN: 2,
+      SUPER_ADMIN: 3,
     };
 
     if (roleHierarchy[user.role] < roleHierarchy[requiredRole]) {

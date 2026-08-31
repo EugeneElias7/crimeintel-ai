@@ -25,13 +25,10 @@ class AuditService:
 
         await self.db.insert("Audit_Logs", {
             "ROWID": log_id,
-            "log_id": log_id,
             "user_id": user_id,
             "action": action,
             "module": module,
             "details": str(details) if details is not None else None,
-            "ip_address": ip_address or "",
-            "timestamp": now,
             "created_at": now,
         })
 
@@ -46,6 +43,19 @@ class AuditService:
             return {"data": [], "total": 0, "page": page, "pages": 0}
 
         filters = filters or {}
+        search = (filters.get("search") or "").lower() if filters.get("search") else None
+        # Pre-fetch user map for search on actor_name
+        user_map = {}
+        if search:
+            try:
+                all_users = await self.db.get_all("Users")
+                for u in all_users or []:
+                    uid = u.get("ROWID") or u.get("user_id") or u.get("id")
+                    if uid:
+                        user_map[uid] = (u.get("display_name") or "").lower()
+            except:
+                pass
+
         filtered = []
         for log_entry in all_logs:
             action = filters.get("action")
@@ -58,23 +68,32 @@ class AuditService:
 
             user_id = filters.get("user_id")
             if user_id and log_entry.get("user_id") != user_id:
-                continue
-
-            date_from = filters.get("date_from")
-            if date_from:
-                ts = log_entry.get("timestamp", "")
-                if ts < date_from:
+                # also allow display_name match via search logic
+                # if user_id is display_name, check via user_map
+                uid = log_entry.get("user_id","")
+                disp = user_map.get(uid, "") if user_map else ""
+                if user_id.lower() not in disp and user_id != uid:
                     continue
 
+            ts_raw = log_entry.get("timestamp") or log_entry.get("created_at") or ""
+            date_from = filters.get("date_from")
+            if date_from and ts_raw and ts_raw < date_from:
+                continue
+
             date_to = filters.get("date_to")
-            if date_to:
-                ts = log_entry.get("timestamp", "")
-                if ts > date_to:
+            if date_to and ts_raw and ts_raw > date_to:
+                continue
+
+            if search:
+                uid = log_entry.get("user_id","")
+                disp = user_map.get(uid, "") if user_map else ""
+                hay = f"{log_entry.get('action','')} {log_entry.get('module','')} {log_entry.get('details','')} {uid} {disp}".lower()
+                if search not in hay:
                     continue
 
             filtered.append(log_entry)
 
-        filtered.sort(key=lambda l: l.get("timestamp", ""), reverse=True)
+        filtered.sort(key=lambda l: (l.get("timestamp") or l.get("created_at") or ""), reverse=True)
 
         total = len(filtered)
         pages = max(1, (total + limit - 1) // limit)
@@ -93,16 +112,24 @@ class AuditService:
                         actor_name = user.get("display_name", uid)
                 except Exception:
                     pass
+            ts_val = entry.get("timestamp") or entry.get("created_at") or ""
+            row_id = entry.get("ROWID") or entry.get("log_id") or ts_val or str(id(entry))
+            details_raw = entry.get("details")
+            details_str = details_raw if isinstance(details_raw, str) else str(details_raw) if details_raw else ""
 
             enriched.append({
-                "log_id": entry.get("log_id") or entry.get("ROWID"),
+                "log_id": row_id,
                 "action": entry.get("action"),
                 "actor_id": uid,
                 "actor_name": actor_name,
                 "resource_type": entry.get("module", ""),
                 "resource_id": "",
-                "details": entry.get("details"),
-                "timestamp": entry.get("timestamp", ""),
+                "details": details_str,
+                "timestamp": ts_val,
+                "user": {"user_id": uid, "display_name": actor_name},
+                "module": entry.get("module", ""),
+                "ip_address": entry.get("ip_address", "") or "—",
+                "created_at": ts_val,
             })
 
         return {"data": enriched, "total": total, "page": page, "pages": pages}

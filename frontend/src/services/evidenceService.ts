@@ -39,7 +39,7 @@ export const uploadEvidence = async (
   if (description) formData.append('description', description);
   if (sensitive !== undefined) formData.append('sensitive', String(sensitive));
 
-  const res = await api.post('/evidence', formData, {
+  const res = await api.post('/evidence/', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
   return normalizeEvidenceResponse(res);

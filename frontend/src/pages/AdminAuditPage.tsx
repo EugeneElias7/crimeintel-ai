@@ -22,13 +22,6 @@ interface AuditLog {
   timestamp: string;
 }
 
-interface AuditLogApiResponse {
-  data: AuditLog[];
-  total: number;
-  page: number;
-  pages: number;
-}
-
 const ACTION_TYPES = ['CREATE', 'UPDATE', 'DELETE', 'VIEW', 'LOGIN', 'LOGOUT', 'EXPORT'];
 
 function getActionBadgeVariant(action: string) {
@@ -64,17 +57,34 @@ export default function AdminAuditPage() {
         limit,
       };
       if (search) params.search = search;
-      if (dateFrom) params.date_from = dateFrom;
-      if (dateTo) params.date_to = dateTo;
-      if (selectedUser) params.user_id = selectedUser;
+      if (dateFrom) params.from = dateFrom;
+      if (dateTo) params.to = dateTo;
       if (selectedAction) params.action = selectedAction;
+      // selectedUser is display_name, use search for user filtering to match actor_name
+      if (selectedUser) {
+        // combine with existing search
+        const existing = (params.search as string) || '';
+        params.search = existing ? `${existing} ${selectedUser}` : selectedUser;
+      }
 
-      const { data } = await api.get<AuditLogApiResponse>('/admin/audit-logs', { params });
-      setLogs(data.data);
-      setTotalLogs(data.total);
-      setTotalPages(data.pages);
-    } catch {
-      setError('Failed to load audit logs');
+      const { data } = await api.get<any>('/admin/audit-logs', { params });
+      // backend returns PaginatedResponse with data as enriched logs, handle both shapes
+      const rawData = data.data || data;
+      const mapped: AuditLog[] = (Array.isArray(rawData) ? rawData : []).map((r: any) => ({
+        log_id: r.log_id || r.ROWID || r.id || String(Math.random()),
+        user: r.user || { user_id: r.actor_id || r.user_id || 'unknown', display_name: r.actor_name || r.user?.display_name || r.display_name || 'Unknown' },
+        action: r.action || '—',
+        module: r.module || r.resource_type || '—',
+        details: typeof r.details === 'string' ? (() => { try { return JSON.parse(r.details); } catch { return { message: r.details }; } })() : r.details || {},
+        ip_address: r.ip_address || r.ip || '—',
+        timestamp: r.timestamp || r.created_at || new Date().toISOString(),
+      }));
+      setLogs(mapped);
+      setTotalLogs(data.total ?? mapped.length);
+      setTotalPages(data.pages ?? 1);
+    } catch (e: any) {
+      const msg = e?.response?.data?.detail || 'Failed to load audit logs';
+      setError(typeof msg === 'string' ? msg : 'Failed to load audit logs');
     } finally {
       setLoading(false);
     }

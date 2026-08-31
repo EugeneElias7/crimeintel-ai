@@ -100,21 +100,33 @@ class AnalyticsService:
 
         filtered = self._filter_by_date(all_cases, from_date, to_date)
 
-        monthly: dict = defaultdict(lambda: {"total": 0, "open": 0, "closed": 0})
+        # Choose granularity: <=60 days -> daily, else monthly (keeps 12m/custom large ranges as monthly)
+        use_daily = False
+        if from_date and to_date:
+            try:
+                d1 = datetime.fromisoformat(from_date)
+                d2 = datetime.fromisoformat(to_date)
+                delta = abs((d2 - d1).days)
+                if delta <= 60:
+                    use_daily = True
+            except Exception:
+                pass
+
+        bucket: dict = defaultdict(lambda: {"total": 0, "open": 0, "closed": 0})
         for case in filtered:
             date_str = case.get("date_filed") or case.get("created_at", "")
             try:
                 dt = datetime.fromisoformat(date_str)
-                month_key = dt.strftime("%Y-%m")
+                key = dt.strftime("%Y-%m-%d") if use_daily else dt.strftime("%Y-%m")
             except (ValueError, TypeError):
                 continue
 
-            monthly[month_key]["total"] += 1
+            bucket[key]["total"] += 1
             status = case.get("status", "")
             if status == "open" or status == "under_investigation":
-                monthly[month_key]["open"] += 1
+                bucket[key]["open"] += 1
             elif status == "closed":
-                monthly[month_key]["closed"] += 1
+                bucket[key]["closed"] += 1
 
         return [
             {
@@ -123,7 +135,7 @@ class AnalyticsService:
                 "open": data["open"],
                 "closed": data["closed"],
             }
-            for month, data in sorted(monthly.items())
+            for month, data in sorted(bucket.items())
         ]
 
     async def get_by_district(

@@ -91,7 +91,10 @@ async def get_current_user(
 
 def require_role(roles: List[str]) -> Callable:
     async def role_dependency(current_user: dict = Depends(get_current_user)) -> dict:
-        if current_user["role"] not in roles:
+        # Case-insensitive role check - frontend sends SUPER_ADMIN, backend stores super_admin
+        user_role = str(current_user.get("role") or "").lower()
+        allowed = [str(r).lower() for r in roles]
+        if user_role not in allowed:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=ERROR_CODES["FORBIDDEN"],
@@ -99,3 +102,15 @@ def require_role(roles: List[str]) -> Callable:
         return current_user
 
     return role_dependency
+
+
+def decode_access_token(token: str) -> dict:
+    """Decode and verify a JWT access token."""
+    try:
+        payload = jwt.decode(
+            token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM]
+        )
+        return payload
+    except JWTError as e:
+        logger.warning("JWT decode failed: %s", e)
+        raise ValueError("Invalid or expired token")

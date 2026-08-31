@@ -1,7 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
-import { getMe } from '../services/authService';
 import type { User } from '../types/user';
 
 interface AuthContextValue {
@@ -15,28 +13,18 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { user, isAuthenticated, login, logout, setUser, setToken, initialize } = useAuthStore();
+  const { user, isAuthenticated, initialize } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const init = async () => {
-      initialize();
-      const token = useAuthStore.getState().token;
-      if (token) {
-        try {
-          const res = await getMe();
-          setUser(res.data);
-        } catch (error) {
-          // If token is expired/invalid, clear it and redirect to login
-          if (axios.isAxiosError(error) && error.response?.status === 401) {
-            setToken(null);
-          }
-        }
-      }
+      await initialize();
       setIsLoading(false);
     };
     init();
-  }, [initialize, setUser, setToken]);
+  }, []);
+
+  const { login, logout } = useAuthStore.getState();
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, login, logout, isLoading }}>

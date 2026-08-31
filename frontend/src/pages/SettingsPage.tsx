@@ -1,13 +1,14 @@
-import { useState } from 'react';
-import { User, Lock, Bell, Save } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { User, Bell, Save } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/ui/Toast';
-import { changePassword } from '../services/authService';
+import { updateProfile } from '../services/authService';
+import { useAuthStore } from '../store/authStore';
 
-type SettingsTab = 'profile' | 'security' | 'notifications';
+type SettingsTab = 'profile' | 'notifications';
 
 export default function SettingsPage() {
   const { user } = useAuth();
@@ -16,28 +17,27 @@ export default function SettingsPage() {
 
   const tabs: { key: SettingsTab; label: string; icon: React.ReactNode }[] = [
     { key: 'profile', label: 'Profile', icon: <User size={16} /> },
-    { key: 'security', label: 'Security', icon: <Lock size={16} /> },
     { key: 'notifications', label: 'Notifications', icon: <Bell size={16} /> },
   ];
 
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Settings</h1>
+        <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
           Manage your account settings and preferences
         </p>
       </div>
 
-      <div className="mb-6 flex gap-2 border-b border-gray-200">
+      <div className="mb-6 flex gap-2 border-b border-[var(--color-border-primary)]">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
               activeTab === tab.key
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'border-[var(--color-accent-primary)] text-[var(--color-accent-primary)]'
+                : 'border-transparent text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
             }`}
           >
             {tab.icon}
@@ -47,7 +47,6 @@ export default function SettingsPage() {
       </div>
 
       {activeTab === 'profile' && <ProfileTab user={user} addToast={addToast} />}
-      {activeTab === 'security' && <SecurityTab addToast={addToast} />}
       {activeTab === 'notifications' && <NotificationsTab />}
     </div>
   );
@@ -65,13 +64,46 @@ function ProfileTab({
   const [badgeNumber, setBadgeNumber] = useState(user?.badge_number ?? '');
   const [saving, setSaving] = useState(false);
 
+  useEffect(() => {
+    if (user?.display_name !== undefined) setDisplayName(user.display_name ?? '');
+    if (user?.phone !== undefined) setPhone(user.phone ?? '');
+    if (user?.badge_number !== undefined) setBadgeNumber(user.badge_number ?? '');
+  }, [user?.display_name, user?.phone, user?.badge_number]);
+
   const handleSave = async () => {
+    if (!displayName.trim()) {
+      addToast('error', 'Display name cannot be empty');
+      return;
+    }
     setSaving(true);
     try {
-      await new Promise((r) => setTimeout(r, 500));
+      const updated: any = await updateProfile({
+        display_name: displayName.trim(),
+        phone: phone.trim(),
+        badge_number: badgeNumber.trim(),
+      });
+      // Update authStore so Sidebar/Navbar show new display name immediately
+      const raw = updated as any;
+      // Normalize like authStore does
+      const normalized = {
+        id: raw.user_id || raw.ROWID || raw.id || 0,
+        username: raw.username || raw.display_name?.toLowerCase().replace(/\s+/g, '_') || raw.email?.split('@')[0],
+        email: raw.email || user?.email || '',
+        full_name: raw.display_name || displayName,
+        employee_id: raw.badge_number || badgeNumber,
+        department: raw.department || 'Karnataka State Police',
+        designation: raw.designation || raw.role || '',
+        role: (raw.role || 'OFFICER').toUpperCase(),
+        account_status: raw.status === 'active' ? 'APPROVED' : (raw.status || 'APPROVED').toUpperCase(),
+        is_active: true,
+        created_at: raw.created_at || new Date().toISOString(),
+      } as any;
+      useAuthStore.getState().setUser(normalized);
+      // Also trigger re-initialize to be safe
       addToast('success', 'Profile updated successfully');
-    } catch {
-      addToast('error', 'Failed to update profile');
+    } catch (e: any) {
+      const msg = e?.response?.data?.detail || e?.message || 'Failed to update profile';
+      addToast('error', typeof msg === 'string' ? msg : 'Failed to update profile');
     } finally {
       setSaving(false);
     }
@@ -81,136 +113,52 @@ function ProfileTab({
     <Card>
       <div className="max-w-lg space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">
             Email
           </label>
           <input
-            className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-500"
+            className="w-full rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-slate-50)] px-3 py-2 text-sm text-[var(--color-text-tertiary)]"
             value={user?.email ?? ''}
             disabled
           />
-          <p className="mt-1 text-xs text-gray-400">
+          <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">
             Email cannot be changed
           </p>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">
             Display Name
           </label>
-          <input
-            className="input-field w-full"
+          <Input
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">
               Phone
             </label>
-            <input
-              className="input-field w-full"
+            <Input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+91 XXXXXXXXXX"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">
               Badge Number
             </label>
-            <input
-              className="input-field w-full"
+            <Input
               value={badgeNumber}
               onChange={(e) => setBadgeNumber(e.target.value)}
               placeholder="e.g. KSP-#####"
             />
           </div>
         </div>
-        <Button onClick={handleSave} isLoading={saving}>
+        <Button onClick={handleSave} isLoading={saving} className="border border-blue-600/20 shadow-md shadow-blue-500/10 hover:shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5 active:translate-y-0">
           <Save size={16} />
           Save Changes
-        </Button>
-      </div>
-    </Card>
-  );
-}
-
-function SecurityTab({
-  addToast,
-}: {
-  addToast: (type: 'success' | 'error', message: string) => void;
-}) {
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [changing, setChanging] = useState(false);
-
-  const handleChangePassword = async () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!currentPassword) newErrors.current = 'Current password is required';
-    if (!newPassword) newErrors.new = 'New password is required';
-    else if (newPassword.length < 6)
-      newErrors.new = 'Must be at least 6 characters';
-    if (newPassword !== confirmPassword)
-      newErrors.confirm = 'Passwords do not match';
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors({});
-    setChanging(true);
-    try {
-      await changePassword(currentPassword, newPassword, confirmPassword);
-      addToast('success', 'Password changed successfully');
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } catch {
-      addToast('error', 'Failed to change password');
-    } finally {
-      setChanging(false);
-    }
-  };
-
-  return (
-    <Card>
-      <div className="max-w-lg space-y-4">
-        <div>
-          <Input
-            label="Current Password"
-            type="password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            error={errors.current}
-          />
-        </div>
-        <div>
-          <Input
-            label="New Password"
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            error={errors.new}
-            helperText="At least 6 characters"
-          />
-        </div>
-        <div>
-          <Input
-            label="Confirm Password"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            error={errors.confirm}
-          />
-        </div>
-        <Button onClick={handleChangePassword} isLoading={changing}>
-          <Lock size={16} />
-          Change Password
         </Button>
       </div>
     </Card>
@@ -246,11 +194,11 @@ function NotificationsTab() {
         ].map((item) => (
           <div
             key={item.key}
-            className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-4 py-3"
+            className="flex items-center justify-between rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-slate-50)] px-4 py-3"
           >
             <div>
-              <p className="text-sm font-medium text-gray-900">{item.label}</p>
-              <p className="text-xs text-gray-500">{item.description}</p>
+              <p className="text-sm font-medium text-[var(--color-text-primary)]">{item.label}</p>
+              <p className="text-xs text-[var(--color-text-tertiary)]">{item.description}</p>
             </div>
             <label className="relative inline-flex cursor-pointer items-center">
               <input
@@ -264,11 +212,11 @@ function NotificationsTab() {
                 }
                 className="peer sr-only"
               />
-              <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300" />
+              <div className="peer h-6 w-11 rounded-full bg-[var(--color-slate-200)] after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-[var(--color-slate-300)] after:bg-white after:transition-all after:content-[''] peer-checked:bg-[var(--color-accent-primary)] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[var(--color-accent-primary)]" />
             </label>
           </div>
         ))}
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-[var(--color-text-tertiary)]">
           Notification preferences are saved automatically
         </p>
       </div>

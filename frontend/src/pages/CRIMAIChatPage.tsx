@@ -115,16 +115,16 @@ export default function CRIMAIChatPage() {
     .reduce((sum, m) => sum + (m.results?.length ?? 0), 0);
 
   return (
-    <div className="flex h-[calc(100vh-6rem)] gap-0 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+    <div className="flex h-[calc(100vh-6rem)] gap-0 overflow-hidden rounded-xl border border-[var(--color-border-primary)] bg-white shadow-sm">
       <div className="flex w-full flex-col lg:w-3/5">
-        <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-[var(--color-border-primary)] px-5 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-100">
-              <Bot className="h-5 w-5 text-purple-600" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--color-indigo-100)]">
+              <Bot className="h-5 w-5 text-[var(--color-indigo-600)]" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-gray-900">CRIMA AI</h2>
-              <p className="text-xs text-gray-400">
+              <h2 className="text-base font-semibold text-[var(--color-text-primary)]">CRIMA AI</h2>
+              <p className="text-xs text-[var(--color-text-tertiary)]">
                 {isLoading ? 'Thinking...' : 'Online'}
               </p>
             </div>
@@ -140,19 +140,19 @@ export default function CRIMAIChatPage() {
             <div key={idx} className="mb-4">
               {msg.role === 'user' ? (
                 <div className="flex justify-end">
-                  <div className="max-w-[80%] rounded-2xl rounded-tr-sm bg-blue-600 px-4 py-2.5 text-sm text-white">
+                  <div className="max-w-[80%] rounded-2xl rounded-tr-sm bg-[var(--color-accent-primary)] px-4 py-2.5 text-sm text-white">
                     {msg.text}
                   </div>
                 </div>
               ) : (
                 <div>
                   <div className="mb-2 flex items-center gap-2">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100">
-                      <Bot className="h-4 w-4 text-purple-600" />
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-indigo-100)]">
+                      <Bot className="h-4 w-4 text-[var(--color-indigo-600)]" />
                     </div>
-                    <span className="text-xs font-medium text-gray-500">CRIMA AI</span>
+                    <span className="text-xs font-medium text-[var(--color-text-tertiary)]">CRIMA AI</span>
                   </div>
-                  <div className="ml-9 rounded-2xl rounded-tl-sm border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700">
+                  <div className="ml-9 rounded-2xl rounded-tl-sm border border-[var(--color-border-primary)] bg-white px-4 py-2.5 text-sm text-[var(--color-text-secondary)]">
                     <p className="whitespace-pre-wrap">{msg.text}</p>
 
                     {msg.results && Array.isArray(msg.results) && msg.results.length > 0 && (
@@ -171,12 +171,12 @@ export default function CRIMAIChatPage() {
           {isLoading && (
             <div className="mb-4">
               <div className="flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100">
-                  <Bot className="h-4 w-4 text-purple-600" />
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-indigo-100)]">
+                  <Bot className="h-4 w-4 text-[var(--color-indigo-600)]" />
                 </div>
-                <span className="text-xs font-medium text-gray-500">CRIMA AI</span>
+                <span className="text-xs font-medium text-[var(--color-text-tertiary)]">CRIMA AI</span>
               </div>
-              <div className="ml-9 mt-2 flex items-center gap-1.5 rounded-2xl rounded-tl-sm border border-gray-200 bg-white px-4 py-3">
+              <div className="ml-9 mt-2 flex items-center gap-1.5 rounded-2xl rounded-tl-sm border border-[var(--color-border-primary)] bg-white px-4 py-3">
                 <span className="h-2 w-2 animate-bounce rounded-full bg-purple-400" />
                 <span className="h-2 w-2 animate-bounce rounded-full bg-purple-400" style={{ animationDelay: '0.15s' }} />
                 <span className="h-2 w-2 animate-bounce rounded-full bg-purple-400" style={{ animationDelay: '0.3s' }} />
@@ -193,7 +193,7 @@ export default function CRIMAIChatPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="border-t border-gray-200 px-5 py-4">
+        <div className="border-t border-[var(--color-border-primary)] px-5 py-4">
           <div className="flex items-end gap-2">
             <textarea
               ref={textareaRef}
@@ -219,34 +219,34 @@ export default function CRIMAIChatPage() {
         </div>
       </div>
 
-      <div className="hidden border-l border-gray-200 bg-gray-50 lg:block lg:w-2/5">
+      <div className="hidden border-l border-[var(--color-border-primary)] bg-[var(--color-slate-50)] lg:block lg:w-2/5">
         <div className="p-5">
-          <h3 className="mb-4 text-sm font-semibold text-gray-700">Current Context</h3>
+          <h3 className="mb-4 text-sm font-semibold text-[var(--color-text-secondary)]">Current Context</h3>
           <div className="mb-6 rounded-lg bg-white p-4 shadow-sm">
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-gray-400">
+            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-[var(--color-text-tertiary)]">
               Detected Entities
             </p>
-            <p className="text-sm text-gray-400 italic">
+            <p className="text-sm text-[var(--color-text-tertiary)] italic">
               Send a query to detect entities
             </p>
           </div>
 
-          <h3 className="mb-4 text-sm font-semibold text-gray-700">Active Filters</h3>
+          <h3 className="mb-4 text-sm font-semibold text-[var(--color-text-secondary)]">Active Filters</h3>
           <div className="mb-6 rounded-lg bg-white p-4 shadow-sm">
-            <p className="text-sm text-gray-400 italic">No active filters</p>
+            <p className="text-sm text-[var(--color-text-tertiary)] italic">No active filters</p>
           </div>
 
-          <h3 className="mb-4 text-sm font-semibold text-gray-700">Session History</h3>
+          <h3 className="mb-4 text-sm font-semibold text-[var(--color-text-secondary)]">Session History</h3>
           <div className="rounded-lg bg-white p-4 shadow-sm">
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-[var(--color-text-primary)]">
               {messages.filter((m) => m.role === 'user').length}
             </p>
-            <p className="text-xs text-gray-500">Queries this session</p>
+            <p className="text-xs text-[var(--color-text-tertiary)]">Queries this session</p>
           </div>
 
           <div className="mt-4 rounded-lg bg-white p-4 shadow-sm">
-            <p className="text-2xl font-bold text-gray-900">{resultsCount}</p>
-            <p className="text-xs text-gray-500">Results found</p>
+            <p className="text-2xl font-bold text-[var(--color-text-primary)]">{resultsCount}</p>
+            <p className="text-xs text-[var(--color-text-tertiary)]">Results found</p>
           </div>
         </div>
       </div>
@@ -256,22 +256,22 @@ export default function CRIMAIChatPage() {
 
 function QueryResultCard({ result }: { result: QueryResult }) {
   return (
-    <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+    <div className="rounded-lg border border-gray-100 bg-[var(--color-slate-50)] p-3">
       <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-sm font-semibold text-blue-600">
+        <span className="text-sm font-semibold text-[var(--color-intel-blue-600)]">
           {result.case_id}
         </span>
         <Badge variant={getConfidenceVariant(result.confidence)}>
           {(result.confidence * 100).toFixed(0)}%
         </Badge>
       </div>
-      <div className="mb-1 flex items-center gap-2 text-xs text-gray-500">
+      <div className="mb-1 flex items-center gap-2 text-xs text-[var(--color-text-tertiary)]">
         <FileText size={12} />
         <span>{result.crime_type}</span>
         <MapPin size={12} />
         <span>{result.location}</span>
       </div>
-      <p className="text-xs text-gray-600 line-clamp-2">{result.summary}</p>
+      <p className="text-xs text-[var(--color-text-secondary)] line-clamp-2">{result.summary}</p>
     </div>
   );
 }

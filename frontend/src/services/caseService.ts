@@ -91,7 +91,7 @@ export const getCase = async (caseId: string): Promise<CaseDetail | null> => {
 };
 
 export const createCase = async (caseData: CaseCreate): Promise<CaseDetail> => {
-  const { data } = await api.post<any>('/cases', caseData);
+  const { data } = await api.post<any>('/cases/', caseData);
   return data;
 };
 

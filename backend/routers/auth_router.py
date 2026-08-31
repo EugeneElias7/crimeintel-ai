@@ -115,6 +115,33 @@ async def get_me(current_user: dict = Depends(get_current_user)):
 
 
 @router.put(
+    "/me",
+    response_model=UserProfileResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Update current user profile (display name, phone, badge)",
+)
+async def update_me(body: dict, current_user: dict = Depends(get_current_user)):
+    try:
+        updated = await auth_service.update_profile(current_user["user_id"], body)
+        return UserProfileResponse(
+            user_id=updated.get("ROWID", current_user["user_id"]),
+            display_name=updated.get("display_name", ""),
+            email=updated.get("email", ""),
+            role=updated.get("role", ""),
+            badge_number=updated.get("badge_number"),
+            phone=updated.get("phone"),
+            status=updated.get("status", "active"),
+            created_at=updated.get("created_at", ""),
+            updated_at=updated.get("updated_at", ""),
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except Exception as e:
+        logger.exception("Failed to update profile: %s", e)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to update profile.")
+
+
+@router.put(
     "/change-password",
     response_model=SuccessResponse,
     status_code=status.HTTP_200_OK,
@@ -176,14 +203,80 @@ async def reset_password(body: dict):
             detail="email is required.",
         )
     try:
-        await auth_service.reset_password(email)
+        result = await auth_service.reset_password(email)
         return SuccessResponse(
-            data=None,
-            message="If the email exists, a password reset link has been sent.",
+            data={"reset_link": result.get("reset_link"), "reset_token": result.get("reset_token")},
+            message=result.get("message", "If the email exists, a password reset link has been sent."),
         )
     except Exception as e:
         logger.exception("Reset password failed: %s", e)
         return SuccessResponse(
             data=None,
             message="If the email exists, a password reset link has been sent.",
+        )
+
+
+@router.post(
+    "/reset-password/confirm",
+    response_model=SuccessResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Confirm password reset with token and new password",
+)
+async def confirm_reset_password(body: dict):
+    token = body.get("token")
+    new_password = body.get("new_password")
+    confirm_password = body.get("confirm_password")
+    
+    if not token or not new_password or not confirm_password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="token, new_password, and confirm_password are required.",
+        )
+    
+    try:
+        result = await auth_service.confirm_reset_password(token, new_password, confirm_password)
+        return SuccessResponse(data=None, message=result.get("message", "Password reset successful."))
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
+    except Exception as e:
+        logger.exception("Confirm reset password failed: %s", e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to reset password.",
+        )
+
+
+@router.post(
+    "/reset-password/direct",
+    response_model=SuccessResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Direct password reset for demo (no token required)",
+)
+async def direct_reset_password(body: dict):
+    email = body.get("email")
+    new_password = body.get("new_password")
+    confirm_password = body.get("confirm_password")
+    
+    if not email or not new_password or not confirm_password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="email, new_password, and confirm_password are required.",
+        )
+    
+    try:
+        result = await auth_service.direct_reset_password(email, new_password, confirm_password)
+        return SuccessResponse(data=None, message=result.get("message", "Password reset successful."))
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
+    except Exception as e:
+        logger.exception("Direct reset password failed: %s", e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to reset password.",
         )

@@ -1,7 +1,12 @@
 import sqlite3
-conn = sqlite3.connect('data/crimeintel.db')
+conn = sqlite3.connect('crimeintel.db')
 cursor = conn.cursor()
-cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+cursor.execute('SELECT name FROM sqlite_master WHERE type="table"')
 tables = cursor.fetchall()
-print('Tables:', [t[0] for t in tables])
-conn.close()
+for t in tables:
+    print('Table:', t[0])
+    cursor.execute('PRAGMA table_info(' + t[0] + ')')
+    columns = cursor.fetchall()
+    for col in columns:
+        print('  ', col[1], '(', col[2], ')')
+print('Done')

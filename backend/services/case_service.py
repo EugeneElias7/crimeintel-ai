@@ -30,19 +30,44 @@ class CaseService:
             return {"data": [], "total": 0, "page": page, "pages": 0}
 
         filters = filters or {}
+        # Normalize district aliases
+        DISTRICT_ALIAS = {
+            "bengaluru urban": "bangalore urban",
+            "bengaluru rural": "bangalore rural",
+            "mysuru": "mysore",
+            "tumakuru": "tumkur",
+            "belagavi": "belgaum",
+            "shivamogga": "shimoga",
+            "kalaburagi": "gulbarga",
+            "chamarajanagar": "chamarajanagar",
+            "chikkmagaluru": "chikkamagaluru",
+        }
         filtered = []
         for case in all_cases:
             crime_type = filters.get("crime_type")
-            if crime_type and case.get("crime_type") != crime_type:
+            if crime_type and case.get("crime_type", "").lower() != crime_type.lower():
                 continue
 
             status = filters.get("status")
-            if status and case.get("status") != status:
-                continue
+            if status:
+                filt_status = status.lower()
+                # alias resolved <-> closed
+                if filt_status == "resolved":
+                    filt_status = "closed"
+                case_status = (case.get("status") or "").lower()
+                if case_status == "resolved":
+                    case_status = "closed"
+                if case_status != filt_status:
+                    continue
 
             district = filters.get("district")
-            if district and case.get("district") != district:
-                continue
+            if district:
+                case_dist = (case.get("district") or "").lower()
+                filt_dist = district.lower()
+                filt_dist = DISTRICT_ALIAS.get(filt_dist, filt_dist)
+                case_dist_norm = DISTRICT_ALIAS.get(case_dist, case_dist)
+                if case_dist_norm != filt_dist and case_dist != filt_dist:
+                    continue
 
             date_from = filters.get("date_from")
             if date_from and case.get("date_filed", "") < date_from:
@@ -55,6 +80,17 @@ class CaseService:
             officer_id = filters.get("officer_id")
             if officer_id and case.get("officer_id") != officer_id:
                 continue
+
+            priority = filters.get("priority")
+            if priority and case.get("priority", "").lower() != priority.lower():
+                continue
+
+            search = filters.get("search")
+            if search:
+                q = search.lower()
+                hay = f"{case.get('case_id','')} {case.get('fir_number','')} {case.get('location','')} {case.get('description','')} {case.get('crime_type','')} {case.get('district','')} {case.get('status','')}".lower()
+                if q not in hay:
+                    continue
 
             filtered.append(case)
 
@@ -129,6 +165,9 @@ class CaseService:
                 or q in (case.get("fir_number") or "").lower()
                 or q in (case.get("location") or "").lower()
                 or q in (case.get("description") or "").lower()
+                or q in (case.get("crime_type") or "").lower()
+                or q in (case.get("district") or "").lower()
+                or q in (case.get("status") or "").lower()
             ):
                 matched.append(case)
 
@@ -143,7 +182,7 @@ class CaseService:
     async def get_case(self, case_id: str) -> Optional[dict]:
         case = await self.db.get("Cases", case_id)
         if not case:
-            return None
+            raise ValueError("Case not found")
 
         suspects = await self.db.query("Suspects", {"case_id": case_id})
         witnesses = await self.db.query("Witnesses", {"case_id": case_id})
@@ -248,33 +287,49 @@ class CaseService:
         case_id = generate_case_id()
         now = datetime.utcnow().isoformat()
 
+        # Permission: officer_id must be authenticated user, not frontend trusted input
+        effective_officer_id = user_id or data.officer_id
+        if not effective_officer_id:
+            raise ValueError("Officer ID is required")
         row_data = {
             "ROWID": case_id,
             "case_id": case_id,
-            "fir_number": data.fir_number,
-            "crime_type": data.crime_type,
+            "fir_number": data.fir_number or case_id,
+            "crime_type": data.crime_type.lower() if isinstance(data.crime_type, str) else data.crime_type,
             "date_filed": data.date_filed,
             "location": data.location,
             "latitude": data.latitude,
             "longitude": data.longitude,
             "district": data.district,
             "description": data.description,
-            "officer_id": data.officer_id,
-            "priority": data.priority,
-            "status": data.status or "open",
+            "officer_id": effective_officer_id,
+            "priority": (data.priority or "medium").lower() if isinstance(data.priority, str) else data.priority,
+            "status": (data.status or "open").lower() if isinstance(data.status, str) else data.status or "open",
             "created_at": now,
             "updated_at": now,
         }
 
         await self.db.insert("Cases", row_data)
+        print(f"[CASE CREATE] Case ID: {case_id}")
 
+        # Create per-case storage directories as per spec
+        try:
+            from pathlib import Path
+            case_dir = Path(__file__).resolve().parent.parent / "storage" / "cases" / case_id / "evidence"
+            case_dir.mkdir(parents=True, exist_ok=True)
+            print(f"[CASE CREATE] Created storage directory: {case_dir}")
+        except Exception as e:
+            print(f"[CASE CREATE] Storage dir failed: {e}")
+
+        _tid = generate_uuid()
         await self.db.insert("Timeline", {
-            "ROWID": generate_uuid(),
+            "ROWID": _tid,
+            "event_id": _tid,
             "case_id": case_id,
             "event_date": now,
             "event_type": "fir_registered",
             "description": f"FIR registered for {data.crime_type} at {data.location}",
-            "officer_id": data.officer_id,
+            "officer_id": effective_officer_id,
             "created_at": now,
         })
 
@@ -306,8 +361,10 @@ class CaseService:
         await self.db.update("Cases", case_id, update_data)
 
         if new_status and new_status != old_status:
+            _tid2 = generate_uuid()
             await self.db.insert("Timeline", {
-                "ROWID": generate_uuid(),
+                "ROWID": _tid2,
+                "event_id": _tid2,
                 "case_id": case_id,
                 "event_date": datetime.utcnow().isoformat(),
                 "event_type": "status_change",
@@ -340,16 +397,48 @@ class CaseService:
         if not existing:
             raise ValueError("Case not found")
 
-        await self.db.update("Cases", case_id, {
-            "status": "filed",
-            "updated_at": datetime.utcnow().isoformat(),
-        })
+        # Hard delete: remove case and all related data + storage folder
+        # Delete related evidence metadata
+        try:
+            evidences = await self.db.query("Evidence_Metadata", {"case_id": case_id})
+            for ev in evidences or []:
+                try:
+                    await self.db.delete("Evidence_Metadata", ev.get("evidence_id") or ev.get("ROWID"))
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        # Delete suspects, witnesses, timeline
+        for tbl in ("Suspects", "Witnesses", "Timeline"):
+            try:
+                rows = await self.db.query(tbl, {"case_id": case_id})
+                for r in rows or []:
+                    rid = r.get("ROWID") or r.get("suspect_id") or r.get("witness_id") or r.get("event_id")
+                    if rid:
+                        try:
+                            await self.db.delete(tbl, rid)
+                        except Exception:
+                            pass
+            except Exception:
+                pass
+        # Delete storage folder
+        try:
+            from pathlib import Path
+            import shutil
+            for base in [Path(__file__).resolve().parent.parent / "storage" / "cases" / case_id,
+                        Path(__file__).resolve().parent.parent / "storage" / "evidence" / case_id]:
+                if base.exists():
+                    shutil.rmtree(str(base), ignore_errors=True)
+        except Exception:
+            pass
+        # Finally delete case itself
+        await self.db.delete("Cases", case_id)
 
         await self.db.insert("Audit_Logs", {
             "user_id": user_id or "",
             "action": AUDIT_CASE_DELETED,
             "module": "cases",
-            "details": f"Soft-deleted case {case_id} (status set to filed)",
+            "details": f"Hard-deleted case {case_id} and all related data",
             "created_at": datetime.utcnow().isoformat(),
         })
 

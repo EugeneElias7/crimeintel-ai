@@ -74,6 +74,13 @@ class EvidenceService:
         "video/mp4",
         "video/quicktime",
         "video/x-msvideo",
+        "audio/mpeg",
+        "audio/mp3",
+        "audio/wav",
+        "audio/x-wav",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "text/plain",
     }
 
     async def upload_evidence(
@@ -101,7 +108,10 @@ class EvidenceService:
             )
 
         await file.seek(0)
-        file_url = await self.fs.upload_file(file, folder="evidence")
+        # Store per-case folder as required: storage/cases/{case_id}/evidence/
+        print(f"[EVIDENCE] Processing: {file.filename} for case {case_id}")
+        file_url = await self.fs.upload_file(file, folder=f"cases/{case_id}/evidence")
+        print(f"[EVIDENCE] Saved file path: {file_url}")
 
         import mimetypes
         mime_type, _ = mimetypes.guess_type(file.filename or "")
@@ -124,8 +134,10 @@ class EvidenceService:
             "uploaded_at": now,
         })
 
+        _tid = generate_uuid()
         await self.db.insert("Timeline", {
-            "ROWID": generate_uuid(),
+            "ROWID": _tid,
+            "event_id": _tid,
             "case_id": case_id,
             "event_date": now,
             "event_type": "evidence_collected",

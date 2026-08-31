@@ -55,6 +55,8 @@ export interface CaseDetail {
   priority: string;
   district: string;
   location: string;
+  latitude?: number | null;
+  longitude?: number | null;
   date_filed: string;
   date_updated: string;
   date_closed?: string;

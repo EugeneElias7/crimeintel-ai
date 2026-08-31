@@ -18,8 +18,14 @@ class SQLiteDBAdapter:
     async def _ensure_initialized(self) -> None:
         if not self._initialized:
             try:
-                self._conn = sqlite3.connect(str(self._db_path), check_same_thread=False)
+                self._conn = sqlite3.connect(str(self._db_path), check_same_thread=False, timeout=10.0, isolation_level=None)
                 self._conn.row_factory = sqlite3.Row
+                try:
+                    self._conn.execute("PRAGMA journal_mode=WAL;")
+                    self._conn.execute("PRAGMA busy_timeout=5000;")
+                    self._conn.execute("PRAGMA synchronous=NORMAL;")
+                except Exception:
+                    pass
                 self._initialized = True
                 logger.info("SQLiteDBAdapter initialized successfully at %s", self._db_path)
             except Exception as e:

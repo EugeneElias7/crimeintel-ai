@@ -37,11 +37,13 @@ def validate_password(password: str) -> str:
 
 def validate_role(role: str) -> str:
     valid_roles = {r.value for r in RoleEnum}
-    if role not in valid_roles:
+    # Normalize case - frontend sends SUPER_ADMIN, backend stores super_admin
+    normalized = role.lower() if isinstance(role, str) else role
+    if normalized not in valid_roles:
         raise ValueError(
             f"Invalid role '{role}'. Must be one of: {', '.join(sorted(valid_roles))}"
         )
-    return role
+    return normalized
 
 
 def validate_case_status(status: str) -> str:

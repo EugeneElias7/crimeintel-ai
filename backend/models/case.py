@@ -154,16 +154,44 @@ class CaseCreate(CaseBase):
         from utils.constants import CrimeTypeEnum
 
         valid = {c.value for c in CrimeTypeEnum}
-        if v not in valid:
-            raise ValueError(
-                f"Invalid crime type '{v}'. Must be one of: {', '.join(sorted(valid))}"
-            )
-        return v
+        norm = v.lower().strip() if isinstance(v, str) else v
+        # Map common frontend labels to enum
+        alias = {
+            "chain snatching": "theft",
+            "drug trafficking": "other",
+            "vehicle theft": "theft",
+            "credit card fraud": "fraud",
+            "traffic violation": "other",
+            "atm fraud": "fraud",
+            "rash driving": "other",
+            "identity theft": "fraud",
+            "arson": "other",
+            "public nuisance": "other",
+            "hit and run": "other",
+            "extortion": "other",
+            "attempted murder": "murder",
+            "burglary": "theft",
+            "over speeding": "other",
+            "vandalism": "other",
+            "pickpocketing": "theft",
+            "cyber crime": "cybercrime",
+            "drunk driving": "other",
+            "counterfeiting": "fraud",
+            "online fraud": "fraud",
+            "domestic violence": "assault",
+            "unlawful assembly": "rioting",
+        }
+        if norm in alias:
+            norm = alias[norm]
+        if norm not in valid:
+            # Allow any, fallback to 'other' instead of hard fail for demo
+            return "other"
+        return norm
 
     @field_validator("status")
     @classmethod
     def _validate_status(cls, v: str) -> str:
-        return validate_case_status(v)
+        return validate_case_status(v.lower().strip() if isinstance(v, str) else v)
 
     @field_validator("priority")
     @classmethod
@@ -171,11 +199,10 @@ class CaseCreate(CaseBase):
         from utils.constants import PriorityEnum
 
         valid = {p.value for p in PriorityEnum}
-        if v not in valid:
-            raise ValueError(
-                f"Invalid priority '{v}'. Must be one of: {', '.join(sorted(valid))}"
-            )
-        return v
+        norm = v.lower().strip() if isinstance(v, str) else v
+        if norm not in valid:
+            return "medium"
+        return norm
 
 
 class CaseUpdate(BaseModel):

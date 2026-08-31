@@ -1,415 +1,380 @@
-import { useState, useEffect, useRef } from 'react';
-import {
-  FileText,
-  Printer,
-} from 'lucide-react';
-import Card from '../components/ui/Card';
-import Button from '../components/ui/Button';
-import EmptyState from '../components/ui/EmptyState';
-import { listCases, getCase } from '../services/caseService';
-import { getOverview, getTrends, getByDistrict } from '../services/analyticsService';
-import type { Case, CaseDetail } from '../types/case';
-import type { OverviewData, TrendItem, DistrictItem } from '../types/analytics';
+import { useEffect, useState } from "react";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import EmptyState from "../components/ui/EmptyState";
+import { useToast } from "../components/ui/Toast";
 
-const DISTRICTS = [
-  'Bangalore Urban',
-  'Bangalore Rural',
-  'Belgaum',
-  'Dharwad',
-  'Gulbarga',
-  'Hubli',
-  'Mangalore',
-  'Mysore',
-  'Shimoga',
-  'Tumkur',
-];
+import { listCases } from "../services/caseService";
+import type { Case } from "../types/case";
 
-type ReportMode = 'case' | 'summary';
 
-export default function ReportsPage() {
-  const [mode, setMode] = useState<ReportMode>('case');
-  const [cases, setCases] = useState<Case[]>([]);
-  const [selectedCaseId, setSelectedCaseId] = useState('');
-  const [caseDetail, setCaseDetail] = useState<CaseDetail | null>(null);
-  const [loadingCase, setLoadingCase] = useState(false);
+interface ReportModalProps {
+  caseId: string;
+  caseNumber: string;
+  open: boolean;
+  setOpen: (value: boolean) => void;
+}
 
-  const [summaryFrom, setSummaryFrom] = useState('');
-  const [summaryTo, setSummaryTo] = useState('');
-  const [summaryDistrict, setSummaryDistrict] = useState('');
-  const [overview, setOverview] = useState<OverviewData | null>(null);
-  const [trends, setTrends] = useState<TrendItem[]>([]);
-  const [byDistrict, setByDistrict] = useState<DistrictItem[]>([]);
-  const [loadingSummary, setLoadingSummary] = useState(false);
 
-  const printRef = useRef<HTMLDivElement>(null);
+function ReportModal({
+  caseId,
+  caseNumber,
+  open,
+  setOpen,
+}: ReportModalProps) {
 
-  const [loadingCases, setLoadingCases] = useState(true);
-  const [casesError, setCasesError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { addToast } = useToast();
 
-  useEffect(() => {
-    setLoadingCases(true);
-    setCasesError(null);
-    listCases({ limit: 100 })
-      .then((res) => setCases(res.data))
-      .catch((err) => {
-        const msg = (err as any)?.response?.data?.detail || 'Failed to load cases';
-        setCasesError(typeof msg === 'string' ? msg : 'Failed to load cases');
-      })
-      .finally(() => setLoadingCases(false));
-  }, []);
 
-  const handleGenerateCase = async () => {
-    if (!selectedCaseId) return;
-    setLoadingCase(true);
+  const handleGenerate = async () => {
+
+    setLoading(true);
+
     try {
-      const caseDetail = await getCase(selectedCaseId);
-      setCaseDetail(caseDetail);
-    } catch {
-      setCaseDetail(null);
+
+      const token =
+        localStorage.getItem("token") ||
+        localStorage.getItem("access_token");
+
+
+      const response = await fetch(
+        `/api/v1/reports/case/${caseId}/pdf`,
+        {
+          method: "GET",
+
+          headers: {
+            ...(token
+              ? {
+                  Authorization: `Bearer ${token}`,
+                }
+              : {}),
+          },
+        }
+      );
+
+
+      if (!response.ok) {
+
+        const errorText = await response.text();
+
+        console.error(
+          "Report generation failed:",
+          response.status,
+          errorText
+        );
+
+        throw new Error(
+          `Failed to generate report (${response.status})`
+        );
+      }
+
+
+      const blob = await response.blob();
+
+
+      if (blob.size === 0) {
+        throw new Error("Generated PDF is empty");
+      }
+
+
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+
+      link.href = url;
+
+      link.download =
+        `CrimeIntel_Report_${caseNumber}_${new Date()
+          .toISOString()
+          .split("T")[0]}.pdf`;
+
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(url);
+
+
+      addToast(
+        "success",
+        "PDF report generated and downloaded successfully"
+      );
+
+
+      setOpen(false);
+
+    } catch (error) {
+
+      console.error(
+        "PDF generation error:",
+        error
+      );
+
+      addToast(
+        "error",
+        "Failed to generate PDF report"
+      );
+
     } finally {
-      setLoadingCase(false);
+
+      setLoading(false);
+
     }
+
   };
 
-  const handleGenerateSummary = async () => {
-    setLoadingSummary(true);
-    try {
-      const [overviewRes, trendsRes, districtRes] = await Promise.all([
-        getOverview(summaryFrom || undefined, summaryTo || undefined),
-        getTrends(summaryFrom || undefined, summaryTo || undefined),
-        getByDistrict(summaryFrom || undefined, summaryTo || undefined),
-      ]);
-      setOverview(overviewRes);
-      setTrends(trendsRes);
-      setByDistrict(districtRes);
-    } catch {
-      setOverview(null);
-    } finally {
-      setLoadingSummary(false);
-    }
-  };
 
-  const handlePrint = () => {
-    window.print();
-  };
+  if (!open) {
+    return null;
+  }
+
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Generate case and summary reports
+
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+
+      <div className="bg-slate-900 rounded-xl p-6 max-w-md w-full border border-slate-600">
+
+        <h3 className="mb-4 text-xl font-semibold text-white text-center">
+
+          Generate Case Report
+
+        </h3>
+
+
+        <p className="mb-6 text-sm text-slate-400 text-center">
+
+          A PDF report will be generated containing the case details,
+          suspects, witnesses, location information and evidence summary.
+
         </p>
+
+
+        <Button
+          onClick={handleGenerate}
+          disabled={loading}
+          className="w-full"
+        >
+
+          {loading
+            ? "Generating PDF..."
+            : "Generate & Download PDF"}
+
+        </Button>
+
+
+        <Button
+          onClick={() => setOpen(false)}
+          variant="outline"
+          className="mt-3 w-full"
+          disabled={loading}
+        >
+
+          Cancel
+
+        </Button>
+
       </div>
 
-      <div className="mb-6 flex gap-2">
-        <button
-          onClick={() => {
-            setMode('case');
-            setCaseDetail(null);
-          }}
-          className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-            mode === 'case'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          <FileText size={16} className="inline" /> Case Report
-        </button>
-        <button
-          onClick={() => {
-            setMode('summary');
-            setOverview(null);
-          }}
-          className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-            mode === 'summary'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          <FileText size={16} className="inline" /> Summary Report
-        </button>
-      </div>
-
-      {mode === 'case' && (
-        <Card>
-          <div className="mb-4 flex flex-wrap items-end gap-4">
-            <div className="min-w-[280px] flex-1">
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Select Case <span className="font-mono-industrial text-[11px] text-slate-400">• {cases.length} loaded</span>
-              </label>
-              <select
-                className="input-field w-full"
-                value={selectedCaseId}
-                onChange={(e) => setSelectedCaseId(e.target.value)}
-                disabled={loadingCases}
-              >
-                <option value="">{loadingCases ? 'Loading cases...' : casesError ? casesError : 'Choose a case...'}</option>
-                {cases.map((c) => (
-                  <option key={c.case_id} value={c.case_id} title={`${c.case_number} – ${c.title}`}>
-                    {c.case_number} • {c.crime_type} @ {c.district} — {c.title.slice(0, 48)}{c.title.length > 48 ? '…' : ''}
-                  </option>
-                ))}
-              </select>
-              {casesError && !loadingCases && <p className="mt-1 text-xs text-red-500">{casesError} — showing 0 cases. Try refreshing.</p>}
-              {!casesError && !loadingCases && cases.length === 0 && <p className="mt-1 text-xs text-amber-600">No cases found.</p>}
-            </div>
-            <Button onClick={handleGenerateCase} isLoading={loadingCase} disabled={!selectedCaseId || loadingCases}>
-              Generate
-            </Button>
-          </div>
-
-          {caseDetail && (
-            <div ref={printRef}>
-              <div className="mb-4 flex justify-end print:hidden">
-                <Button variant="outline" size="sm" onClick={handlePrint}>
-                  <Printer size={16} />
-                  Print
-                </Button>
-              </div>
-
-              <div className="rounded-lg border border-gray-200 p-6">
-                <div className="mb-6 border-b border-gray-200 pb-4">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    Case Report: {caseDetail.case_number}
-                  </h2>
-                  <p className="mt-1 text-gray-600">{caseDetail.title}</p>
-                </div>
-
-                <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
-                  {[
-                    ['Case Number', caseDetail.case_number],
-                    ['Crime Type', caseDetail.crime_type],
-                    ['Status', caseDetail.status],
-                    ['Priority', caseDetail.priority],
-                    ['District', caseDetail.district],
-                    ['Location', caseDetail.location],
-                    [
-                      'Date Filed',
-                      new Date(caseDetail.date_filed).toLocaleDateString(),
-                    ],
-                    [
-                      'Assigned Officer',
-                      caseDetail.assigned_officer?.display_name ?? '—',
-                    ],
-                    [
-                      'Filing Officer',
-                      caseDetail.filing_officer?.display_name ?? '—',
-                    ],
-                  ].map(([label, value]) => (
-                    <div key={label}>
-                      <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-                        {label}
-                      </p>
-                      <p className="mt-1 text-sm font-medium text-gray-900">
-                        {value}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                {caseDetail.description && (
-                  <div className="mb-6">
-                    <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-                      Description
-                    </p>
-                    <p className="mt-1 text-sm text-gray-700">
-                      {caseDetail.description}
-                    </p>
-                  </div>
-                )}
-
-                {caseDetail.witnesses && caseDetail.witnesses.length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="mb-2 text-sm font-semibold text-gray-700">
-                      Witnesses
-                    </h3>
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b bg-gray-50">
-                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Name</th>
-                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Contact</th>
-                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Credibility</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {caseDetail.witnesses.map((w) => (
-                          <tr key={w.witness_id} className="border-b">
-                            <td className="px-3 py-2 text-gray-900">{w.name}</td>
-                            <td className="px-3 py-2 text-gray-500">{w.contact ?? '—'}</td>
-                            <td className="px-3 py-2 text-gray-500">{w.credibility ?? '—'}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-
-                {caseDetail.timeline && caseDetail.timeline.length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="mb-2 text-sm font-semibold text-gray-700">
-                      Timeline
-                    </h3>
-                    <div className="space-y-2">
-                      {caseDetail.timeline.map((e) => (
-                        <div key={e.event_id} className="flex gap-3 rounded-lg bg-gray-50 p-3">
-                          <div className="text-xs text-gray-400">
-                            {new Date(e.date).toLocaleDateString()}
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-gray-900">{e.title}</p>
-                            <p className="text-xs text-gray-500">{e.description}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </Card>
-      )}
-
-      {mode === 'summary' && (
-        <Card>
-          <div className="mb-4 flex flex-wrap items-end gap-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                From
-              </label>
-              <input
-                type="date"
-                className="input-field"
-                value={summaryFrom}
-                onChange={(e) => setSummaryFrom(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                To
-              </label>
-              <input
-                type="date"
-                className="input-field"
-                value={summaryTo}
-                onChange={(e) => setSummaryTo(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                District
-              </label>
-              <select
-                className="input-field"
-                value={summaryDistrict}
-                onChange={(e) => setSummaryDistrict(e.target.value)}
-              >
-                <option value="">All Districts</option>
-                {DISTRICTS.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <Button onClick={handleGenerateSummary} isLoading={loadingSummary}>
-              Generate
-            </Button>
-          </div>
-
-          {overview && (
-            <div ref={printRef}>
-              <div className="mb-4 flex justify-end print:hidden">
-                <Button variant="outline" size="sm" onClick={handlePrint}>
-                  <Printer size={16} />
-                  Print
-                </Button>
-              </div>
-
-              <div className="rounded-lg border border-gray-200 p-6">
-                <h2 className="mb-4 text-xl font-bold text-gray-900">
-                  Summary Report
-                </h2>
-
-                <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-                  {[
-                    ['Total Cases', overview.total_cases],
-                    ['Open', overview.open_cases],
-                    ['Closed', overview.closed_cases],
-                    ['Clearance Rate', `${overview.clearance_rate.toFixed(1)}%`],
-                  ].map(([label, value]) => (
-                    <div key={label} className="rounded-lg bg-gray-50 p-4 text-center">
-                      <p className="text-2xl font-bold text-gray-900">{value}</p>
-                      <p className="text-xs text-gray-500">{label}</p>
-                    </div>
-                  ))}
-                </div>
-
-                {trends.length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="mb-2 text-sm font-semibold text-gray-700">
-                      Monthly Trend
-                    </h3>
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b bg-gray-50">
-                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Month</th>
-                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Total</th>
-                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Open</th>
-                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Closed</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {trends.map((t, i) => (
-                          <tr key={i} className="border-b">
-                            <td className="px-3 py-2 text-gray-900">{t.month}</td>
-                            <td className="px-3 py-2 text-gray-700">{t.total}</td>
-                            <td className="px-3 py-2 text-gray-700">{t.open}</td>
-                            <td className="px-3 py-2 text-gray-700">{t.closed}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-
-                {byDistrict.length > 0 && (
-                  <div>
-                    <h3 className="mb-2 text-sm font-semibold text-gray-700">
-                      Cases by District
-                    </h3>
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b bg-gray-50">
-                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">District</th>
-                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">Count</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {byDistrict.map((d, i) => (
-                          <tr key={i} className="border-b">
-                            <td className="px-3 py-2 text-gray-900">{d.district}</td>
-                            <td className="px-3 py-2 text-gray-700">{d.count}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {!overview && !loadingSummary && (
-            <EmptyState
-              icon={<FileText size={48} />}
-              title="Generate a summary"
-              description="Select a date range and district, then click Generate."
-            />
-          )}
-        </Card>
-      )}
     </div>
+
   );
+
+}
+
+
+export default function ReportsPage() {
+
+  const [cases, setCases] = useState<Case[]>([]);
+
+  const [loading, setLoading] = useState(true);
+
+  const [selectedCase, setSelectedCase] =
+    useState<Case | null>(null);
+
+  const [modalOpen, setModalOpen] =
+    useState(false);
+
+
+  useEffect(() => {
+
+    async function fetchCases() {
+
+      try {
+
+        setLoading(true);
+
+        const result = await listCases();
+
+        setCases(result.data || []);
+
+      } catch (error) {
+
+        console.error(
+          "Failed to load cases:",
+          error
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    }
+
+
+    fetchCases();
+
+  }, []);
+
+
+  const handleGenerateReport = (
+    caseItem: Case
+  ) => {
+
+    setSelectedCase(caseItem);
+
+    setModalOpen(true);
+
+  };
+
+
+  return (
+
+    <div className="min-h-screen bg-slate-100">
+
+      <div className="max-w-7xl mx-auto p-4">
+
+
+        <Card>
+
+          <div className="px-5 py-4 border-b border-slate-300">
+
+            <h2 className="text-2xl font-bold text-slate-900">
+
+              Case Reports
+
+            </h2>
+
+
+            <p className="text-slate-500">
+
+              Generate and download PDF reports for investigation cases
+
+            </p>
+
+          </div>
+
+
+          <div className="px-5 py-4">
+
+
+            {loading ? (
+
+              <EmptyState
+                title="Loading Cases"
+                description="Fetching available cases..."
+              />
+
+            ) : cases.length === 0 ? (
+
+              <EmptyState
+                title="No Cases Available"
+                description="There are currently no cases available for reporting."
+              />
+
+            ) : (
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+
+                {cases.map((caseItem) => (
+
+                  <Card
+                    key={caseItem.case_id}
+                    className="border-none shadow-sm hover:shadow-md transition-shadow"
+                  >
+
+                    <div className="px-4 py-3">
+
+
+                      <h3 className="font-medium text-slate-800 line-clamp-1">
+
+                        {caseItem.title}
+
+                      </h3>
+
+
+                      <p className="text-xs text-slate-500 mt-2">
+
+                        Case: {caseItem.case_number}
+
+                      </p>
+
+
+                      <p className="text-xs text-slate-500 mt-1">
+
+                        Status: {caseItem.status}
+
+                      </p>
+
+
+                      <Button
+                        size="sm"
+                        onClick={() =>
+                          handleGenerateReport(caseItem)
+                        }
+                        className="w-full mt-4 text-sm"
+                      >
+
+                        Generate Report
+
+                      </Button>
+
+
+                    </div>
+
+                  </Card>
+
+                ))}
+
+              </div>
+
+            )}
+
+
+          </div>
+
+        </Card>
+
+
+      </div>
+
+
+      {selectedCase && (
+
+        <ReportModal
+
+          caseId={selectedCase.case_id}
+
+          caseNumber={selectedCase.case_number}
+
+          open={modalOpen}
+
+          setOpen={setModalOpen}
+
+        />
+
+      )}
+
+
+    </div>
+
+  );
+
 }

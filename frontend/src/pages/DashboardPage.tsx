@@ -3,13 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import {
   RefreshCw,
   FolderOpen,
-  FileText,
-  TrendingUp,
-  User,
+  FileSearch,
+  CheckCircle2,
+  AlertTriangle,
   Search,
   Bot,
-  ArrowUp,
-  ArrowDown,
+  ChevronRight,
 } from 'lucide-react';
 import {
   PieChart,
@@ -35,22 +34,13 @@ import { listCases } from '../services/caseService';
 import type { OverviewData, TrendItem, DistributionItem, DistrictItem } from '../types/analytics';
 import type { Case } from '../types/case';
 
-const COLORS = ['#3B82F6', '#EF4444', '#F59E0B', '#10B981', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
-
-function formatTime(d: Date) {
-  return d.toLocaleString('en-IN', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
+const CHART_COLORS = ['#2563EB', '#EF4444', '#F59E0B', '#10B981', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
 
 function getBadgeVariant(status: string) {
   const s = status.toLowerCase().replace(/\s+/g, '_');
   if (s === 'open') return 'open';
   if (s === 'closed') return 'closed';
+  if (s === 'resolved') return 'closed';
   if (s === 'under_investigation') return 'under_investigation';
   if (s === 'filed') return 'filed';
   return 'default';
@@ -58,19 +48,27 @@ function getBadgeVariant(status: string) {
 
 function SkeletonCard() {
   return (
-    <div className="animate-pulse rounded-lg bg-white p-5 shadow-sm">
-      <div className="mb-3 h-4 w-20 rounded bg-gray-200" />
-      <div className="mb-2 h-8 w-16 rounded bg-gray-200" />
-      <div className="h-3 w-32 rounded bg-gray-200" />
+    <div className="animate-pulse rounded-lg bg-white border border-[var(--color-border-primary)] p-5 shadow-sm">
+      <div className="mb-3 h-4 w-20 rounded bg-[var(--color-slate-200)]" />
+      <div className="mb-2 h-8 w-16 rounded bg-[var(--color-slate-200)]" />
+      <div className="h-3 w-32 rounded bg-[var(--color-slate-200)]" />
     </div>
   );
 }
 
 function SkeletonChart() {
   return (
-    <div className="animate-pulse rounded-lg bg-white p-5 shadow-sm">
-      <div className="mb-4 h-5 w-40 rounded bg-gray-200" />
-      <div className="h-64 rounded bg-gray-100" />
+    <div className="animate-pulse rounded-lg bg-white border border-[var(--color-border-primary)] p-5 shadow-sm">
+      <div className="mb-4 h-5 w-32 rounded bg-[var(--color-slate-200)]" />
+      <div className="h-[240px] rounded bg-[var(--color-slate-100)]" />
+    </div>
+  );
+}
+
+function ChartEmpty({ message }: { message: string }) {
+  return (
+    <div className="flex h-[240px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-primary)] bg-[var(--color-slate-50)]">
+      <p className="text-sm text-[var(--color-text-tertiary)]">{message}</p>
     </div>
   );
 }
@@ -84,27 +82,33 @@ export default function DashboardPage() {
   const [recentCases, setRecentCases] = useState<Case[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState(new Date());
-  const [live, setLive] = useState(true);
 
   const fetchData = useCallback(async (showLoader = true) => {
     if (showLoader) setLoading(true);
     setError(null);
     try {
-      const [overviewRes, casesRes, trendsRes, distRes, districtRes] = await Promise.all([
+      const results = await Promise.allSettled([
         getOverview(),
         listCases({ page: 1, limit: 10 }),
         getTrends(),
         getDistribution(),
         getByDistrict(),
       ]);
-      setOverview(overviewRes);
-      setRecentCases(casesRes.data);
-      setTrends(trendsRes);
-      setDistribution(distRes);
-      setByDistrict(districtRes);
-      setLastUpdated(new Date());
-    } catch {
+      const [overviewRes, casesRes, trendsRes, distRes, districtRes] = results;
+      if (overviewRes.status === 'fulfilled') setOverview(overviewRes.value);
+      if (casesRes.status === 'fulfilled') setRecentCases(casesRes.value.data);
+      if (trendsRes.status === 'fulfilled') setTrends(trendsRes.value);
+      if (distRes.status === 'fulfilled') setDistribution(distRes.value);
+      if (districtRes.status === 'fulfilled') setByDistrict(districtRes.value);
+      const critical = [overviewRes, casesRes].every((r) => r.status === 'rejected');
+      if (critical) {
+        const reasons = results
+          .filter((r) => r.status === 'rejected')
+          .map((r) => (r.reason as any)?.response?.data?.detail || (r.reason as any)?.message || 'Unknown')
+          .join(', ');
+        setError(`Failed to load dashboard: ${reasons}`);
+      }
+    } catch (e) {
       setError('Failed to load dashboard data');
     } finally {
       if (showLoader) setLoading(false);
@@ -115,19 +119,10 @@ export default function DashboardPage() {
     fetchData(true);
   }, [fetchData]);
 
-  // Live: poll real data from reports/analytics every 12s
-  useEffect(() => {
-    if (!live) return;
-    const id = setInterval(() => fetchData(false), 12000);
-    return () => clearInterval(id);
-  }, [live, fetchData]);
-
-
-
   if (loading) {
     return (
-      <div>
-        <div className="mb-6 h-8 w-40 animate-pulse rounded bg-gray-200" />
+      <div className="animate-fade-in">
+        <div className="mb-6 h-8 w-40 animate-pulse rounded bg-[var(--color-slate-200)]" />
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <SkeletonCard key={i} />
@@ -137,266 +132,218 @@ export default function DashboardPage() {
           <SkeletonChart />
           <SkeletonChart />
         </div>
-        <div className="h-80 animate-pulse rounded-lg bg-white shadow-sm">
-          <div className="border-b border-gray-100 px-5 py-4">
-            <div className="h-5 w-32 rounded bg-gray-200" />
-          </div>
-        </div>
+        <SkeletonChart />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <p className="mb-4 text-red-600">{error}</p>
+      <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
+        <p className="mb-4 text-[var(--color-red-600)]">{error}</p>
         <Button onClick={() => fetchData(true)}>Retry</Button>
       </div>
     );
   }
 
-  // Live real data: distribution & byDistrict from reports/analytics – not just 10 recent
-  const distributionData: { name: string; value: number; color: string }[] =
-    distribution.length > 0
-      ? distribution.map((d, i) => ({ name: d.crime_type, value: d.count, color: COLORS[i % COLORS.length] }))
-      : recentCases.reduce<{ name: string; value: number; color: string }[]>((acc, c) => {
-          const ex = acc.find((d) => d.name === c.crime_type);
-          if (ex) ex.value++;
-          else acc.push({ name: c.crime_type, value: 1, color: COLORS[acc.length % COLORS.length] });
-          return acc;
-        }, []);
-
+  // KPI mapping per spec: Total, Active Investigations (open), Resolved (closed), High Priority (filed)
   const kpiCards = [
     {
-      icon: <FolderOpen className="h-6 w-6 text-blue-600" />,
+      icon: <FolderOpen className="h-5 w-5 text-[#2563EB]" />,
       value: overview?.total_cases ?? 0,
       label: 'Total Cases',
-      bg: 'bg-blue-50',
-      trend: '+12%',
-      trendUp: true,
+      sub: 'All registered cases',
+      bg: 'bg-[#EFF6FF] border-[#DBEAFE]',
     },
     {
-      icon: <FileText className="h-6 w-6 text-amber-600" />,
+      icon: <FileSearch className="h-5 w-5 text-[#D97706]" />,
       value: overview?.open_cases ?? 0,
-      label: 'Open Cases',
-      bg: 'bg-amber-50',
-      trend: '+5%',
-      trendUp: true,
+      label: 'Active Investigations',
+      sub: 'Open & under investigation',
+      bg: 'bg-[#FFFBEB] border-[#FDE68A]',
     },
     {
-      icon: <TrendingUp className="h-6 w-6 text-green-600" />,
-      value: `${(overview?.clearance_rate ?? 0).toFixed(1)}%`,
-      label: 'Clearance Rate',
-      bg: 'bg-green-50',
-      trend: '+2.3%',
-      trendUp: true,
+      icon: <CheckCircle2 className="h-5 w-5 text-[#059669]" />,
+      value: overview?.closed_cases ?? 0,
+      label: 'Resolved Cases',
+      sub: 'Closed investigations',
+      bg: 'bg-[#ECFDF5] border-[#A7F3D0]',
     },
     {
-      icon: <User className="h-6 w-6 text-purple-600" />,
-      value: 0,
-      label: 'My Cases',
-      bg: 'bg-purple-50',
-      trend: '—',
-      trendUp: true,
+      icon: <AlertTriangle className="h-5 w-5 text-[#DC2626]" />,
+      value: overview?.filed_cases ?? 0,
+      label: 'High Priority Cases',
+      sub: 'Filed & urgent',
+      bg: 'bg-[#FEF2F2] border-[#FECACA]',
     },
   ];
 
+  // Data prep - vertical only
+  const topCrimeTypes = [...distribution]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8)
+    .map((d, i) => ({ name: d.crime_type, count: d.count, fill: CHART_COLORS[i % CHART_COLORS.length] }));
+
+  const topDistricts = [...byDistrict]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10)
+    .map((d, i) => ({ name: d.district, count: d.count, fill: CHART_COLORS[i % CHART_COLORS.length] }));
+
+  const distributionData = (() => {
+    const base = distribution.map((d, i) => ({ name: d.crime_type, value: d.count, color: CHART_COLORS[i % CHART_COLORS.length] }));
+    const sorted = [...base].sort((a, b) => b.value - a.value);
+    const top = sorted.slice(0, 6);
+    const others = sorted.slice(6).reduce((acc, cur) => acc + cur.value, 0);
+    if (others > 0) top.push({ name: 'Others', value: others, color: '#94A3B8' });
+    return top;
+  })();
+
   return (
-    <div>
+    <div className="animate-fade-in">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            Dashboard
-            {live && <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-[11px] font-mono-industrial font-bold tracking-widest text-emerald-700"><span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />LIVE</span>}
-          </h1>
-          <p className="mt-1 text-sm text-gray-500 flex items-center gap-2">
-            Last updated: {formatTime(lastUpdated)}
-            <span className={`h-1 w-1 rounded-full ${live ? 'bg-emerald-400 animate-pulse' : 'bg-gray-300'}`} />
-            {live ? 'Live cycling real report data every 12s' : 'Paused'}
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">Dashboard</h1>
+          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Overview of current crime intelligence and investigation activity</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setLive((v) => !v)}
-            className={`inline-flex items-center gap-1.5 rounded-[8px] border px-3 py-1.5 text-xs font-mono-industrial font-bold tracking-widest transition-colors ${live ? 'bg-[#0F172A] text-white border-[#1E293B] shadow' : 'bg-white text-slate-600 border-[#E2E8F0] hover:border-[#0EA5E9]'}`}
-          >
-            <span className={`h-2 w-2 rounded-full ${live ? 'bg-emerald-400 animate-pulse' : 'bg-slate-400'}`} />
-            {live ? 'LIVE ON' : 'LIVE OFF'}
-          </button>
-          <Button variant="outline" size="sm" onClick={() => fetchData(true)}>
-            <RefreshCw size={16} />
-            Refresh
-          </Button>
-        </div>
+        <Button variant="outline" size="sm" onClick={() => fetchData(true)}>
+          <RefreshCw size={14} />
+          Refresh
+        </Button>
       </div>
 
-
+      {/* KPI Row */}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {kpiCards.map((card, idx) => (
-          <Card key={idx} className="group">
-            <div className="flex items-start justify-between">
-              <div
-                className={`rounded-lg p-3 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 ${card.bg}`}
-              >
+        {kpiCards.map((card) => (
+          <Card key={card.label} className="group border">
+            <div className="flex items-center justify-between">
+              <div className={`flex h-9 w-9 items-center justify-center rounded-lg border ${card.bg}`}>
                 {card.icon}
               </div>
             </div>
-            <p className="mt-3 text-3xl font-bold text-gray-900">{card.value}</p>
-            <p className="text-sm text-gray-500">{card.label}</p>
-            <div className="mt-2 flex items-center gap-1 text-xs font-medium">
-              {card.trendUp ? (
-                <ArrowUp size={14} className="text-green-500" />
-              ) : (
-                <ArrowDown size={14} className="text-red-500" />
-              )}
-              <span className={card.trendUp ? 'text-green-600' : 'text-red-600'}>
-                {card.trend}
-              </span>
-              <span className="ml-1 text-gray-400">vs last month</span>
-            </div>
+            <p className="mt-4 text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">{card.value}</p>
+            <p className="text-sm font-medium text-[var(--color-text-primary)]">{card.label}</p>
+            <p className="text-xs text-[var(--color-text-tertiary)]">{card.sub}</p>
           </Card>
         ))}
       </div>
 
-      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <Card
-          title="Crime Type Distribution"
-          subtitle={`Real • ${distributionData.reduce((a, b) => a + b.value, 0)} total • smooth live`}
-          className="transition-all duration-300"
-        >
+      {/* Row 2: Crime Distribution (donut) + Monthly Trend (line) */}
+      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card title="Crime Type Distribution" subtitle={`${distributionData.reduce((a, b) => a + b.value, 0)} total • Top 6 + Others`}>
           {distributionData.length === 0 ? (
-            <p className="py-8 text-center text-sm text-gray-400">No data</p>
+            <ChartEmpty message="No distribution data available" />
           ) : (
-            <div className="h-72">
+            <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie
-                    data={distributionData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={78}
-                    innerRadius={42}
-                    dataKey="value"
-                    isAnimationActive={false}
-                    label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
-                    labelLine={false}
-                  >
-                    {distributionData.map((entry) => (
-                      <Cell key={`${entry.name}-${entry.value}`} fill={entry.color} stroke="white" strokeWidth={1.5} />
+                  <Pie data={distributionData} cx="50%" cy="50%" outerRadius={85} innerRadius={52} dataKey="value" isAnimationActive={true} animationDuration={500} animationEasing="ease-out" animationBegin={0}>
+                    {distributionData.map((e) => (
+                      <Cell key={e.name} fill={e.color} stroke="white" strokeWidth={2} />
                     ))}
                   </Pie>
-                  <Tooltip />
-                  <Legend />
+                  <Tooltip formatter={(v: any, n: any) => [`${v} cases`, n]} contentStyle={{ backgroundColor: '#0F172A', border: 'none', borderRadius: '8px', color: '#fff' }} itemStyle={{ color: '#fff' }} />
+                  <Legend layout="vertical" align="right" verticalAlign="middle" iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           )}
         </Card>
 
-        <Card
-          title="Monthly Case Trend"
-          subtitle="Live from analytics"
-          className="transition-all duration-300"
-        >
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={trends.length > 0 ? trends : [
-                  { month: 'Jan', total: 0, open: 0, closed: 0 },
-                  { month: 'Feb', total: 0, open: 0, closed: 0 },
-                  { month: 'Mar', total: 0, open: 0, closed: 0 },
-                  { month: 'Apr', total: 0, open: 0, closed: 0 },
-                  { month: 'May', total: 0, open: 0, closed: 0 },
-                  { month: 'Jun', total: 0, open: 0, closed: 0 },
-                ]}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Line type="monotone" dataKey="total" stroke="#3B82F6" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={true} animationDuration={800} name="Total" />
-                <Line type="monotone" dataKey="open" stroke="#F59E0B" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={true} animationDuration={800} name="Open" />
-                <Line type="monotone" dataKey="closed" stroke="#10B981" strokeWidth={2} dot={{ r: 3 }} isAnimationActive={true} animationDuration={800} name="Closed" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        <Card
-          title="Cases by District"
-          subtitle="Live from reports"
-          className="transition-all duration-300"
-        >
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={byDistrict.length > 0 ? byDistrict : [{ district: 'No data', count: 0 }]} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                <XAxis dataKey="district" tick={{ fontSize: 10 }} interval={0} angle={-22} textAnchor="end" height={60} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Bar dataKey="count" fill="#6366F1" radius={[6, 6, 0, 0]} isAnimationActive={true} animationDuration={900} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+        <Card title="Monthly Case Trend" subtitle="Total • Open • Closed">
+          {trends.length === 0 ? (
+            <ChartEmpty message="No trend data available" />
+          ) : (
+            <div className="h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={trends} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
+                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ backgroundColor: '#0F172A', border: 'none', borderRadius: '8px' }} />
+                  <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
+                  <Line type="monotone" dataKey="total" stroke="#2563EB" strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} name="Total" isAnimationActive={true} animationDuration={500} animationEasing="ease-out" />
+                  <Line type="monotone" dataKey="open" stroke="#F59E0B" strokeWidth={2} dot={false} name="Open" isAnimationActive={true} animationDuration={500} animationEasing="ease-out" />
+                  <Line type="monotone" dataKey="closed" stroke="#10B981" strokeWidth={2} dot={false} name="Closed" isAnimationActive={true} animationDuration={500} animationEasing="ease-out" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </Card>
       </div>
 
+      {/* Row 3: District vertical column + Status vertical column */}
+      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card title="Cases by District" subtitle="Top 10 districts • vertical — district crime distribution">
+          {topDistricts.length === 0 ? (
+            <ChartEmpty message="No district data available" />
+          ) : (
+            <div className="h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={topDistricts} margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.12)" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#64748B' }} interval={0} angle={-18} textAnchor="end" height={48} />
+                  <YAxis tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                  <Tooltip cursor={{ fill: 'rgba(37,99,235,0.06)' }} contentStyle={{ backgroundColor: '#0F172A', border: 'none', borderRadius: '8px' }} />
+                  <Bar dataKey="count" radius={[6, 6, 0, 0]} fill="#2563EB" isAnimationActive={true} animationDuration={500} animationEasing="ease-out" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </Card>
+
+        <Card title="Top Crime Types" subtitle="Top 8 • vertical">
+          {topCrimeTypes.length === 0 ? (
+            <ChartEmpty message="No crime type data available" />
+          ) : (
+            <div className="h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={topCrimeTypes} margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.12)" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#64748B' }} interval={0} angle={-18} textAnchor="end" height={48} />
+                  <YAxis tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                  <Tooltip cursor={{ fill: 'rgba(37,99,235,0.06)' }} contentStyle={{ backgroundColor: '#0F172A', border: 'none', borderRadius: '8px' }} />
+                  <Bar dataKey="count" radius={[6, 6, 0, 0]} fill="#6366F1" isAnimationActive={true} animationDuration={500} animationEasing="ease-out" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {/* Row 4: Recent Cases */}
       <Card
         title="Recent Cases"
-        subtitle="Last 10 cases"
+        subtitle="Latest 10 • click to investigate"
         actions={
           <Button variant="ghost" size="sm" onClick={() => navigate('/cases')}>
-            View All
+            View All <ChevronRight size={14} />
           </Button>
         }
       >
         {recentCases.length === 0 ? (
-          <EmptyState
-            icon={<FolderOpen size={48} />}
-            title="No cases yet"
-            description="Cases will appear here once created."
-          />
+          <EmptyState icon={<FolderOpen size={48} />} title="No cases yet" description="Cases will appear here once created." />
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-[var(--color-border-primary)]">
+              <thead className="bg-[var(--color-slate-50)]">
                 <tr>
-                  {['Case ID', 'Crime Type', 'Status', 'Date', 'Location'].map(
-                    (h) => (
-                      <th
-                        key={h}
-                        className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
-                      >
-                        {h}
-                      </th>
-                    ),
-                  )}
+                  {['Case ID', 'Crime Type', 'Status', 'Date', 'Location'].map((h) => (
+                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-tertiary)]">
+                      {h}
+                    </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+              <tbody className="divide-y divide-[var(--color-border-primary)] bg-white">
                 {recentCases.map((c) => (
-                  <tr
-                    key={c.case_id}
-                    className="cursor-pointer transition-colors hover:bg-blue-50"
-                    onClick={() => navigate(`/cases/${c.case_id}`)}
-                  >
-                    <td className="whitespace-nowrap px-4 py-3 text-sm font-medium text-blue-600">
-                      {c.case_number}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-700">
-                      {c.crime_type}
-                    </td>
+                  <tr key={c.case_id} className="cursor-pointer transition-colors hover:bg-[var(--color-intel-blue-50)]" onClick={() => navigate(`/cases/${c.case_id}`)}>
+                    <td className="whitespace-nowrap px-4 py-3 font-mono text-sm font-medium text-[var(--color-intel-blue-600)]">{c.case_number}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-sm text-[var(--color-text-secondary)]">{c.crime_type}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-sm">
-                      <Badge variant={getBadgeVariant(c.status)}>
-                        {c.status}
-                      </Badge>
+                      <Badge variant={getBadgeVariant(c.status)}>{c.status}</Badge>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-500">
-                      {new Date(c.date_filed).toLocaleDateString()}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-500">
-                      {c.location}
-                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 font-mono text-sm text-[var(--color-text-tertiary)]">{new Date(c.date_filed).toLocaleDateString()}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-sm text-[var(--color-text-tertiary)]">{c.location}</td>
                   </tr>
                 ))}
               </tbody>
@@ -408,43 +355,29 @@ export default function DashboardPage() {
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Card>
           <div className="flex items-center gap-4">
-            <div className="rounded-lg bg-blue-50 p-3">
-              <Search className="h-6 w-6 text-blue-600" />
+            <div className="rounded-lg bg-[#EFF6FF] p-3">
+              <Search className="h-6 w-6 text-[#2563EB]" />
             </div>
             <div>
-              <p className="font-semibold text-gray-900">Search Cases</p>
-              <p className="text-sm text-gray-500">
-                Find cases by ID, type, or location
-              </p>
+              <p className="font-semibold text-[var(--color-text-primary)]">Search Cases</p>
+              <p className="text-sm text-[var(--color-text-secondary)]">Find cases by ID, type, or location</p>
             </div>
-            <Button
-              variant="primary"
-              size="sm"
-              className="ml-auto"
-              onClick={() => navigate('/cases')}
-            >
-              🔍 Search Cases
+            <Button variant="primary" size="sm" className="ml-auto" onClick={() => navigate('/cases')}>
+              Search Cases
             </Button>
           </div>
         </Card>
         <Card>
           <div className="flex items-center gap-4">
-            <div className="rounded-lg bg-purple-50 p-3">
-              <Bot className="h-6 w-6 text-purple-600" />
+            <div className="rounded-lg bg-[#EEF2FF] p-3">
+              <Bot className="h-6 w-6 text-[#6366F1]" />
             </div>
             <div>
-              <p className="font-semibold text-gray-900">CRIMA AI</p>
-              <p className="text-sm text-gray-500">
-                AI-powered crime analysis assistant
-              </p>
+              <p className="font-semibold text-[var(--color-text-primary)]">CRIMA AI</p>
+              <p className="text-sm text-[var(--color-text-secondary)]">AI-powered crime analysis assistant</p>
             </div>
-            <Button
-              variant="primary"
-              size="sm"
-              className="ml-auto"
-              onClick={() => navigate('/crima')}
-            >
-              🤖 Open CRIMA AI
+            <Button variant="primary" size="sm" className="ml-auto" onClick={() => navigate('/crima')}>
+              Open CRIMA AI
             </Button>
           </div>
         </Card>

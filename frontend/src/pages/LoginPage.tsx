@@ -86,10 +86,10 @@ export default function LoginPage() {
   };
 
   return (
-    <PageTransition className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--color-navy-950)] px-4 py-10">
+    <PageTransition className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-(--color-navy-950) px-4 py-10">
       {/* Ambient gradient orbs */}
-      <div className="pointer-events-none absolute -left-40 -top-40 z-0 h-[30rem] w-[30rem] animate-[float-orb_16s_ease-in-out_infinite] rounded-full bg-gradient-to-br from-blue-600/40 via-indigo-600/25 to-transparent blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-48 -right-32 z-0 h-[34rem] w-[34rem] animate-[float-orb_20s_ease-in-out_infinite_reverse] rounded-full bg-gradient-to-tr from-violet-600/35 via-fuchsia-500/15 to-cyan-500/25 blur-3xl" />
+      <div className="pointer-events-none absolute -left-40 -top-40 z-0 h-120 w-120 animate-[float-orb_16s_ease-in-out_infinite] rounded-full bg-linear-to-br from-blue-600/40 via-indigo-600/25 to-transparent blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-48 -right-32 z-0 h-136 w-136 animate-[float-orb_20s_ease-in-out_infinite_reverse] rounded-full bg-linear-to-tr from-violet-600/35 via-fuchsia-500/15 to-cyan-500/25 blur-3xl" />
       <div className="pointer-events-none absolute left-1/2 top-1/4 z-0 h-72 w-72 -translate-x-1/2 animate-pulse rounded-full bg-cyan-400/10 blur-3xl" />
 
       {/* Blueprint grid overlay + forensic watermark */}
@@ -97,7 +97,7 @@ export default function LoginPage() {
 
       <div className="relative w-full max-w-md">
         {/* Industrial steel login card – rivets + hazard stripe */}
-        <div className="relative overflow-hidden rounded-[12px] border border-[var(--color-border-sidebar)] bg-[var(--color-navy-900)]/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
+        <div className="relative overflow-hidden rounded-lg border border-(--color-border-sidebar) bg-(--color-navy-900)/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
           <div className="rivet rivet-tl" /> <div className="rivet rivet-tr" /> <div className="rivet rivet-bl" /> <div className="rivet rivet-br" />
           <div className="hazard-stripe opacity-80" />
 <div className="p-6">
@@ -110,7 +110,7 @@ export default function LoginPage() {
 
             {error && (
               <div className="mb-4 flex items-center gap-2 rounded-lg border border-red-400/30 bg-red-500/15 px-3 py-2.5 text-sm text-red-300 backdrop-blur-sm">
-                <svg className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77-1.333.192 3 1.732 3z" />
                 </svg>
                 <span>{error}</span>
@@ -118,7 +118,7 @@ export default function LoginPage() {
             )}
             {success && (
               <div className="mb-4 flex items-center gap-2 rounded-lg border border-emerald-400/30 bg-emerald-500/15 px-3 py-2.5 text-sm text-emerald-300 backdrop-blur-sm animate-fade-in">
-                <CheckCircle className="h-4 w-4 flex-shrink-0" />
+                <CheckCircle className="h-4 w-4 shrink-0" />
                 <span>{success}</span>
               </div>
             )}
@@ -130,7 +130,7 @@ export default function LoginPage() {
                 </label>
                 <div className="relative group">
                   <svg
-                    className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 h-5 w-5 text-slate-500 transition-colors duration-300 group-focus-within:text-[var(--color-accent-primary)]"
+                    className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 h-5 w-5 text-slate-500 transition-colors duration-300 group-focus-within:text-(--color-accent-primary)"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="none"
@@ -147,7 +147,7 @@ export default function LoginPage() {
                     type="email"
                     autoComplete="email"
                     {...register('email')}
-                    className={`w-full rounded-lg border border-white bg-white px-4 py-3 pl-10 text-sm text-black placeholder-slate-500 focus:outline-none focus:border-[var(--color-accent-primary)] focus:ring-2 focus:ring-[var(--color-accent-primary)]/20 ${errors.email ? 'border-red-400/60' : ''}`}
+                    className={`w-full rounded-lg border border-white bg-white px-4 py-3 pl-10 text-sm text-black placeholder-slate-500 focus:outline-none focus:border-(--color-accent-primary) focus:ring-2 focus:ring-(--color-accent-primary)/20 ${errors.email ? 'border-red-400/60' : ''}`}
                     placeholder="name@department.gov.in"
                   />
                 </div>
@@ -159,7 +159,7 @@ export default function LoginPage() {
                 </label>
                 <div className="relative group">
                   <svg
-                    className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 h-5 w-5 text-slate-500 transition-colors duration-300 group-focus-within:text-[var(--color-accent-primary)]"
+                    className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 h-5 w-5 text-slate-500 transition-colors duration-300 group-focus-within:text-(--color-accent-primary)"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="none"
@@ -176,7 +176,7 @@ export default function LoginPage() {
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="current-password"
                     {...register('password')}
-                    className={`w-full rounded-lg border border-white bg-white px-4 py-3 pl-10 pr-10 text-sm text-black placeholder-slate-500 focus:outline-none focus:border-[var(--color-accent-primary)] focus:ring-2 focus:ring-[var(--color-accent-primary)]/20 ${errors.password ? 'border-red-400/60' : ''}`}
+                    className={`w-full rounded-lg border border-white bg-white px-4 py-3 pl-10 pr-10 text-sm text-black placeholder-slate-500 focus:outline-none focus:border-(--color-accent-primary) focus:ring-2 focus:ring-(--color-accent-primary)/20 ${errors.password ? 'border-red-400/60' : ''}`}
                     placeholder="Enter your password"
                   />
                   <button
@@ -192,7 +192,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full rounded-lg bg-[var(--color-accent-primary)] py-3 text-sm font-semibold text-white shadow-[0_4px_14px_-4px_rgba(37,99,235,0.4)] hover:bg-[var(--color-accent-primary-hover)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-navy-900)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full rounded-lg bg-(--color-accent-primary) py-3 text-sm font-semibold text-white shadow-[0_4px_14px_-4px_rgba(37,99,235,0.4)] hover:bg-(--color-accent-primary-hover) transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-(--color-accent-primary) focus:ring-offset-2 focus:ring-offset-(--color-navy-900) disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>
@@ -215,7 +215,7 @@ export default function LoginPage() {
             <div className="mt-4 flex items-center justify-between">
               <Link
                 to="/forgot-password"
-                className="text-sm font-medium text-[var(--color-accent-primary)] hover:underline hover:underline-offset-2"
+                className="text-sm font-medium text-(--color-accent-primary) hover:underline hover:underline-offset-2"
               >
                 Forgot Password?
               </Link>
@@ -224,7 +224,7 @@ export default function LoginPage() {
                 className="relative text-sm font-medium text-slate-400 hover:text-white transition-all duration-300"
               >
                 Create an account
-                <span className="absolute -top-1 right-[-16px] h-3 w-3 rounded-full bg-gradient-to-br from-[var(--color-accent-primary)] to-[var(--color-amber-500)] opacity-0 translate-x-1 transition-all duration-300 hover:opacity-100 hover:translate-x-0" aria-hidden="true" />
+                <span className="absolute -top-1 -right-4 h-3 w-3 rounded-full bg-linear-to-br from-(--color-accent-primary) to-(--color-amber-500) opacity-0 translate-x-1 transition-all duration-300 hover:opacity-100 hover:translate-x-0" aria-hidden="true" />
               </Link>
             </div>
 

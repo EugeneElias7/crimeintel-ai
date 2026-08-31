@@ -70,6 +70,7 @@ export interface CaseDetail {
   };
   victim_count: number;
   suspect_count: number;
+  suspects: Suspect[];
   witnesses: Witness[];
   timeline: TimelineEvent[];
 }

@@ -81,7 +81,7 @@ function NavItem({
         className={({ isActive }) =>
           `group relative flex h-9 w-9 items-center justify-center rounded-lg mx-auto transition-colors duration-200 ${
             isActive
-              ? 'bg-[var(--color-intel-blue-50)] text-[var(--color-intel-blue-600)] border border-[var(--color-intel-blue-200)] shadow-sm'
+              ? 'bg-(--color-intel-blue-50) text-(--color-intel-blue-600) border border-(--color-intel-blue-200) shadow-sm'
               : 'text-white/70 hover:bg-white/[0.07] hover:text-white border border-transparent'
           }`
         }
@@ -101,14 +101,14 @@ function NavItem({
       className={({ isActive }) =>
         `group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
           isActive
-            ? 'bg-[var(--color-intel-blue-50)] text-[var(--color-intel-blue-600)] border border-[var(--color-intel-blue-200)] shadow-sm'
-            : 'text-[var(--color-text-sidebar)] hover:bg-[var(--color-navy-800)] hover:text-white border border-transparent hover:border-[var(--color-border-sidebar)]'
+            ? 'bg-(--color-intel-blue-50) text-(--color-intel-blue-600) border border-(--color-intel-blue-200) shadow-sm'
+            : 'text-(--color-text-sidebar) hover:bg-(--color-navy-800) hover:text-white border border-transparent hover:border-(--color-border-sidebar)'
         }`
       }
     >
       <Icon
         size={18}
-        className="shrink-0 text-[var(--color-slate-400)] group-hover:text-[var(--color-slate-300)] group-[.bg-[var(--color-intel-blue-50)]]:text-[var(--color-intel-blue-600)]"
+        className="shrink-0 text-(--color-slate-400) group-hover:text-(--color-slate-300) group-[.bg-(--color-intel-blue-50)]:text-(--color-intel-blue-600)"
         aria-hidden="true"
       />
       <span className="truncate text-[13px] font-medium whitespace-nowrap overflow-hidden">{label}</span>
@@ -130,7 +130,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const ToggleButton = (
     <button
       onClick={onToggle}
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/10 bg-[var(--color-navy-800)] text-slate-400 hover:bg-white/[0.08] hover:text-white hover:border-white/20 transition-colors duration-200"
+      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/10 bg-(--color-navy-800) text-slate-400 hover:bg-white/[0.08] hover:text-white hover:border-white/20 transition-colors duration-200"
       aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       aria-expanded={!collapsed}
     >
@@ -150,7 +150,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       {/* Desktop sidebar - flex item */}
       <aside
-        className={`texture-sidebar hidden lg:flex h-screen shrink-0 flex-col bg-[var(--color-bg-sidebar)] text-white transition-[width] duration-[260ms] ease-in-out will-change-[width] [transform:translateZ(0)] ${
+        className={`texture-sidebar hidden lg:flex h-screen shrink-0 flex-col bg-(--color-bg-sidebar) text-white transition-[width] duration-[260ms] ease-in-out will-change-[width] [transform:translateZ(0)] ${
           collapsed ? 'w-[72px]' : 'w-[300px]'
         }`}
         aria-label="Main navigation"
@@ -159,11 +159,11 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
         {/* Header - fixed */}
         {collapsed ? (
-          <div className="flex h-14 shrink-0 items-center justify-center border-b border-[var(--color-border-sidebar)] bg-[var(--color-bg-sidebar-elevated)] overflow-hidden transition-all duration-260 ease-in-out">
+          <div className="flex h-14 shrink-0 items-center justify-center border-b border-(--color-border-sidebar) bg-(--color-bg-sidebar-elevated) overflow-hidden transition-all duration-260 ease-in-out">
             {ToggleButton}
           </div>
         ) : (
-          <div className="relative flex h-16 shrink-0 items-center justify-center border-b border-[var(--color-border-sidebar)] bg-[var(--color-bg-sidebar-elevated)] px-3 overflow-hidden transition-all duration-260 ease-in-out">
+          <div className="relative flex h-16 shrink-0 items-center justify-center border-b border-(--color-border-sidebar) bg-(--color-bg-sidebar-elevated) px-3 overflow-hidden transition-all duration-260 ease-in-out">
             <NavLink to="/" className="flex items-center justify-center" aria-label="CrimeIntel Home" onClick={handleNavClick}>
               <img src="/Crime-Icon.png" alt="CrimeIntel" className="h-14 w-auto object-contain drop-shadow-md" />
             </NavLink>
@@ -181,9 +181,9 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               <div key={group.label} className="flex flex-col gap-1">
                 {!collapsed && (
                   <span className="label-industrial flex items-center gap-2 px-2 py-1">
-                    <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                    <span className="h-px flex-1 bg-(--color-border-sidebar)" />
                     {group.label}
-                    <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                    <span className="h-px flex-1 bg-(--color-border-sidebar)" />
                   </span>
                 )}
                 <ul className={`flex flex-col ${collapsed ? 'gap-1.5' : 'gap-1'}`}>
@@ -200,12 +200,12 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               <div className="flex flex-col gap-1">
                 {!collapsed && (
                   <span className="label-industrial flex items-center gap-2 px-2 py-1 pt-2">
-                    <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                    <span className="h-px flex-1 bg-(--color-border-sidebar)" />
                     ADMIN
-                    <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                    <span className="h-px flex-1 bg-(--color-border-sidebar)" />
                   </span>
                 )}
-                {collapsed && <div className="mx-2 h-px bg-[var(--color-border-sidebar)]" aria-hidden="true" />}
+                {collapsed && <div className="mx-2 h-px bg-(--color-border-sidebar)" aria-hidden="true" />}
                 <ul className={`flex flex-col ${collapsed ? 'gap-1.5' : 'gap-1'}`}>
                   {adminItems.map((item) => (
                     <li key={item.to}>
@@ -219,12 +219,12 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             <div className="flex flex-col gap-1">
               {!collapsed && (
                 <span className="label-industrial flex items-center gap-2 px-2 py-1 pt-2">
-                  <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                  <span className="h-px flex-1 bg-(--color-border-sidebar)" />
                   System
-                  <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                  <span className="h-px flex-1 bg-(--color-border-sidebar)" />
                 </span>
               )}
-              {collapsed && <div className="mx-2 h-px bg-[var(--color-border-sidebar)]" aria-hidden="true" />}
+              {collapsed && <div className="mx-2 h-px bg-(--color-border-sidebar)" aria-hidden="true" />}
               <ul className={`flex flex-col ${collapsed ? 'gap-1.5' : 'gap-1'}`}>
                 <li>
                   <NavItem to="/settings" icon={Settings} label="Settings" collapsed={collapsed} onClick={handleNavClick} />
@@ -235,19 +235,19 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         </nav>
 
         {/* User Profile - fixed bottom */}
-        <div className="shrink-0 border-t border-[var(--color-border-sidebar)] bg-[var(--color-navy-900)] p-2.5">
+        <div className="shrink-0 border-t border-(--color-border-sidebar) bg-(--color-navy-900) p-2.5">
           <div className="h-px w-full bg-gradient-to-r from-transparent via-amber-500/20 to-transparent mb-2.5" aria-hidden="true" />
           {collapsed ? (
             <div className="flex flex-col items-center gap-2">
               <div
-                className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--color-navy-950)] border border-[var(--color-border-sidebar)] text-[11px] font-mono-industrial font-bold text-[var(--color-amber-400)]"
+                className="flex h-8 w-8 items-center justify-center rounded-md bg-(--color-navy-950) border border-(--color-border-sidebar) text-[11px] font-mono-industrial font-bold text-(--color-amber-400)"
                 title={user?.full_name || 'Operator'}
               >
                 {user?.full_name?.charAt(0)?.toUpperCase() || 'U'}
               </div>
               <button
                 onClick={logout}
-                className="flex h-8 w-8 items-center justify-center rounded-md border border-transparent bg-[var(--color-navy-800)] text-slate-400 hover:text-white hover:bg-white/[0.06] hover:border-white/10 transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-md border border-transparent bg-(--color-navy-800) text-slate-400 hover:text-white hover:bg-white/[0.06] hover:border-white/10 transition-colors"
                 title="Logout"
                 aria-label="Logout"
               >
@@ -255,13 +255,13 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-3 rounded-lg border border-[var(--color-border-sidebar)] bg-[var(--color-navy-800)] p-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[var(--color-navy-950)] border border-[var(--color-border-sidebar)] text-[11px] font-mono-industrial font-bold text-[var(--color-amber-400)]">
+            <div className="flex items-center gap-3 rounded-lg border border-(--color-border-sidebar) bg-(--color-navy-800) p-2.5">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-(--color-navy-950) border border-(--color-border-sidebar) text-[11px] font-mono-industrial font-bold text-(--color-amber-400)">
                 {user?.full_name?.charAt(0)?.toUpperCase() || 'U'}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="truncate text-sm font-semibold text-white leading-none">{user?.full_name || 'Operator'}</p>
-                <p className="truncate font-mono-industrial text-[10px] text-[var(--color-amber-400)] leading-none mt-1">
+                <p className="truncate font-mono-industrial text-[10px] text-(--color-amber-400) leading-none mt-1">
                   {(user?.role ? getRoleLabel(user.role as UserRole) : 'Police Officer').toUpperCase()} • ONLINE
                 </p>
               </div>
@@ -280,19 +280,19 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       {/* Mobile sidebar - overlay */}
       <aside
-        className={`texture-sidebar fixed inset-y-0 left-0 z-50 flex h-screen w-[300px] flex-col bg-[var(--color-bg-sidebar)] text-white transition-transform duration-300 ease-in-out lg:hidden ${
+        className={`texture-sidebar fixed inset-y-0 left-0 z-50 flex h-screen w-[300px] flex-col bg-(--color-bg-sidebar) text-white transition-transform duration-300 ease-in-out lg:hidden ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         aria-label="Mobile navigation"
       >
         <div className="hazard-stripe shrink-0" aria-hidden="true" />
-        <div className="flex h-14 shrink-0 items-center justify-between border-b border-[var(--color-border-sidebar)] bg-[var(--color-bg-sidebar-elevated)] px-3">
+        <div className="flex h-14 shrink-0 items-center justify-between border-b border-(--color-border-sidebar) bg-(--color-bg-sidebar-elevated) px-3">
           <NavLink to="/" className="flex items-center gap-2" aria-label="CrimeIntel Home" onClick={handleNavClick}>
             <img src="/Crime-Icon.png" alt="CrimeIntel" className="h-12 w-auto object-contain" />
           </NavLink>
           <button
             onClick={() => setMobileOpen(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-md border border-white/10 bg-[var(--color-navy-800)] text-slate-400 hover:text-white hover:bg-white/[0.08] transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-white/10 bg-(--color-navy-800) text-slate-400 hover:text-white hover:bg-white/[0.08] transition-colors"
             aria-label="Close menu"
           >
             <X size={16} />
@@ -304,9 +304,9 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             {navGroups.map((group) => (
               <div key={group.label} className="flex flex-col gap-1">
                 <span className="label-industrial flex items-center gap-2 px-2 py-1">
-                  <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                  <span className="h-px flex-1 bg-(--color-border-sidebar)" />
                   {group.label}
-                  <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                  <span className="h-px flex-1 bg-(--color-border-sidebar)" />
                 </span>
                 <ul className="flex flex-col gap-1">
                   {group.items.map((item) => (
@@ -318,8 +318,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                         className={({ isActive }) =>
                           `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                             isActive
-                              ? 'bg-[var(--color-intel-blue-50)] text-[var(--color-intel-blue-600)] border border-[var(--color-intel-blue-200)] shadow-sm'
-                              : 'text-[var(--color-text-sidebar)] hover:bg-[var(--color-navy-800)] hover:text-white border border-transparent'
+                              ? 'bg-(--color-intel-blue-50) text-(--color-intel-blue-600) border border-(--color-intel-blue-200) shadow-sm'
+                              : 'text-(--color-text-sidebar) hover:bg-(--color-navy-800) hover:text-white border border-transparent'
                           }`
                         }
                       >
@@ -334,9 +334,9 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             {isAdmin && (
               <div className="flex flex-col gap-1">
                 <span className="label-industrial flex items-center gap-2 px-2 py-1 pt-2">
-                  <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                  <span className="h-px flex-1 bg-(--color-border-sidebar)" />
                   ADMIN
-                  <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                  <span className="h-px flex-1 bg-(--color-border-sidebar)" />
                 </span>
                 <ul className="flex flex-col gap-1">
                   {adminItems.map((item) => (
@@ -347,8 +347,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                         className={({ isActive }) =>
                           `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                             isActive
-                              ? 'bg-[var(--color-intel-blue-50)] text-[var(--color-intel-blue-600)] border border-[var(--color-intel-blue-200)] shadow-sm'
-                              : 'text-[var(--color-text-sidebar)] hover:bg-[var(--color-navy-800)] hover:text-white border border-transparent'
+                              ? 'bg-(--color-intel-blue-50) text-(--color-intel-blue-600) border border-(--color-intel-blue-200) shadow-sm'
+                              : 'text-(--color-text-sidebar) hover:bg-(--color-navy-800) hover:text-white border border-transparent'
                           }`
                         }
                       >
@@ -362,9 +362,9 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             )}
             <div className="flex flex-col gap-1">
               <span className="label-industrial flex items-center gap-2 px-2 py-1 pt-2">
-                <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                <span className="h-px flex-1 bg-(--color-border-sidebar)" />
                 System
-                <span className="h-px flex-1 bg-[var(--color-border-sidebar)]" />
+                <span className="h-px flex-1 bg-(--color-border-sidebar)" />
               </span>
               <ul className="flex flex-col gap-1">
                 <li>
@@ -374,8 +374,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                     className={({ isActive }) =>
                       `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                         isActive
-                          ? 'bg-[var(--color-intel-blue-50)] text-[var(--color-intel-blue-600)] border border-[var(--color-intel-blue-200)] shadow-sm'
-                          : 'text-[var(--color-text-sidebar)] hover:bg-[var(--color-navy-800)] hover:text-white border border-transparent'
+                          ? 'bg-(--color-intel-blue-50) text-(--color-intel-blue-600) border border-(--color-intel-blue-200) shadow-sm'
+                          : 'text-(--color-text-sidebar) hover:bg-(--color-navy-800) hover:text-white border border-transparent'
                       }`
                     }
                   >
@@ -388,14 +388,14 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           </div>
         </nav>
 
-        <div className="shrink-0 border-t border-[var(--color-border-sidebar)] bg-[var(--color-navy-900)] p-3">
-          <div className="flex items-center gap-3 rounded-lg border border-[var(--color-border-sidebar)] bg-[var(--color-navy-800)] p-2.5">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[var(--color-navy-950)] border border-[var(--color-border-sidebar)] text-[11px] font-mono-industrial font-bold text-[var(--color-amber-400)]">
+        <div className="shrink-0 border-t border-(--color-border-sidebar) bg-(--color-navy-900) p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-(--color-border-sidebar) bg-(--color-navy-800) p-2.5">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-(--color-navy-950) border border-(--color-border-sidebar) text-[11px] font-mono-industrial font-bold text-(--color-amber-400)">
               {user?.full_name?.charAt(0)?.toUpperCase() || 'U'}
             </div>
             <div className="flex-1 min-w-0">
               <p className="truncate text-sm font-semibold text-white leading-none">{user?.full_name || 'Operator'}</p>
-              <p className="truncate font-mono-industrial text-[10px] text-[var(--color-amber-400)] leading-none mt-1">
+              <p className="truncate font-mono-industrial text-[10px] text-(--color-amber-400) leading-none mt-1">
                 {(user?.role ? getRoleLabel(user.role as UserRole) : 'Police Officer').toUpperCase()} • ONLINE
               </p>
             </div>

@@ -16,6 +16,66 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/evidence", tags=["Evidence"])
 
+
+def _resolve_evidence_file_path(file_url: str, file_name: str = "") -> str:
+    raw = (file_url or "").strip()
+    candidates = []
+
+    if raw.startswith("file://"):
+        candidates.append(raw[7:])
+    elif raw:
+        candidates.append(raw)
+
+    if file_name:
+        candidates.append(file_name)
+
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    normalized_name = os.path.basename(file_name or raw or "")
+    if normalized_name:
+        for root in [
+            base_dir,
+            os.path.join(base_dir, "storage"),
+            os.path.join(base_dir, "storage", "cases"),
+            os.path.join(base_dir, "storage", "evidence"),
+        ]:
+            for current_root, _, files in os.walk(root):
+                if normalized_name in files:
+                    candidates.append(os.path.join(current_root, normalized_name))
+
+    if raw.startswith("/"):
+        rel = raw.lstrip("/")
+        rel_parts = rel.split("/") if rel else []
+        candidates.extend([
+            os.path.join(base_dir, rel),
+            os.path.join(base_dir, "storage", rel),
+            os.path.join(base_dir, "storage", "cases", rel),
+        ])
+
+        if len(rel_parts) >= 3 and rel_parts[0] == "evidence":
+            case_id = rel_parts[1]
+            file_name = rel_parts[2]
+            candidates.extend([
+                os.path.join(base_dir, "storage", "cases", case_id, "evidence", file_name),
+                os.path.join(base_dir, "storage", "evidence", case_id, file_name),
+            ])
+
+        if len(rel_parts) >= 2 and rel_parts[0] != "cases":
+            candidates.append(os.path.join(base_dir, "storage", "cases", rel_parts[0], "evidence", *rel_parts[1:]))
+
+    seen = set()
+    for candidate in candidates:
+        if not candidate:
+            continue
+        normalized = candidate.replace("\\", "/")
+        if normalized in seen:
+            continue
+        seen.add(normalized)
+        if os.path.exists(candidate):
+            return candidate
+
+    return raw[7:] if raw.startswith("file://") else raw
+
+
 _evidence_service = None
 
 
@@ -125,17 +185,28 @@ async def download_evidence_file(
         svc = get_evidence_service()
         record = await svc.get_evidence(evidence_id)
         file_url = record.get("file_url", "")
-        # file_url is file:// path from local_fs
-        if file_url.startswith("file://"):
-            file_path = file_url[7:]
-        else:
-            file_path = file_url
-        if not os.path.exists(file_path):
+        file_name = record.get("file_name", "file")
+        file_path = _resolve_evidence_file_path(file_url, file_name)
+        if not file_path or not os.path.exists(file_path):
             raise HTTPException(status_code=404, detail="File not found on server")
-        # Guess mime type from stored file_type or extension
+
         import mimetypes
-        mime, _ = mimetypes.guess_type(file_path)
-        return FileResponse(path=file_path, media_type=mime or "application/octet-stream", filename=record.get("file_name", "file"))
+        mime, _ = mimetypes.guess_type(file_name or file_path)
+        stored_type = (record.get("file_type") or "").strip().lower()
+        if stored_type and "/" not in stored_type:
+            guessed_from_stored = mimetypes.guess_type(f"file.{stored_type}")[0]
+            if guessed_from_stored:
+                mime = guessed_from_stored
+        elif stored_type and "/" in stored_type:
+            mime = stored_type
+
+        response_headers = {"Content-Disposition": f"inline; filename={file_name}"}
+        return FileResponse(
+            path=file_path,
+            media_type=mime or "application/octet-stream",
+            filename=file_name,
+            headers=response_headers,
+        )
     except HTTPException:
         raise
     except Exception as e:

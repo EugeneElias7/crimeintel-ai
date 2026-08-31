@@ -183,7 +183,7 @@ export default function CaseListPage() {
       header: 'Case ID',
       sortable: true,
       render: (c) => (
-        <span className="font-medium text-[var(--color-intel-blue-600)]">{c.case_number}</span>
+        <span className="font-medium text-(--color-intel-blue-600)">{c.case_number}</span>
       ),
     },
     { key: 'crime_type', header: 'Crime Type', sortable: true },
@@ -205,7 +205,7 @@ export default function CaseListPage() {
       header: 'Officer',
       render: (c) =>
         c.assigned_officer?.display_name ?? (
-          <span className="text-[var(--color-text-tertiary)]">—</span>
+          <span className="text-(--color-text-tertiary)">—</span>
         ),
     },
     ...(canDelete
@@ -240,8 +240,8 @@ export default function CaseListPage() {
     <div className="animate-fade-in">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Case Explorer</h1>
-          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">{total} total cases</p>
+          <h1 className="text-2xl font-bold text-(--color-text-primary)">Case Explorer</h1>
+          <p className="mt-1 text-sm text-(--color-text-secondary)">{total} total cases</p>
         </div>
         {canCreate && (
           <Button onClick={() => setShowCreateModal(true)}>
@@ -321,14 +321,14 @@ export default function CaseListPage() {
           </Button>
           <button
             onClick={() => setFiltersExpanded(!filtersExpanded)}
-            className="flex items-center gap-1 shrink-0 rounded-lg border border-[var(--color-border-primary)] bg-white px-3 py-1.5 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-slate-50)] transition-colors"
+            className="flex items-center gap-1 shrink-0 rounded-lg border border-(--color-border-primary) bg-white px-3 py-1.5 text-sm font-medium text-(--color-text-secondary) hover:bg-(--color-slate-50) transition-colors"
             aria-expanded={filtersExpanded}
           >
             More Filters {filtersExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
         </div>
         {/* Advanced - collapsed by default, smooth */}
-        <div className={`grid transition-all duration-200 ease-in-out ${filtersExpanded ? 'grid-rows-[1fr] opacity-100 mt-3 pt-3 border-t border-[var(--color-border-primary)]' : 'grid-rows-[0fr] opacity-0'}`}>
+        <div className={`grid transition-all duration-200 ease-in-out ${filtersExpanded ? 'grid-rows-[1fr] opacity-100 mt-3 pt-3 border-t border-(--color-border-primary)' : 'grid-rows-[0fr] opacity-0'}`}>
           <div className="overflow-hidden">
             <div className="flex flex-wrap items-center gap-2">
               <input
@@ -381,12 +381,12 @@ export default function CaseListPage() {
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-14 animate-pulse rounded-lg bg-[var(--color-slate-100)]" />
+            <div key={i} className="h-14 animate-pulse rounded-lg bg-(--color-slate-100)" />
           ))}
         </div>
       ) : error ? (
         <div className="flex flex-col items-center py-16">
-          <p className="mb-4 text-[var(--color-red-600)]">{error}</p>
+          <p className="mb-4 text-(--color-red-600)">{error}</p>
           <Button onClick={fetchCases}>Retry</Button>
         </div>
       ) : cases.length === 0 ? (
@@ -414,7 +414,7 @@ export default function CaseListPage() {
           />
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-sm text-[var(--color-text-secondary)]">
+            <p className="text-sm text-(--color-text-secondary)">
               Showing {from}–{to} of {total}
             </p>
             <div className="flex items-center gap-1">
@@ -436,14 +436,14 @@ export default function CaseListPage() {
                 .map((p, idx, arr) => (
                   <span key={p} className="flex items-center gap-1">
                     {idx > 0 && arr[idx - 1] !== p - 1 && (
-                      <span className="px-1 text-[var(--color-text-tertiary)]">...</span>
+                      <span className="px-1 text-(--color-text-tertiary)">...</span>
                     )}
                     <button
                       onClick={() => setPage(p)}
                       className={`min-w-[32px] rounded-lg px-2 py-1.5 text-sm font-medium transition-colors ${
                         p === page
-                          ? 'bg-[var(--color-accent-primary)] text-white'
-                          : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-slate-100)]'
+                          ? 'bg-(--color-accent-primary) text-white'
+                          : 'text-(--color-text-secondary) hover:bg-(--color-slate-100)'
                       }`}
                     >
                       {p}
@@ -632,38 +632,38 @@ function CreateCaseModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 animate-fade-in">
-      <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl bg-white border border-[var(--color-border-primary)] shadow-xl">
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--color-border-primary)] bg-white px-6 py-4">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Create Case</h2>
+      <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl bg-white border border-(--color-border-primary) shadow-xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-(--color-border-primary) bg-white px-6 py-4">
+          <h2 className="text-lg font-semibold text-(--color-text-primary)">Create Case</h2>
           <button onClick={onClose} className="rounded p-1 text-slate-400 hover:bg-slate-100">✕</button>
         </div>
         {error && (
-          <div className="mx-6 mt-4 rounded-lg border border-[var(--color-red-200)] bg-[var(--color-red-50)] px-4 py-2 text-sm text-[var(--color-red-700)]">
+          <div className="mx-6 mt-4 rounded-lg border border-(--color-red-200) bg-(--color-red-50) px-4 py-2 text-sm text-(--color-red-700)">
             {error}
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-6 p-6">
           {/* SECTION 1 — CASE INFORMATION */}
           <div>
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--color-text-primary)] border-b border-[var(--color-border-primary)] pb-2">Case Information</h3>
-            <div className="rounded-lg bg-[var(--color-slate-50)] border border-dashed border-[var(--color-border-primary)] px-3 py-2 mb-4 text-sm">
-              <span className="text-[var(--color-text-tertiary)]">Case ID</span> <span className="ml-2 font-mono font-medium text-[var(--color-text-primary)]">Auto-generated after creation (KSP-MLR-{new Date().getFullYear()}-XXXX)</span>
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-(--color-text-primary) border-b border-(--color-border-primary) pb-2">Case Information</h3>
+            <div className="rounded-lg bg-(--color-slate-50) border border-dashed border-(--color-border-primary) px-3 py-2 mb-4 text-sm">
+              <span className="text-(--color-text-tertiary)">Case ID</span> <span className="ml-2 font-mono font-medium text-(--color-text-primary)">Auto-generated after creation (KSP-MLR-{new Date().getFullYear()}-XXXX)</span>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">Case Title *</label>
+                <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">Case Title *</label>
                 <input className="input-field w-full" value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="e.g., Vehicle Theft Investigation" />
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">Crime Type *</label>
+                  <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">Crime Type *</label>
                   <select className="input-field w-full" value={form.crime_type} onChange={(e) => setForm((f) => ({ ...f, crime_type: e.target.value }))}>
                     <option value="">Select Crime Type</option>
                     {CRIME_TYPES.map((t) => (<option key={t} value={t}>{t}</option>))}
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">Status *</label>
+                  <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">Status *</label>
                   <select className="input-field w-full" value={(form as any).status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value } as any))}>
                     <option value="open">Open</option>
                     <option value="under_investigation">Under Investigation</option>
@@ -674,7 +674,7 @@ function CreateCaseModal({
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">Priority *</label>
+                  <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">Priority *</label>
                   <select className="input-field w-full" value={(form as any).priority} onChange={(e) => setForm((f) => ({ ...f, priority: e.target.value } as any))}>
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -682,20 +682,20 @@ function CreateCaseModal({
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">Incident Date *</label>
+                  <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">Incident Date *</label>
                   <input type="date" className="input-field w-full" value={(form as any).incident_date} onChange={(e) => setForm((f) => ({ ...f, incident_date: e.target.value } as any))} />
                 </div>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">District *</label>
+                  <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">District *</label>
                   <select className="input-field w-full" value={form.district} onChange={(e) => setForm((f) => ({ ...f, district: e.target.value }))}>
                     <option value="">Select...</option>
                     {DISTRICTS.map((d) => (<option key={d} value={d}>{d}</option>))}
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">Date Filed *</label>
+                  <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">Date Filed *</label>
                   <input type="date" className="input-field w-full" value={(form as any).date_filed} onChange={(e) => setForm((f) => ({ ...f, date_filed: e.target.value } as any))} />
                 </div>
               </div>
@@ -704,14 +704,14 @@ function CreateCaseModal({
 
           {/* SECTION 2 — CASE DESCRIPTION */}
           <div>
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--color-text-primary)] border-b border-[var(--color-border-primary)] pb-2">Case Description</h3>
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-(--color-text-primary) border-b border-(--color-border-primary) pb-2">Case Description</h3>
             <div className="space-y-3">
               <div>
-                <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">Short Summary</label>
+                <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">Short Summary</label>
                 <input className="input-field w-full" value={shortSummary} onChange={(e) => setShortSummary(e.target.value)} placeholder="Brief summary..." />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">Detailed Description</label>
+                <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">Detailed Description</label>
                 <textarea className="input-field w-full" rows={4} value={form.description ?? ''} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} placeholder="Describe the case in detail..." />
               </div>
             </div>
@@ -719,32 +719,32 @@ function CreateCaseModal({
 
           {/* SECTION 3 — INCIDENT LOCATION */}
           <div>
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--color-text-primary)] border-b border-[var(--color-border-primary)] pb-2">Incident Location</h3>
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-(--color-text-primary) border-b border-(--color-border-primary) pb-2">Incident Location</h3>
             <MapPicker value={mapValue} onChange={setMapValue} />
           </div>
 
           {/* SECTION 4 — CASE EVIDENCE (Optional) */}
           <div>
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--color-text-primary)] border-b border-[var(--color-border-primary)] pb-2">Case Evidence <span className="ml-2 text-xs font-normal normal-case text-[var(--color-text-tertiary)]">Optional</span></h3>
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-(--color-text-primary) border-b border-(--color-border-primary) pb-2">Case Evidence <span className="ml-2 text-xs font-normal normal-case text-(--color-text-tertiary)">Optional</span></h3>
             <div
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={(e) => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files) handleFileAdd(e.dataTransfer.files); }}
-              className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 text-center transition-colors ${dragOver ? 'border-blue-500 bg-blue-50' : 'border-[var(--color-border-primary)] bg-[var(--color-slate-50)]'}`}
+              className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 text-center transition-colors ${dragOver ? 'border-blue-500 bg-blue-50' : 'border-(--color-border-primary) bg-(--color-slate-50)'}`}
             >
-              <p className="text-sm font-medium text-[var(--color-text-secondary)]">⬆ Upload Files</p>
-              <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">Drag and drop files here or click to browse</p>
-              <p className="mt-1 text-[11px] text-[var(--color-text-tertiary)]">JPG • PNG • PDF • MP4 • MP3 etc. (max 50MB)</p>
+              <p className="text-sm font-medium text-(--color-text-secondary)">⬆ Upload Files</p>
+              <p className="mt-1 text-xs text-(--color-text-tertiary)">Drag and drop files here or click to browse</p>
+              <p className="mt-1 text-[11px] text-(--color-text-tertiary)">JPG • PNG • PDF • MP4 • MP3 etc. (max 50MB)</p>
               <input type="file" multiple className="hidden" id="case-evidence-input" onChange={(e) => e.target.files && handleFileAdd(e.target.files)} accept=".jpg,.jpeg,.png,.pdf,.mp4,.mp3,.wav,.doc,.docx" />
               <label htmlFor="case-evidence-input" className="mt-3 cursor-pointer rounded-lg border bg-white px-4 py-1.5 text-sm font-medium hover:bg-slate-50">Browse</label>
             </div>
             {evidenceFiles.length > 0 && (
               <div className="mt-3 space-y-2">
                 {evidenceFiles.map((ef, idx) => (
-                  <div key={idx} className="flex items-start gap-3 rounded-lg border border-[var(--color-border-primary)] bg-white p-3">
+                  <div key={idx} className="flex items-start gap-3 rounded-lg border border-(--color-border-primary) bg-white p-3">
                     <div className="flex-1 min-w-0">
                       <p className="truncate text-sm font-medium">📄 {ef.file.name}</p>
-                      <p className="text-xs text-[var(--color-text-tertiary)]">Type: {ef.file.type || 'unknown'} • Size: {(ef.file.size/1024/1024).toFixed(2)} MB</p>
+                      <p className="text-xs text-(--color-text-tertiary)">Type: {ef.file.type || 'unknown'} • Size: {(ef.file.size/1024/1024).toFixed(2)} MB</p>
                       <input className="input-field mt-2 w-full !py-1.5 text-xs" placeholder="Description: Crime scene near entrance..." value={ef.description} onChange={(e) => setEvidenceFiles(prev => prev.map((p,i)=> i===idx? {...p, description:e.target.value}:p))} />
                       <label className="mt-2 flex items-center gap-2 text-xs"><input type="checkbox" checked={ef.sensitive} onChange={(e)=> setEvidenceFiles(prev=> prev.map((p,i)=> i===idx? {...p, sensitive:e.target.checked}:p))} /> Sensitive Evidence</label>
                     </div>
@@ -758,17 +758,17 @@ function CreateCaseModal({
           {/* SUSPECTS - Optional */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-medium text-[var(--color-text-secondary)]">Suspects <span className="text-xs font-normal text-[var(--color-text-tertiary)]">— Optional, if applicable</span></h4>
+              <h4 className="text-sm font-medium text-(--color-text-secondary)">Suspects <span className="text-xs font-normal text-(--color-text-tertiary)">— Optional, if applicable</span></h4>
               <button type="button" onClick={() => setSuspects(prev => [...prev, { name: '', age: '', gender: '', address: '', contact: '', description: '', status: 'Suspected' }])} className="text-xs font-medium text-blue-600 hover:text-blue-700 border border-blue-200 rounded px-2 py-1 hover:bg-blue-50">+ Add Suspect</button>
             </div>
             {suspects.length === 0 ? (
-              <p className="text-xs text-[var(--color-text-tertiary)] italic border border-dashed rounded p-3 text-center">No suspects added. Click "Add Suspect" if applicable, or skip.</p>
+              <p className="text-xs text-(--color-text-tertiary) italic border border-dashed rounded p-3 text-center">No suspects added. Click "Add Suspect" if applicable, or skip.</p>
             ) : (
               <div className="space-y-3">
                 {suspects.map((s, idx) => (
-                  <div key={idx} className="rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-slate-50)] p-3 space-y-2">
+                  <div key={idx} className="rounded-lg border border-(--color-border-primary) bg-(--color-slate-50) p-3 space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-semibold text-[var(--color-text-secondary)]">Suspect {idx + 1}</span>
+                      <span className="text-xs font-semibold text-(--color-text-secondary)">Suspect {idx + 1}</span>
                       <button type="button" onClick={() => setSuspects(prev => prev.filter((_, i) => i !== idx))} className="text-xs text-red-600 hover:underline">Remove</button>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
@@ -795,17 +795,17 @@ function CreateCaseModal({
           {/* WITNESSES - Optional */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-medium text-[var(--color-text-secondary)]">Witnesses <span className="text-xs font-normal text-[var(--color-text-tertiary)]">— Optional, if applicable</span></h4>
+              <h4 className="text-sm font-medium text-(--color-text-secondary)">Witnesses <span className="text-xs font-normal text-(--color-text-tertiary)">— Optional, if applicable</span></h4>
               <button type="button" onClick={() => setWitnesses(prev => [...prev, { name: '', age: '', gender: '', address: '', contact: '', statement: '' }])} className="text-xs font-medium text-blue-600 hover:text-blue-700 border border-blue-200 rounded px-2 py-1 hover:bg-blue-50">+ Add Witness</button>
             </div>
             {witnesses.length === 0 ? (
-              <p className="text-xs text-[var(--color-text-tertiary)] italic border border-dashed rounded p-3 text-center">No witnesses added. Click "Add Witness" if applicable, or skip.</p>
+              <p className="text-xs text-(--color-text-tertiary) italic border border-dashed rounded p-3 text-center">No witnesses added. Click "Add Witness" if applicable, or skip.</p>
             ) : (
               <div className="space-y-3">
                 {witnesses.map((w, idx) => (
-                  <div key={idx} className="rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-slate-50)] p-3 space-y-2">
+                  <div key={idx} className="rounded-lg border border-(--color-border-primary) bg-(--color-slate-50) p-3 space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-semibold text-[var(--color-text-secondary)]">Witness {idx + 1}</span>
+                      <span className="text-xs font-semibold text-(--color-text-secondary)">Witness {idx + 1}</span>
                       <button type="button" onClick={() => setWitnesses(prev => prev.filter((_, i) => i !== idx))} className="text-xs text-red-600 hover:underline">Remove</button>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
@@ -826,7 +826,7 @@ function CreateCaseModal({
             )}
           </div>
 
-          <div className="flex justify-end gap-3 border-t border-[var(--color-border-primary)] pt-4">
+          <div className="flex justify-end gap-3 border-t border-(--color-border-primary) pt-4">
             <Button variant="outline" type="button" onClick={onClose}>Cancel</Button>
             <Button type="submit" isLoading={submitting}>Create Case</Button>
           </div>

@@ -23,21 +23,21 @@ export default function SettingsPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Settings</h1>
-        <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+        <h1 className="text-2xl font-bold text-(--color-text-primary)">Settings</h1>
+        <p className="mt-1 text-sm text-(--color-text-secondary)">
           Manage your account settings and preferences
         </p>
       </div>
 
-      <div className="mb-6 flex gap-2 border-b border-[var(--color-border-primary)]">
+      <div className="mb-6 flex gap-2 border-b border-(--color-border-primary)">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
               activeTab === tab.key
-                ? 'border-[var(--color-accent-primary)] text-[var(--color-accent-primary)]'
-                : 'border-transparent text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
+                ? 'border-(--color-accent-primary) text-(--color-accent-primary)'
+                : 'border-transparent text-(--color-text-secondary) hover:text-(--color-text-primary)'
             }`}
           >
             {tab.icon}
@@ -113,20 +113,20 @@ function ProfileTab({
     <Card>
       <div className="max-w-lg space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">
+          <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">
             Email
           </label>
           <input
-            className="w-full rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-slate-50)] px-3 py-2 text-sm text-[var(--color-text-tertiary)]"
+            className="w-full rounded-lg border border-(--color-border-primary) bg-(--color-slate-50) px-3 py-2 text-sm text-(--color-text-tertiary)"
             value={user?.email ?? ''}
             disabled
           />
-          <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">
+          <p className="mt-1 text-xs text-(--color-text-tertiary)">
             Email cannot be changed
           </p>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">
+          <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">
             Display Name
           </label>
           <Input
@@ -136,7 +136,7 @@ function ProfileTab({
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">
+            <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">
               Phone
             </label>
             <Input
@@ -146,7 +146,7 @@ function ProfileTab({
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">
+            <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">
               Badge Number
             </label>
             <Input
@@ -194,11 +194,11 @@ function NotificationsTab() {
         ].map((item) => (
           <div
             key={item.key}
-            className="flex items-center justify-between rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-slate-50)] px-4 py-3"
+            className="flex items-center justify-between rounded-lg border border-(--color-border-primary) bg-(--color-slate-50) px-4 py-3"
           >
             <div>
-              <p className="text-sm font-medium text-[var(--color-text-primary)]">{item.label}</p>
-              <p className="text-xs text-[var(--color-text-tertiary)]">{item.description}</p>
+              <p className="text-sm font-medium text-(--color-text-primary)">{item.label}</p>
+              <p className="text-xs text-(--color-text-tertiary)">{item.description}</p>
             </div>
             <label className="relative inline-flex cursor-pointer items-center">
               <input
@@ -212,11 +212,11 @@ function NotificationsTab() {
                 }
                 className="peer sr-only"
               />
-              <div className="peer h-6 w-11 rounded-full bg-[var(--color-slate-200)] after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-[var(--color-slate-300)] after:bg-white after:transition-all after:content-[''] peer-checked:bg-[var(--color-accent-primary)] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[var(--color-accent-primary)]" />
+              <div className="peer h-6 w-11 rounded-full bg-(--color-slate-200) after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-(--color-slate-300) after:bg-white after:transition-all after:content-[''] peer-checked:bg-(--color-accent-primary) peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-(--color-accent-primary)" />
             </label>
           </div>
         ))}
-        <p className="text-xs text-[var(--color-text-tertiary)]">
+        <p className="text-xs text-(--color-text-tertiary)">
           Notification preferences are saved automatically
         </p>
       </div>

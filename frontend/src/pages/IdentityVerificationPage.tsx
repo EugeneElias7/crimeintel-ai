@@ -118,7 +118,7 @@ function VerificationUploadForm({ userId }: { userId: number }) {
   };
 
   const inputIcon = (icon: React.ReactNode) => (
-    <div className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 h-5 w-5 text-slate-500 transition-colors duration-300 group-focus-within:text-[var(--color-accent-primary)]">
+    <div className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 h-5 w-5 text-slate-500 transition-colors duration-300 group-focus-within:text-(--color-accent-primary)">
       {icon}
     </div>
   );
@@ -133,7 +133,7 @@ function VerificationUploadForm({ userId }: { userId: number }) {
 
       {error && (
         <div className="mb-4 flex items-center gap-2 rounded-lg border border-red-400/30 bg-red-500/15 px-3 py-2.5 text-sm text-red-300 backdrop-blur-sm">
-          <AlertCircle className="h-4 w-4 flex-shrink-0" />
+          <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
@@ -151,7 +151,7 @@ function VerificationUploadForm({ userId }: { userId: number }) {
             <select
               value={documentType}
               onChange={(e) => setDocumentType(e.target.value as DocumentType)}
-              className="w-full rounded-lg border-[var(--color-border-primary)] bg-[var(--color-navy-900)] px-4 py-3 pl-10 text-sm text-white focus:outline-none focus:border-[var(--color-accent-primary)] focus:ring-2 focus:ring-[var(--color-accent-primary)]/20 appearance-none cursor-pointer"
+              className="w-full rounded-lg border-(--color-border-primary) bg-(--color-navy-900) px-4 py-3 pl-10 text-sm text-white focus:outline-none focus:border-(--color-accent-primary) focus:ring-2 focus:ring-(--color-accent-primary)/20 appearance-none cursor-pointer"
             >
               {DOCUMENT_TYPES.map((type) => (
                 <option key={type.value} value={type.value}>
@@ -179,8 +179,8 @@ function VerificationUploadForm({ userId }: { userId: number }) {
             <div
               className={`relative border-2 border-dashed rounded-lg transition-all duration-200 ${
                 dragActive
-                  ? 'border-[var(--color-accent-primary)] bg-[var(--color-accent-primary)]/5'
-                  : 'border-[var(--color-border-primary)] hover:border-[var(--color-accent-primary)]/50'
+                  ? 'border-(--color-accent-primary) bg-(--color-accent-primary)/5'
+                  : 'border-(--color-border-primary) hover:border-(--color-accent-primary)/50'
               } ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
@@ -191,9 +191,9 @@ function VerificationUploadForm({ userId }: { userId: number }) {
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="h-12 w-12 rounded-lg bg-[var(--color-navy-900)] flex items-center justify-center border border-[var(--color-border-primary)]">
+                      <div className="h-12 w-12 rounded-lg bg-(--color-navy-900) flex items-center justify-center border border-(--color-border-primary)">
                         {selectedFile.type.startsWith('image/') ? (
-                          <svg className="h-6 w-6 text-[var(--color-accent-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                          <svg className="h-6 w-6 text-(--color-accent-primary)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                         ) : (
                           <svg className="h-6 w-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                         )}
@@ -218,9 +218,9 @@ function VerificationUploadForm({ userId }: { userId: number }) {
                         <span className="text-slate-400">Uploading...</span>
                         <span className="text-white">{uploadProgress}%</span>
                       </div>
-                      <div className="h-2 bg-[var(--color-navy-800)] rounded-full overflow-hidden">
+                      <div className="h-2 bg-(--color-navy-800) rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-[var(--color-accent-primary)] transition-all duration-300"
+                          className="h-full bg-(--color-accent-primary) transition-all duration-300"
                           style={{ width: `${uploadProgress}%` }}
                         />
                       </div>
@@ -230,7 +230,7 @@ function VerificationUploadForm({ userId }: { userId: number }) {
               ) : (
                 <div className="p-8 text-center">
                   <div className="mb-3 flex justify-center">
-                    <div className="h-14 w-14 rounded-full bg-[var(--color-navy-900)] flex items-center justify-center border border-[var(--color-border-primary)]">
+                    <div className="h-14 w-14 rounded-full bg-(--color-navy-900) flex items-center justify-center border border-(--color-border-primary)">
                       <Upload className="h-7 w-7 text-slate-500" />
                     </div>
                   </div>
@@ -247,7 +247,7 @@ function VerificationUploadForm({ userId }: { userId: number }) {
           type="button"
           onClick={handleSubmit}
           disabled={!selectedFile || isUploading}
-          className="w-full rounded-lg bg-[var(--color-accent-primary)] py-3 text-sm font-semibold text-white shadow-[0_4px_14px_-4px_rgba(37,99,235,0.4)] hover:bg-[var(--color-accent-primary-hover)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-navy-900)] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-lg bg-(--color-accent-primary) py-3 text-sm font-semibold text-white shadow-[0_4px_14px_-4px_rgba(37,99,235,0.4)] hover:bg-(--color-accent-primary-hover) transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-(--color-accent-primary) focus:ring-offset-2 focus:ring-offset-(--color-navy-900) disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isUploading ? (
             <>
@@ -320,15 +320,15 @@ function StatusChecker({ userId, navigate, onReady }: { userId: number; navigate
 
   if (checking) {
     return (
-      <div className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--color-navy-950)] px-4 py-10">
+      <div className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-(--color-navy-950) px-4 py-10">
         <PageTransition className="relative w-full max-w-md">
-          <div className="relative overflow-hidden rounded-[12px] border border-[var(--color-border-sidebar)] bg-[var(--color-navy-900)]/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
+          <div className="relative overflow-hidden rounded-lg border border-(--color-border-sidebar) bg-(--color-navy-900)/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
             <div className="rivet rivet-tl" /> <div className="rivet rivet-tr" /> <div className="rivet rivet-bl" /> <div className="rivet rivet-br" />
             <div className="hazard-stripe opacity-80" />
             <div className="p-8 text-center">
               <div className="mb-4 flex justify-center">
-                <div className="h-12 w-12 rounded-full bg-[var(--color-accent-primary)]/20 flex items-center justify-center animate-pulse">
-                  <Shield className="h-6 w-6 text-[var(--color-accent-primary)]" />
+                <div className="h-12 w-12 rounded-full bg-(--color-accent-primary)/20 flex items-center justify-center animate-pulse">
+                  <Shield className="h-6 w-6 text-(--color-accent-primary)" />
                 </div>
               </div>
               <h2 className="mb-2 text-center text-xl font-semibold text-white">Checking Verification Status</h2>
@@ -342,9 +342,9 @@ function StatusChecker({ userId, navigate, onReady }: { userId: number; navigate
 
   if (error) {
     return (
-      <div className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--color-navy-950)] px-4 py-10">
+      <div className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-(--color-navy-950) px-4 py-10">
         <PageTransition className="relative w-full max-w-md">
-          <div className="relative overflow-hidden rounded-[12px] border border-[var(--color-border-sidebar)] bg-[var(--color-navy-900)]/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
+          <div className="relative overflow-hidden rounded-lg border border-(--color-border-sidebar) bg-(--color-navy-900)/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
             <div className="rivet rivet-tl" /> <div className="rivet rivet-tr" /> <div className="rivet rivet-bl" /> <div className="rivet rivet-br" />
             <div className="hazard-stripe opacity-80" />
             <div className="p-8 text-center">
@@ -357,7 +357,7 @@ function StatusChecker({ userId, navigate, onReady }: { userId: number; navigate
               <p className="mb-6 text-center text-sm text-slate-400">{error}</p>
               <button
                 onClick={() => navigate('/register')}
-                className="w-full rounded-lg bg-[var(--color-accent-primary)] py-3 text-sm font-semibold text-white hover:bg-[var(--color-accent-primary-hover)] transition-colors"
+                className="w-full rounded-lg bg-(--color-accent-primary) py-3 text-sm font-semibold text-white hover:bg-(--color-accent-primary-hover) transition-colors"
               >
                 Go to Registration
               </button>
@@ -406,9 +406,9 @@ export default function IdentityVerificationPage() {
 
   if (!effectiveUserId) {
     return (
-      <div className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--color-navy-950)] px-4 py-10">
+      <div className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-(--color-navy-950) px-4 py-10">
         <PageTransition className="relative w-full max-w-md">
-          <div className="relative overflow-hidden rounded-[12px] border border-[var(--color-border-sidebar)] bg-[var(--color-navy-900)]/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
+          <div className="relative overflow-hidden rounded-lg border border-(--color-border-sidebar) bg-(--color-navy-900)/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
             <div className="rivet rivet-tl" /> <div className="rivet rivet-tr" /> <div className="rivet rivet-bl" /> <div className="rivet rivet-br" />
             <div className="hazard-stripe opacity-80" />
             <div className="p-8 text-center">
@@ -421,7 +421,7 @@ export default function IdentityVerificationPage() {
               <p className="mb-6 text-center text-sm text-slate-400">Please complete registration first.</p>
               <button
                 onClick={() => navigate('/register')}
-                className="w-full rounded-lg bg-[var(--color-accent-primary)] py-3 text-sm font-semibold text-white hover:bg-[var(--color-accent-primary-hover)] transition-colors"
+                className="w-full rounded-lg bg-(--color-accent-primary) py-3 text-sm font-semibold text-white hover:bg-(--color-accent-primary-hover) transition-colors"
               >
                 Go to Registration
               </button>
@@ -442,11 +442,11 @@ export default function IdentityVerificationPage() {
 
   // Status checked, show the upload form
   return (
-    <div className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--color-navy-950)] px-4 py-10">
+    <div className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-(--color-navy-950) px-4 py-10">
       <PageTransition className="relative w-full max-w-md">
         {/* Ambient gradient orbs */}
-        <div className="pointer-events-none absolute -left-40 -top-40 z-0 h-[30rem] w-[30rem] animate-[float-orb_16s_ease-in-out_infinite] rounded-full bg-gradient-to-br from-blue-600/40 via-indigo-600/25 to-transparent blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-48 -right-32 z-0 h-[34rem] w-[34rem] animate-[float-orb_20s_ease-in-out_infinite_reverse] rounded-full bg-gradient-to-tr from-violet-600/35 via-fuchsia-500/15 to-cyan-500/25 blur-3xl" />
+        <div className="pointer-events-none absolute -left-40 -top-40 z-0 h-120 w-120 animate-[float-orb_16s_ease-in-out_infinite] rounded-full bg-linear-to-br from-blue-600/40 via-indigo-600/25 to-transparent blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-48 -right-32 z-0 h-136 w-136 animate-[float-orb_20s_ease-in-out_infinite_reverse] rounded-full bg-linear-to-tr from-violet-600/35 via-fuchsia-500/15 to-cyan-500/25 blur-3xl" />
         <div className="pointer-events-none absolute left-1/2 top-1/4 z-0 h-72 w-72 -translate-x-1/2 animate-pulse rounded-full bg-cyan-400/10 blur-3xl" />
 
         {/* Blueprint grid overlay + forensic watermark */}
@@ -459,7 +459,7 @@ export default function IdentityVerificationPage() {
           </div>
 
           {/* Industrial steel login card – rivets + hazard stripe */}
-          <div className="relative overflow-hidden rounded-[12px] border border-[var(--color-border-sidebar)] bg-[var(--color-navy-900)]/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
+          <div className="relative overflow-hidden rounded-lg border border-(--color-border-sidebar) bg-(--color-navy-900)/85 backdrop-blur-xl shadow-[0_16px_48px_rgba(2,6,23,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] animate-fade-up">
             <div className="rivet rivet-tl" /> <div className="rivet rivet-tr" /> <div className="rivet rivet-bl" /> <div className="rivet rivet-br" />
             <div className="hazard-stripe opacity-80" />
             <VerificationUploadForm userId={effectiveUserId} />

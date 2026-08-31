@@ -4,6 +4,7 @@ from datetime import datetime
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from config import settings
 from middleware.error_handler import add_exception_handlers
@@ -32,6 +33,7 @@ app.add_middleware(
 
 app.add_middleware(CSRFMiddleware)
 
+app.mount("/storage", StaticFiles(directory="storage"), name="storage")
 app.include_router(api_router, prefix="/api/v1")
 
 

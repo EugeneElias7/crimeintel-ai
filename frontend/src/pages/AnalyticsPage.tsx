@@ -37,8 +37,8 @@ function getDateRange(preset: Preset): { from: string; to: string } {
 function SkeletonChart() {
   return (
     <div className="animate-pulse rounded-lg bg-white p-5 shadow-sm">
-      <div className="mb-4 h-5 w-32 rounded bg-[var(--color-border-primary)]" />
-      <div className="h-[280px] rounded bg-gray-100" />
+      <div className="mb-4 h-5 w-32 rounded bg-(--color-border-primary)" />
+      <div className="h-70 rounded bg-gray-100" />
     </div>
   );
 }
@@ -110,21 +110,21 @@ export default function AnalyticsPage() {
       bg: 'bg-[#EFF6FF] border-[#DBEAFE]',
     },
     {
-      icon: <FileText className="h-5 w-5 text-[#D97706]" />,
+      icon: <FileText className="h-5 w-5 text-amber-600" />,
       value: overview?.open_cases ?? 0,
       label: 'Active Cases',
       sub: 'Open & under investigation',
       bg: 'bg-[#FFFBEB] border-[#FDE68A]',
     },
     {
-      icon: <TrendingUp className="h-5 w-5 text-[#059669]" />,
+      icon: <TrendingUp className="h-5 w-5 text-emerald-600" />,
       value: overview?.closed_cases ?? 0,
       label: 'Resolved Cases',
       sub: 'Closed investigations',
       bg: 'bg-[#ECFDF5] border-[#A7F3D0]',
     },
     {
-      icon: <TrendingUp className="h-5 w-5 text-[#DC2626]" />,
+      icon: <TrendingUp className="h-5 w-5 text-red-600" />,
       value: overview?.filed_cases ?? 0,
       label: 'High Priority Cases',
       sub: 'Filed & urgent',
@@ -151,22 +151,22 @@ export default function AnalyticsPage() {
     <div className="animate-fade-in">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">Analytics</h1>
-          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Analyze crime patterns, trends, locations, and investigation activity</p>
+          <h1 className="text-2xl font-bold tracking-tight text-(--color-text-primary)">Analytics</h1>
+          <p className="mt-1 text-sm text-(--color-text-secondary)">Analyze crime patterns, trends, locations, and investigation activity</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {(['7d', '30d', '12m'] as Preset[]).map((p) => (
             <button
               key={p}
               onClick={() => setPreset(p)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${preset === p ? 'bg-[#2563EB] text-white' : 'bg-white border border-[var(--color-border-primary)] text-[var(--color-text-secondary)] hover:bg-[var(--color-slate-50)]'}`}
+              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${preset === p ? 'bg-blue-600 text-white' : 'bg-white border border-(--color-border-primary) text-(--color-text-secondary) hover:bg-(--color-slate-50)'}`}
             >
               {p === '7d' ? '7 Days' : p === '30d' ? '30 Days' : '12 Months'}
             </button>
           ))}
           <button
             onClick={() => setPreset('custom')}
-            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${preset === 'custom' ? 'bg-[#2563EB] text-white' : 'bg-white border border-[var(--color-border-primary)] text-[var(--color-text-secondary)] hover:bg-[var(--color-slate-50)]'}`}
+            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${preset === 'custom' ? 'bg-blue-600 text-white' : 'bg-white border border-(--color-border-primary) text-(--color-text-secondary) hover:bg-(--color-slate-50)'}`}
           >
             <Calendar size={14} className="inline" /> Custom
           </button>
@@ -177,11 +177,11 @@ export default function AnalyticsPage() {
         <Card className="mb-6">
           <div className="flex flex-wrap items-center gap-4">
             <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--color-text-secondary)]">From</label>
+              <label className="mb-1 block text-xs font-medium text-(--color-text-secondary)">From</label>
               <input type="date" className="input-field" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--color-text-secondary)]">To</label>
+              <label className="mb-1 block text-xs font-medium text-(--color-text-secondary)">To</label>
               <input type="date" className="input-field" value={customTo} onChange={(e) => setCustomTo(e.target.value)} />
             </div>
             <Button size="sm" className="mt-5" onClick={handleApplyCustom} disabled={!customFrom || !customTo}>
@@ -218,9 +218,9 @@ export default function AnalyticsPage() {
             {kpiCards.map((card) => (
               <Card key={card.label} className="border">
                 <div className={`flex h-9 w-9 items-center justify-center rounded-lg border ${card.bg}`}>{card.icon}</div>
-                <p className="mt-3 text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">{card.value}</p>
-                <p className="text-sm font-medium text-[var(--color-text-primary)]">{card.label}</p>
-                {(card as any).sub && <p className="text-xs text-[var(--color-text-tertiary)]">{(card as any).sub}</p>}
+                <p className="mt-3 text-3xl font-bold tracking-tight text-(--color-text-primary)">{card.value}</p>
+                <p className="text-sm font-medium text-(--color-text-primary)">{card.label}</p>
+                {(card as any).sub && <p className="text-xs text-(--color-text-tertiary)">{(card as any).sub}</p>}
               </Card>
             ))}
           </div>
@@ -228,11 +228,11 @@ export default function AnalyticsPage() {
           <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Card title="Crime Trend Over Time" subtitle="Cases filed and resolved">
               {trends.length === 0 ? (
-                <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-primary)] bg-[var(--color-slate-50)]">
-                  <p className="text-sm text-[var(--color-text-tertiary)]">No trend data available</p>
+                <div className="flex h-75 items-center justify-center rounded-lg border border-dashed border-(--color-border-primary) bg-(--color-slate-50)">
+                  <p className="text-sm text-(--color-text-tertiary)">No trend data available</p>
                 </div>
               ) : (
-                <div className="h-[300px]">
+                <div className="h-75">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={trends} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
@@ -251,11 +251,11 @@ export default function AnalyticsPage() {
 
             <Card title="Crime Type Distribution" subtitle="Top 6 + Others">
               {distributionData.length === 0 ? (
-                <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-primary)] bg-[var(--color-slate-50)]">
-                  <p className="text-sm text-[var(--color-text-tertiary)]">No distribution data available</p>
+                <div className="flex h-75 items-center justify-center rounded-lg border border-dashed border-(--color-border-primary) bg-(--color-slate-50)">
+                  <p className="text-sm text-(--color-text-tertiary)">No distribution data available</p>
                 </div>
               ) : (
-                <div className="h-[300px]">
+                <div className="h-75">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie data={distributionData} cx="50%" cy="50%" outerRadius={92} innerRadius={58} dataKey="value" isAnimationActive={true} animationDuration={500} animationEasing="ease-out" animationBegin={0}>
@@ -275,11 +275,11 @@ export default function AnalyticsPage() {
           <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Card title="District Crime Distribution" subtitle="Top 10 districts • district crime distribution">
               {topDistricts.length === 0 ? (
-                <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-primary)] bg-[var(--color-slate-50)]">
-                  <p className="text-sm text-[var(--color-text-tertiary)]">No district data available</p>
+                <div className="flex h-75 items-center justify-center rounded-lg border border-dashed border-(--color-border-primary) bg-(--color-slate-50)">
+                  <p className="text-sm text-(--color-text-tertiary)">No district data available</p>
                 </div>
               ) : (
-                <div className="h-[300px]">
+                <div className="h-75">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={topDistricts} margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.12)" vertical={false} />
@@ -295,11 +295,11 @@ export default function AnalyticsPage() {
 
             <Card title="Top Crime Types" subtitle="Top 8 vertical">
               {topCrimeTypes.length === 0 ? (
-                <div className="flex h-[300px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-primary)] bg-[var(--color-slate-50)]">
-                  <p className="text-sm text-[var(--color-text-tertiary)]">No crime type data available</p>
+                <div className="flex h-75 items-center justify-center rounded-lg border border-dashed border-(--color-border-primary) bg-(--color-slate-50)">
+                  <p className="text-sm text-(--color-text-tertiary)">No crime type data available</p>
                 </div>
               ) : (
-                <div className="h-[300px]">
+                <div className="h-75">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={topCrimeTypes.map((d) => ({ name: d.crime_type, count: d.count }))} margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.12)" vertical={false} />
@@ -316,8 +316,8 @@ export default function AnalyticsPage() {
 
           <Card title="Case Status Distribution">
             {((overview?.open_cases ?? 0) + (overview?.closed_cases ?? 0) + (overview?.filed_cases ?? 0) === 0) ? (
-              <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-primary)] bg-[var(--color-slate-50)]">
-                <p className="text-sm text-[var(--color-text-tertiary)]">No status data available</p>
+              <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed border-(--color-border-primary) bg-(--color-slate-50)">
+                <p className="text-sm text-(--color-text-tertiary)">No status data available</p>
               </div>
             ) : (
               <div className="h-[200px]">

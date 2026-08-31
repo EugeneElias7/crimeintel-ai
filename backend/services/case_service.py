@@ -182,11 +182,21 @@ class CaseService:
     async def get_case(self, case_id: str) -> Optional[dict]:
         case = await self.db.get("Cases", case_id)
         if not case:
+            by_case_id = await self.db.query("Cases", {"case_id": case_id})
+            if by_case_id:
+                case = by_case_id[0]
+        if not case:
+            by_fir = await self.db.query("Cases", {"fir_number": case_id})
+            if by_fir:
+                case = by_fir[0]
+        if not case:
             raise ValueError("Case not found")
 
-        suspects = await self.db.query("Suspects", {"case_id": case_id})
-        witnesses = await self.db.query("Witnesses", {"case_id": case_id})
-        timeline = await self.db.query("Timeline", {"case_id": case_id})
+        resolved_case_id = case.get("case_id") or case.get("ROWID") or case_id
+
+        suspects = await self.db.query("Suspects", {"case_id": resolved_case_id})
+        witnesses = await self.db.query("Witnesses", {"case_id": resolved_case_id})
+        timeline = await self.db.query("Timeline", {"case_id": resolved_case_id})
 
         officer_id = case.get("officer_id", "")
         officer = await self.db.get("Users", officer_id)
@@ -252,7 +262,7 @@ class CaseService:
         witness_count = len(witnesses_data)
 
         return {
-            "case_id": case_id,
+            "case_id": resolved_case_id,
             "fir_number": case.get("fir_number"),
             "crime_type": case.get("crime_type"),
             "status": case.get("status"),

@@ -48,27 +48,27 @@ function getBadgeVariant(status: string) {
 
 function SkeletonCard() {
   return (
-    <div className="animate-pulse rounded-lg bg-white border border-[var(--color-border-primary)] p-5 shadow-sm">
-      <div className="mb-3 h-4 w-20 rounded bg-[var(--color-slate-200)]" />
-      <div className="mb-2 h-8 w-16 rounded bg-[var(--color-slate-200)]" />
-      <div className="h-3 w-32 rounded bg-[var(--color-slate-200)]" />
+    <div className="animate-pulse rounded-lg bg-white border border-(--color-border-primary) p-5 shadow-sm">
+      <div className="mb-3 h-4 w-20 rounded bg-(--color-slate-200)" />
+      <div className="mb-2 h-8 w-16 rounded bg-(--color-slate-200)" />
+      <div className="h-3 w-32 rounded bg-(--color-slate-200)" />
     </div>
   );
 }
 
 function SkeletonChart() {
   return (
-    <div className="animate-pulse rounded-lg bg-white border border-[var(--color-border-primary)] p-5 shadow-sm">
-      <div className="mb-4 h-5 w-32 rounded bg-[var(--color-slate-200)]" />
-      <div className="h-[240px] rounded bg-[var(--color-slate-100)]" />
+    <div className="animate-pulse rounded-lg bg-white border border-(--color-border-primary) p-5 shadow-sm">
+      <div className="mb-4 h-5 w-32 rounded bg-(--color-slate-200)" />
+      <div className="h-60 rounded bg-(--color-slate-100)" />
     </div>
   );
 }
 
 function ChartEmpty({ message }: { message: string }) {
   return (
-    <div className="flex h-[240px] items-center justify-center rounded-lg border border-dashed border-[var(--color-border-primary)] bg-[var(--color-slate-50)]">
-      <p className="text-sm text-[var(--color-text-tertiary)]">{message}</p>
+    <div className="flex h-60 items-center justify-center rounded-lg border border-dashed border-(--color-border-primary) bg-(--color-slate-50)">
+      <p className="text-sm text-(--color-text-tertiary)">{message}</p>
     </div>
   );
 }
@@ -122,7 +122,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="animate-fade-in">
-        <div className="mb-6 h-8 w-40 animate-pulse rounded bg-[var(--color-slate-200)]" />
+        <div className="mb-6 h-8 w-40 animate-pulse rounded bg-(--color-slate-200)" />
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <SkeletonCard key={i} />
@@ -140,7 +140,7 @@ export default function DashboardPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
-        <p className="mb-4 text-[var(--color-red-600)]">{error}</p>
+        <p className="mb-4 text-(--color-red-600)">{error}</p>
         <Button onClick={() => fetchData(true)}>Retry</Button>
       </div>
     );
@@ -156,21 +156,21 @@ export default function DashboardPage() {
       bg: 'bg-[#EFF6FF] border-[#DBEAFE]',
     },
     {
-      icon: <FileSearch className="h-5 w-5 text-[#D97706]" />,
+      icon: <FileSearch className="h-5 w-5 text-amber-600" />,
       value: overview?.open_cases ?? 0,
       label: 'Active Investigations',
       sub: 'Open & under investigation',
       bg: 'bg-[#FFFBEB] border-[#FDE68A]',
     },
     {
-      icon: <CheckCircle2 className="h-5 w-5 text-[#059669]" />,
+      icon: <CheckCircle2 className="h-5 w-5 text-emerald-600" />,
       value: overview?.closed_cases ?? 0,
       label: 'Resolved Cases',
       sub: 'Closed investigations',
       bg: 'bg-[#ECFDF5] border-[#A7F3D0]',
     },
     {
-      icon: <AlertTriangle className="h-5 w-5 text-[#DC2626]" />,
+      icon: <AlertTriangle className="h-5 w-5 text-red-600" />,
       value: overview?.filed_cases ?? 0,
       label: 'High Priority Cases',
       sub: 'Filed & urgent',
@@ -202,8 +202,8 @@ export default function DashboardPage() {
     <div className="animate-fade-in">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">Dashboard</h1>
-          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">Overview of current crime intelligence and investigation activity</p>
+          <h1 className="text-2xl font-bold tracking-tight text-(--color-text-primary)">Dashboard</h1>
+          <p className="mt-1 text-sm text-(--color-text-secondary)">Overview of current crime intelligence and investigation activity</p>
         </div>
         <Button variant="outline" size="sm" onClick={() => fetchData(true)}>
           <RefreshCw size={14} />
@@ -220,9 +220,9 @@ export default function DashboardPage() {
                 {card.icon}
               </div>
             </div>
-            <p className="mt-4 text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">{card.value}</p>
-            <p className="text-sm font-medium text-[var(--color-text-primary)]">{card.label}</p>
-            <p className="text-xs text-[var(--color-text-tertiary)]">{card.sub}</p>
+            <p className="mt-4 text-3xl font-bold tracking-tight text-(--color-text-primary)">{card.value}</p>
+            <p className="text-sm font-medium text-(--color-text-primary)">{card.label}</p>
+            <p className="text-xs text-(--color-text-tertiary)">{card.sub}</p>
           </Card>
         ))}
       </div>
@@ -233,7 +233,7 @@ export default function DashboardPage() {
           {distributionData.length === 0 ? (
             <ChartEmpty message="No distribution data available" />
           ) : (
-            <div className="h-[280px]">
+            <div className="h-70">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie data={distributionData} cx="50%" cy="50%" outerRadius={85} innerRadius={52} dataKey="value" isAnimationActive={true} animationDuration={500} animationEasing="ease-out" animationBegin={0}>
@@ -253,7 +253,7 @@ export default function DashboardPage() {
           {trends.length === 0 ? (
             <ChartEmpty message="No trend data available" />
           ) : (
-            <div className="h-[280px]">
+            <div className="h-70">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={trends} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
@@ -277,7 +277,7 @@ export default function DashboardPage() {
           {topDistricts.length === 0 ? (
             <ChartEmpty message="No district data available" />
           ) : (
-            <div className="h-[280px]">
+            <div className="h-70">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={topDistricts} margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.12)" vertical={false} />
@@ -295,7 +295,7 @@ export default function DashboardPage() {
           {topCrimeTypes.length === 0 ? (
             <ChartEmpty message="No crime type data available" />
           ) : (
-            <div className="h-[280px]">
+            <div className="h-70">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={topCrimeTypes} margin={{ top: 8, right: 8, left: 0, bottom: 24 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.12)" vertical={false} />
@@ -324,26 +324,26 @@ export default function DashboardPage() {
           <EmptyState icon={<FolderOpen size={48} />} title="No cases yet" description="Cases will appear here once created." />
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-[var(--color-border-primary)]">
-              <thead className="bg-[var(--color-slate-50)]">
+            <table className="min-w-full divide-y divide--(--color-border-primary)">
+              <thead className="bg-(--color-slate-50)">
                 <tr>
                   {['Case ID', 'Crime Type', 'Status', 'Date', 'Location'].map((h) => (
-                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-tertiary)]">
+                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-(--color-text-tertiary)">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--color-border-primary)] bg-white">
+              <tbody className="divide-y divide--(--color-border-primary) bg-white">
                 {recentCases.map((c) => (
-                  <tr key={c.case_id} className="cursor-pointer transition-colors hover:bg-[var(--color-intel-blue-50)]" onClick={() => navigate(`/cases/${c.case_id}`)}>
-                    <td className="whitespace-nowrap px-4 py-3 font-mono text-sm font-medium text-[var(--color-intel-blue-600)]">{c.case_number}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-sm text-[var(--color-text-secondary)]">{c.crime_type}</td>
+                  <tr key={c.case_id} className="cursor-pointer transition-colors hover:bg-(--color-intel-blue-50)" onClick={() => navigate(`/cases/${c.case_id}`)}>
+                    <td className="whitespace-nowrap px-4 py-3 font-mono text-sm font-medium text-(--color-intel-blue-600)">{c.case_number}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-sm text-(--color-text-secondary)">{c.crime_type}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-sm">
                       <Badge variant={getBadgeVariant(c.status)}>{c.status}</Badge>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 font-mono text-sm text-[var(--color-text-tertiary)]">{new Date(c.date_filed).toLocaleDateString()}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-sm text-[var(--color-text-tertiary)]">{c.location}</td>
+                    <td className="whitespace-nowrap px-4 py-3 font-mono text-sm text-(--color-text-tertiary)">{new Date(c.date_filed).toLocaleDateString()}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-sm text-(--color-text-tertiary)">{c.location}</td>
                   </tr>
                 ))}
               </tbody>
@@ -359,8 +359,8 @@ export default function DashboardPage() {
               <Search className="h-6 w-6 text-[#2563EB]" />
             </div>
             <div>
-              <p className="font-semibold text-[var(--color-text-primary)]">Search Cases</p>
-              <p className="text-sm text-[var(--color-text-secondary)]">Find cases by ID, type, or location</p>
+              <p className="font-semibold text-(--color-text-primary)">Search Cases</p>
+              <p className="text-sm text-(--color-text-secondary)">Find cases by ID, type, or location</p>
             </div>
             <Button variant="primary" size="sm" className="ml-auto" onClick={() => navigate('/cases')}>
               Search Cases
@@ -373,8 +373,8 @@ export default function DashboardPage() {
               <Bot className="h-6 w-6 text-[#6366F1]" />
             </div>
             <div>
-              <p className="font-semibold text-[var(--color-text-primary)]">CRIMA AI</p>
-              <p className="text-sm text-[var(--color-text-secondary)]">AI-powered crime analysis assistant</p>
+              <p className="font-semibold text-(--color-text-primary)">CRIMA AI</p>
+              <p className="text-sm text-(--color-text-secondary)">AI-powered crime analysis assistant</p>
             </div>
             <Button variant="primary" size="sm" className="ml-auto" onClick={() => navigate('/crima')}>
               Open CRIMA AI

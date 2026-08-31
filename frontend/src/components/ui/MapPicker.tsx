@@ -173,7 +173,7 @@ export default function MapPicker({
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-[var(--color-border-primary)]">
+      <div className="overflow-hidden rounded-lg border border-(--color-border-primary)">
         <MapContainer
           center={[center.lat, center.lng]}
           zoom={11}
@@ -206,36 +206,36 @@ export default function MapPicker({
       )}
 
       <div className="grid grid-cols-2 gap-3 text-xs">
-        <div className="rounded-lg bg-[var(--color-slate-50)] border border-[var(--color-border-primary)] p-2.5">
-          <p className="text-[var(--color-text-tertiary)]">Latitude</p>
-          <p className="font-mono font-medium text-[var(--color-text-primary)]">
+        <div className="rounded-lg bg-(--color-slate-50) border border-(--color-border-primary) p-2.5">
+          <p className="text-(--color-text-tertiary)">Latitude</p>
+          <p className="font-mono font-medium text-(--color-text-primary)">
             {value.latitude !== null ? value.latitude.toFixed(6) : '—'}
           </p>
         </div>
-        <div className="rounded-lg bg-[var(--color-slate-50)] border border-[var(--color-border-primary)] p-2.5">
-          <p className="text-[var(--color-text-tertiary)]">Longitude</p>
-          <p className="font-mono font-medium text-[var(--color-text-primary)]">
+        <div className="rounded-lg bg-(--color-slate-50) border border-(--color-border-primary) p-2.5">
+          <p className="text-(--color-text-tertiary)">Longitude</p>
+          <p className="font-mono font-medium text-(--color-text-primary)">
             {value.longitude !== null ? value.longitude.toFixed(6) : '—'}
           </p>
         </div>
       </div>
 
-      <div className="rounded-lg bg-[var(--color-slate-50)] border border-[var(--color-border-primary)] p-2.5">
-        <p className="text-xs text-[var(--color-text-tertiary)] flex items-center gap-1">
+      <div className="rounded-lg bg-(--color-slate-50) border border-(--color-border-primary) p-2.5">
+        <p className="text-xs text-(--color-text-tertiary) flex items-center gap-1">
           <MapPin size={12} /> Address / Location
         </p>
-        <p className="text-sm font-medium text-[var(--color-text-primary)] mt-1 min-h-[1.25rem]">
-          {value.formatted_address || value.location_name || <span className="text-[var(--color-text-tertiary)] font-normal">Click on map to select location</span>}
+        <p className="text-sm font-medium text-(--color-text-primary) mt-1 min-h-[1.25rem]">
+          {value.formatted_address || value.location_name || <span className="text-(--color-text-tertiary) font-normal">Click on map to select location</span>}
         </p>
         {value.district && (
-          <p className="text-xs text-[var(--color-text-secondary)] mt-1">
+          <p className="text-xs text-(--color-text-secondary) mt-1">
             {value.district}
             {value.state ? `, ${value.state}` : ''}
           </p>
         )}
       </div>
 
-      <p className="text-[11px] text-[var(--color-text-tertiary)]">
+      <p className="text-[11px] text-(--color-text-tertiary)">
         Tip: Click anywhere on map to drop pin • Drag pin to adjust
       </p>
     </div>

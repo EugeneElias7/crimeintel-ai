@@ -6,6 +6,8 @@ import Button from '../components/ui/Button';
 import Spinner from '../components/ui/Spinner';
 import EmptyState from '../components/ui/EmptyState';
 import BackButton from '../components/ui/BackButton';
+import EvidenceThumbnail from '../components/evidence/EvidenceThumbnail';
+import { getEvidenceUrl } from '../utils/evidenceUrl';
 import { listEvidence } from '../services/evidenceService';
 import type { Evidence } from '../types/evidence';
 
@@ -121,8 +123,8 @@ export default function EvidenceGalleryPage() {
                 className="cursor-pointer"
                 onClick={() => setPreview(e)}
               >
-                <div className="mb-3 flex items-center justify-center rounded-lg bg-gray-50 py-6">
-                  {getFileIcon(e.file_type)}
+                <div className="mb-3 overflow-hidden rounded-lg bg-gray-50">
+                  <EvidenceThumbnail evidence={e} />
                 </div>
                 <p className="truncate text-sm font-medium text-gray-900">
                   {e.file_name}
@@ -142,7 +144,7 @@ export default function EvidenceGalleryPage() {
               </div>
               <div className="mt-3 flex items-center gap-2 border-t border-gray-100 pt-3">
                 <a
-                  href={e.file_url}
+                  href={getEvidenceUrl(e)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700"
@@ -178,13 +180,13 @@ export default function EvidenceGalleryPage() {
             </div>
             {isImageType(preview.file_type) ? (
               <img
-                src={preview.file_url}
+                src={getEvidenceUrl(preview)}
                 alt={preview.file_name}
                 className="max-h-[70vh] w-full rounded-lg object-contain"
               />
             ) : isVideoType(preview.file_type) ? (
               <video controls className="max-h-[70vh] w-full rounded-lg">
-                <source src={preview.file_url} type={preview.file_type} />
+                <source src={getEvidenceUrl(preview)} type={preview.file_type} />
               </video>
             ) : (
               <div className="flex flex-col items-center py-12">
@@ -193,7 +195,7 @@ export default function EvidenceGalleryPage() {
                   Preview not available
                 </p>
                 <a
-                  href={preview.file_url}
+                  href={getEvidenceUrl(preview)}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

@@ -318,14 +318,14 @@ export default function HeatMapPage() {
 
   return (
     <div className="flex h-[calc(100vh-6rem)] gap-4">
-      <div className="flex-1 overflow-hidden rounded-xl border border-[var(--color-border-primary)] shadow-sm relative">
+      <div className="flex-1 overflow-hidden rounded-xl border border-(--color-border-primary) shadow-sm relative">
         {loading ? (
           <div className="flex h-full items-center justify-center">
             <Spinner size="lg" text="Loading map data..." />
           </div>
         ) : error ? (
           <div className="flex h-full flex-col items-center justify-center">
-            <p className="mb-4 text-[var(--color-red-600)]">{error}</p>
+            <p className="mb-4 text-(--color-red-600)">{error}</p>
             <Button onClick={fetchHeatMapData}>Retry</Button>
           </div>
         ) : heatPoints.length === 0 ? (
@@ -369,19 +369,19 @@ export default function HeatMapPage() {
                 >
                   <Popup>
                     <div className="min-w-[220px]">
-                      <div className="font-semibold text-[var(--color-text-primary)] mb-1">{point.case_id}</div>
-                      <div className="text-sm text-[var(--color-text-secondary)] mb-1">{point.location}</div>
-                      <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)] mb-1">
-                        <span className="px-2 py-0.5 rounded bg-[var(--color-intel-blue-100)] text-[var(--color-intel-blue-800)] text-xs font-medium">{point.crime_type}</span>
-                        <span className="px-2 py-0.5 rounded bg-[var(--color-slate-100)] text-[var(--color-slate-700)] text-xs">{point.status}</span>
+                      <div className="font-semibold text-(--color-text-primary) mb-1">{point.case_id}</div>
+                      <div className="text-sm text-(--color-text-secondary) mb-1">{point.location}</div>
+                      <div className="flex items-center gap-2 text-sm text-(--color-text-secondary) mb-1">
+                        <span className="px-2 py-0.5 rounded bg-(--color-intel-blue-100) text-(--color-intel-blue-800) text-xs font-medium">{point.crime_type}</span>
+                        <span className="px-2 py-0.5 rounded bg-(--color-slate-100) text-(--color-slate-700) text-xs">{point.status}</span>
                       </div>
-                      <div className="text-xs text-[var(--color-text-tertiary)] mb-2">
+                      <div className="text-xs text-(--color-text-tertiary) mb-2">
                         Filed: {point.date_filed ? new Date(point.date_filed).toLocaleDateString() : 'N/A'}
                       </div>
                       <div className="mt-2">
                         <Button 
                           size="sm" 
-                          className="w-full bg-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary-hover)] text-white"
+                          className="w-full bg-(--color-accent-primary) hover:bg-(--color-accent-primary-hover) text-white"
                           onClick={() => window.location.href = `/cases/${point.case_id}`}
                         >
                           View Case
@@ -394,12 +394,12 @@ export default function HeatMapPage() {
             </MarkerClusterGroup>
             {/* Hotspot info panel */}
             {showHotspotInfo && hotspotInfo && (
-              <div className="absolute top-4 right-4 z-[1000] w-72 rounded-lg border border-[var(--color-border-primary)] bg-white shadow-lg p-4 shadow-md">
+              <div className="absolute top-4 right-4 z-[1000] w-72 rounded-lg border border-(--color-border-primary) bg-white shadow-lg p-4 shadow-md">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-[var(--color-text-primary)]">Crime Hotspot</h3>
+                  <h3 className="font-semibold text-(--color-text-primary)">Crime Hotspot</h3>
                   <button
                     onClick={() => setShowHotspotInfo(false)}
-                    className="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] p-1"
+                    className="text-(--color-text-tertiary) hover:text-(--color-text-secondary) p-1"
                     aria-label="Close hotspot info"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -409,37 +409,37 @@ export default function HeatMapPage() {
                 </div>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-xs text-[var(--color-text-tertiary)]">Location</p>
-                    <p className="font-medium text-[var(--color-text-primary)]">{hotspotInfo.location}</p>
+                    <p className="text-xs text-(--color-text-tertiary)">Location</p>
+                    <p className="font-medium text-(--color-text-primary)">{hotspotInfo.location}</p>
                   </div>
                   <div className="flex gap-2">
-                    <span className="px-2 py-0.5 rounded bg-[var(--color-intel-blue-100)] text-[var(--color-intel-blue-800)] text-xs font-medium">{hotspotInfo.district}</span>
-                    <span className="px-2 py-0.5 rounded bg-[var(--color-slate-100)] text-[var(--color-slate-700)] text-xs">{hotspotInfo.district}</span>
+                    <span className="px-2 py-0.5 rounded bg-(--color-intel-blue-100) text-(--color-intel-blue-800) text-xs font-medium">{hotspotInfo.district}</span>
+                    <span className="px-2 py-0.5 rounded bg-(--color-slate-100) text-(--color-slate-700) text-xs">{hotspotInfo.district}</span>
                   </div>
-                  <div className="pt-2 border-t border-[var(--color-border-primary)]">
-                    <p className="text-xs text-[var(--color-text-tertiary)] mb-1">Cases: <span className="font-semibold">{hotspotInfo.caseCount}</span></p>
+                  <div className="pt-2 border-t border-(--color-border-primary)">
+                    <p className="text-xs text-(--color-text-tertiary) mb-1">Cases: <span className="font-semibold">{hotspotInfo.caseCount}</span></p>
                   </div>
-                  <div className="pt-2 border-t border-[var(--color-border-primary)]">
-                    <p className="text-xs text-[var(--color-text-tertiary)] mb-1">Crime Types</p>
+                  <div className="pt-2 border-t border-(--color-border-primary)">
+                    <p className="text-xs text-(--color-text-tertiary) mb-1">Crime Types</p>
                     <div className="flex flex-wrap gap-1">
                       {Object.entries(hotspotInfo.crimeTypeBreakdown).map(([type, count]) => (
-                        <span key={type} className="px-2 py-0.5 rounded bg-[var(--color-slate-100)] text-[var(--color-slate-700)] text-xs">
+                        <span key={type} className="px-2 py-0.5 rounded bg-(--color-slate-100) text-(--color-slate-700) text-xs">
                           {type}: {count}
                         </span>
                       ))}
                     </div>
                   </div>
-                  <div className="pt-2 border-t border-[var(--color-border-primary)]">
-                    <p className="text-xs text-[var(--color-text-tertiary)] mb-1">Status</p>
+                  <div className="pt-2 border-t border-(--color-border-primary)">
+                    <p className="text-xs text-(--color-text-tertiary) mb-1">Status</p>
                     <div className="flex flex-wrap gap-1">
                       {Object.entries(hotspotInfo.statusBreakdown).map(([status, count]) => (
-                        <span key={status} className="px-2 py-0.5 rounded bg-[var(--color-slate-100)] text-[var(--color-slate-700)] text-xs">
+                        <span key={status} className="px-2 py-0.5 rounded bg-(--color-slate-100) text-(--color-slate-700) text-xs">
                           {status}: {count}
                         </span>
                       ))}
                     </div>
                   </div>
-                  <div className="pt-3 border-t border-[var(--color-border-primary)] flex justify-end gap-2">
+                  <div className="pt-3 border-t border-(--color-border-primary) flex justify-end gap-2">
                     <Button 
                       size="sm" 
                       variant="outline"
@@ -449,7 +449,7 @@ export default function HeatMapPage() {
                     </Button>
                     <Button 
                       size="sm" 
-                      className="bg-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary-hover)] text-white"
+                      className="bg-(--color-accent-primary) hover:bg-(--color-accent-primary-hover) text-white"
                       onClick={() => window.location.href = `/cases?district=${encodeURIComponent(hotspotInfo.district)}&crime_type=${Object.keys(hotspotInfo.crimeTypeBreakdown)[0] || ''}`}
                     >
                       View Cases
@@ -461,17 +461,17 @@ export default function HeatMapPage() {
           </MapContainer>
         )}
 
-        <div className="absolute bottom-4 left-4 z-[1000] rounded-lg border border-[var(--color-border-primary)] bg-white px-3 py-2 shadow-md">
+        <div className="absolute bottom-4 left-4 z-[1000] rounded-lg border border-(--color-border-primary) bg-white px-3 py-2 shadow-md">
           <div className="flex items-center gap-2 text-xs">
-            <span className="flex h-3 w-3 rounded-full bg-[var(--color-intel-blue-500)]" />
+            <span className="flex h-3 w-3 rounded-full bg-(--color-intel-blue-500)" />
             <span>Low</span>
-            <span className="flex h-3 w-3 rounded-full bg-[var(--color-cyan-500)]" />
+            <span className="flex h-3 w-3 rounded-full bg-(--color-cyan-500)" />
             <span>Medium</span>
-            <span className="flex h-3 w-3 rounded-full bg-[var(--color-amber-500)]" />
+            <span className="flex h-3 w-3 rounded-full bg-(--color-amber-500)" />
             <span>High</span>
-            <span className="flex h-3 w-3 rounded-full bg-[var(--color-amber-500)]" />
+            <span className="flex h-3 w-3 rounded-full bg-(--color-amber-500)" />
             <span>Very High</span>
-            <span className="flex h-3 w-3 rounded-full bg-[var(--color-red-500)]" />
+            <span className="flex h-3 w-3 rounded-full bg-(--color-red-500)" />
             <span>Critical</span>
           </div>
         </div>
@@ -479,23 +479,23 @@ export default function HeatMapPage() {
 
       <div className="w-72 space-y-4">
         <Card>
-          <h3 className="mb-3 text-sm font-semibold text-[var(--color-text-secondary)]">Filters</h3>
+          <h3 className="mb-3 text-sm font-semibold text-(--color-text-secondary)">Filters</h3>
 
           <div className="mb-4">
-            <p className="mb-2 text-xs font-medium text-[var(--color-text-tertiary)]">
+            <p className="mb-2 text-xs font-medium text-(--color-text-tertiary)">
               Crime Type
             </p>
             <div className="max-h-40 space-y-1 overflow-y-auto">
               {Object.keys(CRIME_TYPE_MAP).map((type) => (
                 <label
                   key={type}
-                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs hover:bg-[var(--color-slate-50)]"
+                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs hover:bg-(--color-slate-50)"
                 >
                   <input
                     type="checkbox"
                     checked={selectedCrimeTypes.includes(type)}
                     onChange={() => toggleCrimeType(type)}
-                    className="h-3.5 w-3.5 rounded border-[var(--color-border-primary)] text-[var(--color-accent-primary)]"
+                    className="h-3.5 w-3.5 rounded border-(--color-border-primary) text-(--color-accent-primary)"
                   />
                   {type}
                 </label>
@@ -504,11 +504,11 @@ export default function HeatMapPage() {
           </div>
 
           <div className="mb-4">
-            <p className="mb-1 text-xs font-medium text-[var(--color-text-tertiary)]">
+            <p className="mb-1 text-xs font-medium text-(--color-text-tertiary)">
               District
             </p>
             <select
-              className="w-full rounded-lg border border-[var(--color-border-primary)] px-2 py-1.5 text-xs outline-none focus:border-[var(--color-accent-primary)]"
+              className="w-full rounded-lg border border-(--color-border-primary) px-2 py-1.5 text-xs outline-none focus:border-(--color-accent-primary)"
               value={selectedDistrict}
               onChange={(e) => setSelectedDistrict(e.target.value as string)}
             >
@@ -522,20 +522,20 @@ export default function HeatMapPage() {
           </div>
 
           <div className="mb-4">
-            <p className="mb-1 text-xs font-medium text-[var(--color-text-tertiary)]">
+            <p className="mb-1 text-xs font-medium text-(--color-text-tertiary)">
               Date Range
             </p>
             <div className="space-y-2">
               <input
                 type="date"
-                className="w-full rounded-lg border border-[var(--color-border-primary)] px-2 py-1.5 text-xs outline-none focus:border-[var(--color-accent-primary)]"
+                className="w-full rounded-lg border border-(--color-border-primary) px-2 py-1.5 text-xs outline-none focus:border-(--color-accent-primary)"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
                 placeholder="From"
               />
               <input
                 type="date"
-                className="w-full rounded-lg border border-[var(--color-border-primary)] px-2 py-1.5 text-xs outline-none focus:border-[var(--color-accent-primary)]"
+                className="w-full rounded-lg border border-(--color-border-primary) px-2 py-1.5 text-xs outline-none focus:border-(--color-accent-primary)"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
                 placeholder="To"
@@ -554,10 +554,10 @@ export default function HeatMapPage() {
         </Card>
 
         <Card>
-          <p className="text-xs font-medium text-[var(--color-text-tertiary)]">
+          <p className="text-xs font-medium text-(--color-text-tertiary)">
             Total Incidents
           </p>
-          <p className="text-2xl font-bold text-[var(--color-text-primary)]">
+          <p className="text-2xl font-bold text-(--color-text-primary)">
             {heatPoints.length}
           </p>
         </Card>

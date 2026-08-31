@@ -30,6 +30,15 @@ function formatFileSize(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+function getAuthHeaders(): Record<string, string> {
+  const token = localStorage.getItem('token') || localStorage.getItem('access_token') || localStorage.getItem('crimeintel_token');
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return headers;
+}
+
 function getFileIcon(fileType: string) {
   const t = fileType.toLowerCase();
   if (t.includes('image') || t.includes('png') || t.includes('jpg') || t.includes('jpeg')) {
@@ -41,19 +50,17 @@ function getFileIcon(fileType: string) {
   if (t.includes('pdf')) {
     return <File className="h-8 w-8 text-red-500" />;
   }
-  return <File className="h-8 w-8 text-[var(--color-text-tertiary)]" />;
+  return <File className="h-8 w-8 text-(--color-text-tertiary)" />;
 }
 
 function EvidenceThumb({ evidence }: { evidence: Evidence }) {
   const [thumbUrl, setThumbUrl] = useState<string | null>(null);
   useEffect(() => {
-    if (!isImageType(evidence.file_type)) return;
     let url: string | null = null;
     const fetchThumb = async () => {
       try {
-        const token = localStorage.getItem('crimeintel_token');
         const res = await fetch(`/api/v1/evidence/${evidence.evidence_id}/file`, {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          headers: getAuthHeaders(),
         });
         if (!res.ok) return;
         const blob = await res.blob();
@@ -61,12 +68,38 @@ function EvidenceThumb({ evidence }: { evidence: Evidence }) {
         setThumbUrl(url);
       } catch {}
     };
+
+    if (!isImageType(evidence.file_type) && !isVideoType(evidence.file_type) && !isPdfType(evidence.file_type)) {
+      setThumbUrl(null);
+      return undefined;
+    }
+
     fetchThumb();
-    return () => { if (url) URL.revokeObjectURL(url); };
+    return () => {
+      if (url) URL.revokeObjectURL(url);
+    };
   }, [evidence.evidence_id, evidence.file_type]);
-  if (thumbUrl) {
+
+  if (thumbUrl && isImageType(evidence.file_type)) {
     return <img src={thumbUrl} alt={evidence.file_name} className="h-full w-full object-cover rounded-lg" />;
   }
+  if (thumbUrl && isVideoType(evidence.file_type)) {
+    return <video src={thumbUrl} muted playsInline preload="metadata" className="h-full w-full object-cover rounded-lg" />;
+  }
+  if (thumbUrl && isPdfType(evidence.file_type)) {
+    return <iframe src={thumbUrl} title={evidence.file_name} className="h-full w-full rounded-lg border border-slate-200 bg-white" />;
+  }
+
+  if (isImageType(evidence.file_type)) {
+    return <img src={createFallbackPreviewSvg(evidence.file_name, '#10b981')} alt={evidence.file_name} className="h-full w-full object-cover rounded-lg" />;
+  }
+  if (isVideoType(evidence.file_type)) {
+    return <img src={createFallbackPreviewSvg(evidence.file_name, '#8b5cf6')} alt={evidence.file_name} className="h-full w-full object-cover rounded-lg" />;
+  }
+  if (isPdfType(evidence.file_type)) {
+    return <img src={createFallbackPreviewSvg(evidence.file_name, '#ef4444')} alt={evidence.file_name} className="h-full w-full object-cover rounded-lg" />;
+  }
+
   return getFileIcon(evidence.file_type);
 }
 
@@ -92,6 +125,19 @@ function isPdfType(fileType: string) {
   return fileType.toLowerCase().includes('pdf');
 }
 
+function createFallbackPreviewSvg(label: string, color: string) {
+  const safeLabel = label.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+      <rect width="800" height="600" fill="#f8fafc"/>
+      <rect x="50" y="60" width="700" height="480" rx="28" fill="#ffffff" stroke="#cbd5e1" stroke-width="4"/>
+      <rect x="150" y="190" width="500" height="160" rx="20" fill="${color}" opacity="0.12"/>
+      <text x="400" y="240" font-family="Segoe UI, Arial" font-size="90" text-anchor="middle" fill="${color}" font-weight="700">📄</text>
+      <text x="400" y="340" font-family="Segoe UI, Arial" font-size="36" text-anchor="middle" fill="#334155">${safeLabel}</text>
+    </svg>
+  `)}`;
+}
+
 const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp', 'application/pdf', 'video/mp4', 'video/mov', 'video/avi', 'video/webm'];
 
 function PreviewContent({ evidence }: { evidence: Evidence }) {
@@ -101,8 +147,7 @@ function PreviewContent({ evidence }: { evidence: Evidence }) {
     let objUrl: string | null = null;
     const load = async () => {
       try {
-        const token = localStorage.getItem('crimeintel_token');
-        const res = await fetch(`/api/v1/evidence/${evidence.evidence_id}/file`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+        const res = await fetch(`/api/v1/evidence/${evidence.evidence_id}/file`, { headers: getAuthHeaders() });
         if (!res.ok) throw new Error('fetch failed');
         const blob = await res.blob();
         objUrl = URL.createObjectURL(blob);
@@ -118,18 +163,18 @@ function PreviewContent({ evidence }: { evidence: Evidence }) {
   }, [evidence.evidence_id]);
   if (loading) return <div className="flex justify-center py-12"><Spinner text="Loading preview..." /></div>;
   if (isImageType(evidence.file_type) && url) {
-    return <img src={url} alt={evidence.file_name} className="max-h-[70vh] w-full rounded-lg object-contain bg-black" />;
+    return <img src={url} alt={evidence.file_name} className="max-h-[70vh] w-full rounded-lg border border-slate-200 bg-white object-contain" />;
   }
   if (isVideoType(evidence.file_type) && url) {
-    return <video controls src={url} className="max-h-[70vh] w-full rounded-lg bg-black" />;
+    return <video controls src={url} className="max-h-[70vh] w-full rounded-lg border border-slate-200 bg-black" playsInline />;
   }
   if (isPdfType(evidence.file_type) && url) {
-    return <iframe src={url} title={evidence.file_name} className="h-[70vh] w-full rounded-lg border" />;
+    return <embed src={url} title={evidence.file_name} type="application/pdf" className="h-[70vh] w-full rounded-lg border border-slate-200 bg-white" />;
   }
   return (
     <div className="flex flex-col items-center py-12">
       {getFileIcon(evidence.file_type)}
-      <p className="mt-4 text-sm text-[var(--color-text-tertiary)]">{url ? 'Preview not available for this file type' : 'Unable to load preview'}</p>
+      <p className="mt-4 text-sm text-(--color-text-tertiary)">{url ? 'Preview not available for this file type' : 'Unable to load preview'}</p>
       {url && <a href={url} download={evidence.file_name} className="mt-4 inline-flex items-center gap-2 rounded-lg border bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"><Download size={16}/> Download File</a>}
     </div>
   );
@@ -169,7 +214,7 @@ export default function EvidencePage() {
     setIsSearching(true);
     const t = setTimeout(async () => {
       try {
-        const res = await searchCases(caseSearch, 1, 20);
+        const res = await searchCases(caseSearch, 1, 500);
         setSearchResults(res.data);
       } catch {
         const q = caseSearch.toLowerCase();
@@ -286,8 +331,8 @@ export default function EvidencePage() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Evidence</h1>
-          <p className="mt-1 text-sm text-[var(--color-text-tertiary)]">
+          <h1 className="text-2xl font-bold text-(--color-text-primary)">Evidence</h1>
+          <p className="mt-1 text-sm text-(--color-text-tertiary)">
             Upload and manage case evidence
           </p>
         </div>
@@ -296,7 +341,7 @@ export default function EvidencePage() {
       <Card className="mb-6">
         <div className="mb-4">
           <div className="flex items-center justify-between">
-            <label className="block text-sm font-semibold text-[var(--color-text-primary)]">
+            <label className="block text-sm font-semibold text-(--color-text-primary)">
               Select Case to Manage Evidence
             </label>
             <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
@@ -389,7 +434,6 @@ export default function EvidencePage() {
                 };
                 return score(b) - score(a);
               })
-              .slice(0, 12)
               .map((c) => {
                 const isSelected = selectedCaseId === c.case_id;
                 return (
@@ -418,9 +462,9 @@ export default function EvidencePage() {
               })
           )}
         </div>
-        {filteredCases.length > 12 && (
+        {filteredCases.length > 0 && (
           <p className="mt-3 text-center text-xs text-slate-500">
-            Showing 12 of {filteredCases.length} • {caseSearch ? 'refine search for more precise suggestions' : 'type to search all 501 cases'}
+            Showing {filteredCases.length} of {filteredCases.length} • {caseSearch ? 'search results updated for this query' : 'all available cases'}
           </p>
         )}
       </Card>
@@ -428,12 +472,12 @@ export default function EvidencePage() {
       {uploadProgress > 0 && (
         <Card className="mb-6">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-medium text-[var(--color-text-secondary)]">Uploading...</span>
-            <span className="text-sm text-[var(--color-text-tertiary)]">{uploadProgress}%</span>
+            <span className="text-sm font-medium text-(--color-text-secondary)">Uploading...</span>
+            <span className="text-sm text-(--color-text-tertiary)">{uploadProgress}%</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--color-border-primary)]">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-(--color-border-primary)">
             <div
-              className="h-full rounded-full bg-[var(--color-accent-primary)] transition-all duration-300"
+              className="h-full rounded-full bg-(--color-accent-primary) transition-all duration-300"
               style={{ width: `${uploadProgress}%` }}
             />
           </div>
@@ -443,7 +487,7 @@ export default function EvidencePage() {
       {selectedCaseId && (
         <>
           <Card className="mb-6">
-            <h3 className="mb-3 text-sm font-semibold text-[var(--color-text-secondary)]">
+            <h3 className="mb-3 text-sm font-semibold text-(--color-text-secondary)">
               Upload Evidence
             </h3>
             <div
@@ -456,14 +500,14 @@ export default function EvidencePage() {
               className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors ${
                 dragOver
                   ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-300 bg-[var(--color-slate-50)]'
+                  : 'border-gray-300 bg-(--color-slate-50)'
               }`}
             >
-              <Upload className="mb-3 h-8 w-8 text-[var(--color-text-tertiary)]" />
-              <p className="text-sm font-medium text-[var(--color-text-secondary)]">
+              <Upload className="mb-3 h-8 w-8 text-(--color-text-tertiary)" />
+              <p className="text-sm font-medium text-(--color-text-secondary)">
                 Drop files here or click to browse
               </p>
-              <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">
+              <p className="mt-1 text-xs text-(--color-text-tertiary)">
                 PNG, JPG, GIF, WebP, PDF, MP4, MOV, AVI, WebM (max 50MB)
               </p>
               <input
@@ -497,7 +541,7 @@ export default function EvidencePage() {
 
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">
+                <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">
                   Description
                 </label>
                 <input
@@ -513,9 +557,9 @@ export default function EvidencePage() {
                     type="checkbox"
                     checked={sensitive}
                     onChange={(e) => setSensitive(e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 text-[var(--color-intel-blue-600)] focus:ring-blue-500"
+                    className="h-4 w-4 rounded border-gray-300 text-(--color-intel-blue-600) focus:ring-blue-500"
                   />
-                  <span className="text-[var(--color-text-secondary)]">Sensitive</span>
+                  <span className="text-(--color-text-secondary)">Sensitive</span>
                 </label>
               </div>
             </div>
@@ -539,15 +583,15 @@ export default function EvidencePage() {
                 </button>
               )}
             </div>
-            <Filter size={16} className="text-[var(--color-text-tertiary)] ml-2" />
+            <Filter size={16} className="text-(--color-text-tertiary) ml-2" />
             {(['all', 'pdf', 'image', 'video'] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setFileTypeFilter(f)}
                 className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
                   fileTypeFilter === f
-                    ? 'bg-[var(--color-accent-primary)] text-white'
-                    : 'bg-gray-100 text-[var(--color-text-secondary)] hover:bg-[var(--color-border-primary)]'
+                    ? 'bg-(--color-accent-primary) text-white'
+                    : 'bg-gray-100 text-(--color-text-secondary) hover:bg-(--color-border-primary)'
                 }`}
               >
                 {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
@@ -582,13 +626,17 @@ export default function EvidencePage() {
                     className="cursor-pointer"
                     onClick={() => setPreview(e)}
                   >
-                    <div className="mb-3 flex items-center justify-center overflow-hidden rounded-lg bg-[var(--color-slate-50)] h-[120px]">
-                      {isImageType(e.file_type) ? <EvidenceThumb evidence={e} /> : getFileIcon(e.file_type)}
+                    <div className="mb-3 flex items-center justify-center overflow-hidden rounded-lg bg-(--color-slate-50) h-[120px]">
+                      {isImageType(e.file_type) || isVideoType(e.file_type) || isPdfType(e.file_type) ? (
+                        <EvidenceThumb evidence={e} />
+                      ) : (
+                        getFileIcon(e.file_type)
+                      )}
                     </div>
-                    <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
+                    <p className="truncate text-sm font-medium text-(--color-text-primary)">
                       {e.file_name}
                     </p>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-[var(--color-text-tertiary)]">
+                    <div className="mt-1 flex items-center gap-2 text-xs text-(--color-text-tertiary)">
                       <span>{formatFileSize(e.file_size)}</span>
                       <span>·</span>
                       <span>
@@ -596,7 +644,7 @@ export default function EvidencePage() {
                       </span>
                     </div>
                     {e.description && (
-                      <p className="mt-1 truncate text-xs text-[var(--color-text-tertiary)]">
+                      <p className="mt-1 truncate text-xs text-(--color-text-tertiary)">
                         {e.description}
                       </p>
                     )}
@@ -604,7 +652,7 @@ export default function EvidencePage() {
                       {e.sensitive && (
                         <Badge variant="critical">Sensitive</Badge>
                       )}
-                      <span className="text-xs text-[var(--color-text-tertiary)]">
+                      <span className="text-xs text-(--color-text-tertiary)">
                         by {e.uploaded_by.display_name}
                       </span>
                     </div>
@@ -613,8 +661,7 @@ export default function EvidencePage() {
                     <button
                       onClick={async () => {
                         try {
-                          const token = localStorage.getItem('crimeintel_token');
-                          const res = await fetch(`/api/v1/evidence/${e.evidence_id}/file`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+                          const res = await fetch(`/api/v1/evidence/${e.evidence_id}/file`, { headers: getAuthHeaders() });
                           if (!res.ok) throw new Error('Download failed');
                           const blob = await res.blob();
                           const url = URL.createObjectURL(blob);
@@ -622,7 +669,7 @@ export default function EvidencePage() {
                           a.href = url; a.download = e.file_name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 1000);
                         } catch {}
                       }}
-                      className="flex items-center gap-1 text-xs font-medium text-[var(--color-intel-blue-600)] hover:text-blue-700"
+                      className="flex items-center gap-1 text-xs font-medium text-(--color-intel-blue-600) hover:text-blue-700"
                     >
                       <Download size={14} />
                       Download
@@ -660,12 +707,12 @@ export default function EvidencePage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">
+              <h3 className="text-lg font-semibold text-(--color-text-primary)">
                 {preview.file_name}
               </h3>
               <button
                 onClick={() => setPreview(null)}
-                className="rounded p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)]"
+                className="rounded p-1 text-(--color-text-tertiary) hover:text-(--color-text-secondary)"
               >
                 <X size={20} />
               </button>

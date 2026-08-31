@@ -13,7 +13,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="mb-1 block text-sm font-medium text-[var(--color-text-secondary)]">
+          <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">
             {label}
           </label>
         )}
@@ -21,7 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {icon && (
             <div
               className={`pointer-events-none absolute inset-y-0 left-0 z-10 flex items-center pl-3 transition-colors duration-300 ${
-                error ? 'text-[var(--color-red-400)]' : 'text-[var(--color-slate-400)] group-focus-within:text-[var(--color-accent-primary)]'
+                error ? 'text-(--color-red-400)' : 'text-(--color-slate-400) group-focus-within:text-(--color-accent-primary)'
               }`}
             >
               {icon}
@@ -29,7 +29,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
           <input
             ref={ref}
-            className={`input-field ${icon ? '!pl-10' : ''} ${suffix ? 'pr-10' : ''} ${error ? 'border-[var(--color-red-400)] focus:border-[var(--color-red-400)] focus:ring-[var(--color-red-400)]' : ''} ${className}`}
+            className={`input-field ${icon ? '!pl-10' : ''} ${suffix ? 'pr-10' : ''} ${error ? 'border-(--color-red-400) focus:border-(--color-red-400) focus:ring-(--color-red-400)' : ''} ${className}`}
             {...props}
           />
           {suffix && (
@@ -38,7 +38,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             </div>
           )}
         </div>
-        {error && <p className="mt-1 text-sm text-[var(--color-red-600)]">{error}</p>}
+        {error && <p className="mt-1 text-sm text-(--color-red-600)">{error}</p>}
       </div>
     );
   },

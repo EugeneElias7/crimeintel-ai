@@ -48,7 +48,7 @@ export const searchCases = async (
 const mapCaseDetail = (c: any): CaseDetail => ({
   case_id: c.case_id,
   case_number: c.fir_number || c.case_id,
-  title: c.description || '',
+  title: c.title || c.description || '',
   description: c.description,
   crime_type: c.crime_type,
   status: c.status,
@@ -67,21 +67,31 @@ const mapCaseDetail = (c: any): CaseDetail => ({
     display_name: c.officer.display_name,
   } : { user_id: '', display_name: 'Unknown' },
   victim_count: c.witness_count || 0,
-  suspect_count: c.suspect_count || 0,
+  suspect_count: c.suspect_count || (c.suspects || []).length,
+  suspects: (c.suspects || []).map((s: any) => ({
+    suspect_id: s.suspect_id,
+    name: s.name,
+    age: s.age,
+    gender: s.gender,
+    status: s.status || 'unknown',
+    charges: s.charges || [],
+    arrest_date: s.arrest_date,
+    photo_url: s.photo_url,
+  })),
   witnesses: (c.witnesses || []).map((w: any) => ({
     witness_id: w.witness_id,
     name: w.name,
-    statement: w.statement_summary,
-    credibility: w.credibility_score?.toString(),
+    statement: w.statement_summary || w.statement,
+    credibility: w.credibility_score?.toString() || w.credibility,
     contact: w.contact,
   })),
-  timeline: (c.timeline_events || []).map((t: any) => ({
+  timeline: (c.timeline_events || c.timeline || []).map((t: any) => ({
     event_id: t.event_id,
     event_type: t.event_type,
-    title: t.event_type,
+    title: t.event_type || t.title,
     description: t.description,
-    date: t.event_date,
-    created_by: t.officer?.display_name || t.officer_id || 'Unknown',
+    date: t.event_date || t.date,
+    created_by: t.officer?.display_name || t.officer_id || t.created_by || 'Unknown',
   })),
 });
 

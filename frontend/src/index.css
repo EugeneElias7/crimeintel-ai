@@ -489,7 +489,7 @@ body {
 
 /* Spinner */
 .spinner {
-  @apply animate-spin rounded-full border-[var(--color-slate-200)] border-t-[var(--color-accent-primary)];
+  @apply animate-spin rounded-full border-(--color-slate-200) border-t-(--color-accent-primary);
 }
 
 .spinner-sm { @apply h-4 w-4 border-2; }
@@ -637,7 +637,7 @@ body {
   }
 
   .card-micro:hover {
-    @apply shadow-lg shadow-[var(--color-intel-blue-500)]/10 -translate-y-1;
+    @apply shadow-lg shadow-(--color-intel-blue-500)/10 -translate-y-1;
   }
 
   .link-micro {
@@ -657,7 +657,7 @@ body {
   }
 
   .input-micro:focus {
-    @apply ring-2 ring-[var(--color-accent-primary)] ring-offset-2 ring-offset-white;
+    @apply ring-2 ring-(--color-accent-primary) ring-offset-2 ring-offset-white;
   }
 
   .badge-micro {
@@ -669,7 +669,7 @@ body {
   }
 
   .tooltip-micro {
-    @apply absolute z-50 px-2 py-1 text-xs font-medium text-white bg-[var(--color-slate-900)] rounded opacity-0 invisible transition-all duration-150;
+    @apply absolute z-50 px-2 py-1 text-xs font-medium text-white bg-(--color-slate-900) rounded opacity-0 invisible transition-all duration-150;
   }
 
   .has-tooltip:hover .tooltip-micro,
@@ -703,7 +703,7 @@ body {
   /* Touch feedback for mobile */
   @media (pointer: coarse) {
     .interactive:active {
-      @apply bg-[var(--color-slate-100)];
+      @apply bg-(--color-slate-100);
     }
 
     .btn-micro:active {
@@ -713,11 +713,11 @@ body {
 
   /* Loading states */
   .loading-shimmer {
-    @apply relative overflow-hidden bg-[var(--color-slate-200)];
+    @apply relative overflow-hidden bg-(--color-slate-200);
   }
 
   .loading-shimmer::after {
-    @apply content-[''] absolute inset-0 bg-gradient-to-r from-transparent via-[var(--color-slate-300)] to-transparent;
+    @apply content-[''] absolute inset-0 bg-linear-to-r from-transparent via-(--color-slate-300) to-transparent;
     animation: shimmer 2s infinite linear;
   }
 
@@ -736,11 +736,11 @@ body {
 
   /* Focus ring utility */
   .focus-ring {
-    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-(--color-accent-primary) focus-visible:ring-offset-2 focus-visible:ring-offset-white;
   }
 
 /* Skip link for accessibility */
 .skip-link {
-  @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 px-4 py-2 bg-[var(--color-accent-primary)] text-white rounded-md;
+  @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 px-4 py-2 bg-(--color-accent-primary) text-white rounded-md;
 }
 }

@@ -4,7 +4,13 @@ export interface Evidence {
   file_name: string;
   file_type: string;
   file_size: number;
-  file_url: string;
+  file_url?: string;
+  file_path?: string;
+  storage_path?: string;
+  url?: string;
+  filename?: string;
+  mime_type?: string;
+  content_type?: string;
   description?: string;
   sensitive: boolean;
   uploaded_by: {

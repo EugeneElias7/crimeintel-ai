@@ -298,7 +298,7 @@ function FIRInfoTab({ detail }: { detail: CaseDetail }) {
             </div>
           </div>
           {detail.latitude != null && detail.longitude != null ? (
-            <div className="h-[300px] overflow-hidden rounded-lg border border-gray-200">
+            <div className="h-75 overflow-hidden rounded-lg border border-gray-200">
               <ReadOnlyMap lat={Number(detail.latitude)} lng={Number(detail.longitude)} />
             </div>
           ) : (

@@ -358,8 +358,10 @@ async def download_case_report_pdf(
                 ])
             pdf.add_table(["Name", "Contact", "Credibility", "Statement"], w_data, [35, 30, 25, 100])
 
-        # Output
-        pdf_output = pdf.output(dest="S").encode("latin-1")
+        # fpdf2 returns bytes/bytearray for dest="S"; use the raw output directly.
+        pdf_output = pdf.output(dest="S")
+        if isinstance(pdf_output, str):
+            pdf_output = pdf_output.encode("latin-1")
         pdf_buffer = io.BytesIO(pdf_output)
         pdf_buffer.seek(0)
 

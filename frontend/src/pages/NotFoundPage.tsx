@@ -4,7 +4,7 @@ import BackButton from '../components/ui/BackButton';
 
 export default function NotFoundPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-100 to-slate-200">
       <div className="text-center">
         <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-200">
           <Shield className="h-10 w-10 text-gray-400" />

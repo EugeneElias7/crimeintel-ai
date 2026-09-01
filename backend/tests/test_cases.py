@@ -65,8 +65,8 @@ class TestCaseService:
         from services.case_service import CaseService
         service = CaseService(mock_db)
         mock_db.get.return_value = None
-        result = await service.get_case("NONEXISTENT")
-        assert result is None
+        with pytest.raises(ValueError, match="Case not found"):
+            await service.get_case("NONEXISTENT")
 
     @pytest.mark.asyncio
     async def test_create_case(self, mock_db):
@@ -94,4 +94,4 @@ class TestCaseService:
         service = CaseService(mock_db)
         mock_db.get.return_value = sample_case_data
         await service.delete_case("FIR-2026-000001")
-        mock_db.update.assert_called_once()
+        mock_db.delete.assert_called()

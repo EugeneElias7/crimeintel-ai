@@ -218,10 +218,10 @@ function ReportPreview({
       style={{ fontFamily: '"Inter", "Segoe UI", Arial, sans-serif' }}
       className="overflow-hidden rounded-3xl border border-slate-200 bg-white text-slate-800 shadow-[0_10px_30px_rgba(15,23,42,0.08)]"
     >
-      <div className="bg-[#0f172a] px-6 py-5 text-white sm:px-8">
+      <div className="bg-gradient-to-r from-[#111827] via-[#172554] to-[#1e3a5f] px-6 py-6 text-white sm:px-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-          <div className="flex items-center gap-4">
-            <img src="/Crime-Icon.png" alt="CrimeIntel" className="h-14 w-auto max-w-40 object-contain" />
+          <div className="flex items-center gap-5">
+            <img src="/Crime-Icon.png" alt="CrimeIntel" className="h-16 w-32 sm:h-18 sm:w-40 object-contain drop-shadow-sm" style={{ background: 'transparent' }} />
             <div>
               <div className="text-lg font-semibold uppercase tracking-[0.18em] text-slate-100 sm:text-xl">
                 Crime Intelligence Report
@@ -480,8 +480,6 @@ export default function ReportsPage() {
   const [selectedCaseId, setSelectedCaseId] = useState('');
   const [selectedCase, setSelectedCase] = useState<CaseDetail | null>(null);
   const [selectedCaseEvidence, setSelectedCaseEvidence] = useState<Evidence[]>([]);
-  const [generatedPdfBlob, setGeneratedPdfBlob] = useState<Blob | null>(null);
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [previewLoading, setPreviewLoading] = useState(false);
   const reportRef = useRef<HTMLDivElement | null>(null);
@@ -540,7 +538,6 @@ export default function ReportsPage() {
     setSelectedCaseId(caseId);
     setSelectedCase(null);
     setSelectedCaseEvidence([]);
-    setGeneratedPdfBlob(null);
 
     try {
       setPreviewLoading(true);
@@ -567,61 +564,84 @@ export default function ReportsPage() {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
-  const handleGeneratePDF = async () => {
-    if (!selectedCase) return;
-
-    setIsGeneratingPdf(true);
-    setGeneratedPdfBlob(null);
-
-    try {
-      const response = await fetch(`/api/v1/reports/case/${selectedCase.case_id}/pdf`, {
-        headers: getAuthHeaders(),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`PDF generation failed (${response.status}): ${errorText || 'Unable to generate the PDF report.'}`);
-      }
-
-      const contentType = response.headers.get('content-type') || '';
-      const pdfBytes = new Uint8Array(await response.arrayBuffer());
-      const isPdfMagic = pdfBytes.length >= 5 && pdfBytes[0] === 0x25 && pdfBytes[1] === 0x50 && pdfBytes[2] === 0x44 && pdfBytes[3] === 0x46 && pdfBytes[4] === 0x2d;
-
-      if (!contentType.includes('application/pdf') && !isPdfMagic) {
-        const fallbackText = new TextDecoder().decode(pdfBytes.slice(0, 256));
-        throw new Error(`Expected a PDF response but received ${contentType || 'unknown content type'}: ${fallbackText || 'No response body'}`);
-      }
-
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      if (blob.size === 0) {
-        throw new Error('Generated PDF is empty.');
-      }
-
-      setGeneratedPdfBlob(blob);
-      triggerDownload(blob, selectedCase.case_number || selectedCase.case_id);
-      addToast('success', 'PDF generated and downloaded successfully.');
-    } catch (error: any) {
-      console.error('Generate PDF failed:', error);
-      addToast('error', error.message || 'Failed to generate PDF report.');
-    } finally {
-      setIsGeneratingPdf(false);
-    }
-  };
-
   const handleDownloadPDF = async () => {
-    if (!selectedCase || !generatedPdfBlob) {
-      addToast('error', 'Please generate the PDF report first.');
+    if (!selectedCase || !reportRef.current) {
+      addToast('error', 'Please select a case first.');
       return;
     }
-
     setIsDownloadingPdf(true);
-
     try {
-      triggerDownload(generatedPdfBlob, selectedCase.case_number || selectedCase.case_id);
-      addToast('success', 'PDF report downloaded successfully.');
+      const element = reportRef.current;
+      // Wait for evidence images to load so PDF includes real thumbnails, not placeholders
+      const images = Array.from(element.querySelectorAll('img')) as HTMLImageElement[];
+      await Promise.all(
+        images.map((img) => {
+          if (img.complete) return Promise.resolve();
+          return new Promise<void>((resolve) => {
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+            setTimeout(() => resolve(), 1200);
+          });
+        }),
+      );
+      const html2pdf = (await import('html2pdf.js')).default as any;
+      const caseNumber = selectedCase.case_number || selectedCase.case_id || 'case';
+      // Tailwind v4 emits oklch() which html2canvas 1.x cannot parse -> strip oklch sheets and inject precise hex fallbacks so colors/alignment match preview exactly
+      const sanitizeOklch = (clonedDoc: Document) => {
+        const oklchRe = /oklch\([^)]+\)|oklab\([^)]+\)|lch\([^)]+\)|lab\([^)]+\)/gi;
+        // 1) Remove any stylesheet that still contains oklch and replace its text with hex-safe version
+        clonedDoc.querySelectorAll('style').forEach((st: any) => {
+          if (st.textContent && oklchRe.test(st.textContent)) {
+            // neutralize instead of generic gray — keep layout but drop unsupported colors
+            st.textContent = st.textContent.replace(oklchRe, '#e2e8f0');
+          }
+        });
+        // 2) Inject precise hex overrides for every Tailwind utility used in ReportPreview so colors stay vibrant (not dull gray)
+        const fix = clonedDoc.createElement('style');
+        fix.textContent = `
+          .bg-slate-50{background-color:#f8fafc !important}.bg-slate-100{background-color:#f1f5f9 !important}.bg-white{background-color:#ffffff !important}.bg-slate-200{background-color:#e2e8f0 !important}.bg-slate-900{background-color:#0f172a !important}
+          .bg-blue-50{background-color:#eff6ff !important}.bg-blue-100{background-color:#dbeafe !important}.bg-blue-600{background-color:#2563eb !important}
+          .bg-amber-50{background-color:#fffbeb !important}.bg-amber-100{background-color:#fef3c7 !important}.bg-red-100{background-color:#fee2e2 !important}.bg-emerald-100{background-color:#d1fae5 !important}.bg-yellow-100{background-color:#fef9c3 !important}.bg-orange-100{background-color:#ffedd5 !important}.bg-cyan-100{background-color:#cffafe !important}
+          .text-slate-800{color:#1e293b !important}.text-slate-700{color:#334155 !important}.text-slate-600{color:#475569 !important}.text-slate-500{color:#64748b !important}.text-slate-400{color:#94a3b8 !important}.text-slate-300{color:#cbd5e1 !important}.text-slate-100{color:#f1f5f9 !important}.text-white{color:#ffffff !important}
+          .text-blue-600{color:#2563eb !important}.text-blue-700{color:#1d4ed8 !important}.text-amber-700{color:#b45309 !important}.text-red-700{color:#b91c1c !important}.text-emerald-700{color:#047857 !important}
+          .border-slate-200{border-color:#e2e8f0 !important}.border-slate-300{border-color:#cbd5e1 !important}.border-blue-200{border-color:#bfdbfe !important}.border-amber-200{border-color:#fde68a !important}.border-red-200{border-color:#fecaca !important}.border-emerald-200{border-color:#a7f3d0 !important}
+          .bg-gradient-to-r{background:linear-gradient(to right,#111827,#172554,#1e3a5f) !important}
+          .from-\\[\\#111827\\]{--tw-gradient-from:#111827 !important}.via-\\[\\#172554\\]{--tw-gradient-via:#172554 !important}.to-\\[\\#1e3a5f\\]{--tw-gradient-to:#1e3a5f !important}
+          *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+          section, .rounded-2xl, .rounded-3xl{ break-inside:avoid !important; page-break-inside:avoid !important; }
+        `;
+        clonedDoc.head.appendChild(fix);
+        // 3) inline oklch in style="" attributes (rare but still breaks)
+        clonedDoc.querySelectorAll('*').forEach((el: any) => {
+          const sa = el.getAttribute && el.getAttribute('style');
+          if (sa && oklchRe.test(sa)) el.setAttribute('style', sa.replace(oklchRe, '#e2e8f0'));
+        });
+      };
+      // Wait for webfonts (Inter) so PDF text is not faux-bold / blurry
+      if ((document as any).fonts?.ready) await (document as any).fonts.ready;
+      const opt: any = {
+        margin: [4, 4, 8, 4],
+        filename: `CrimeIntel_Report_${caseNumber}_${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'png', quality: 1 },
+        html2canvas: {
+          scale: 2.5,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          letterRendering: true,
+          // @ts-ignore onclone is forwarded to html2canvas via html2pdf
+          onclone: (clonedDoc: Document) => sanitizeOklch(clonedDoc),
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] },
+      };
+      const blob: Blob = await html2pdf().set(opt).from(element).outputPdf('blob');
+      if (!blob || blob.size === 0) throw new Error('Generated PDF is empty.');
+      triggerDownload(blob, caseNumber);
+      addToast('success', 'PDF downloaded — matches preview');
     } catch (error: any) {
       console.error('Download PDF failed:', error);
-      addToast('error', error.message || 'Unable to download the PDF report.');
+      addToast('error', error.message || 'Failed to download PDF. Try again.');
     } finally {
       setIsDownloadingPdf(false);
     }
@@ -711,12 +731,9 @@ export default function ReportsPage() {
                 </div>
 
                 <div className="sticky bottom-0 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur-sm">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-                    <Button onClick={handleGeneratePDF} disabled={!selectedCase || isGeneratingPdf || isDownloadingPdf} className="w-full sm:w-auto">
-                      {isGeneratingPdf ? 'Generating PDF...' : 'Generate PDF Report'}
-                    </Button>
-                    <Button onClick={handleDownloadPDF} disabled={!selectedCase || !generatedPdfBlob || isGeneratingPdf || isDownloadingPdf} className="w-full sm:w-auto">
-                      {isDownloadingPdf ? 'Downloading PDF...' : 'Download PDF'}
+                  <div className="flex justify-end">
+                    <Button onClick={handleDownloadPDF} disabled={!selectedCase || isDownloadingPdf} className="w-full sm:w-auto">
+                      {isDownloadingPdf ? 'Downloading...' : 'Download PDF'}
                     </Button>
                   </div>
                 </div>

@@ -49,6 +49,10 @@ function isVideoType(fileType: string) {
   );
 }
 
+function isPdfType(fileType: string) {
+  return fileType.toLowerCase().includes('pdf');
+}
+
 export default function EvidenceGalleryPage() {
   const { caseId } = useParams<{ caseId: string }>();
   const [evidence, setEvidence] = useState<Evidence[]>([]);
@@ -188,6 +192,12 @@ export default function EvidenceGalleryPage() {
               <video controls className="max-h-[70vh] w-full rounded-lg">
                 <source src={getEvidenceUrl(preview)} type={preview.file_type} />
               </video>
+            ) : isPdfType(preview.file_type) ? (
+              <embed
+                src={getEvidenceUrl(preview)}
+                type="application/pdf"
+                className="h-[70vh] w-full rounded-lg border border-slate-200 bg-white"
+              />
             ) : (
               <div className="flex flex-col items-center py-12">
                 {getFileIcon(preview.file_type)}

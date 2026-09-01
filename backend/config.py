@@ -36,8 +36,8 @@ class Settings:
     def MAX_UPLOAD_SIZE_BYTES(self) -> int:
         return self.MAX_UPLOAD_SIZE_MB * 1024 * 1024
 
-    # Allowed file extensions for evidence uploads - expanded to match frontend
-    ALLOWED_EXTENSIONS: set = {".pdf", ".jpg", ".jpeg", ".png", ".mp4", ".mov", ".avi", ".mp3", ".wav", ".doc", ".docx", ".txt", ".mp3", ".m4a"}
+    # Allowed file extensions for evidence uploads
+    ALLOWED_EXTENSIONS: set = {".pdf", ".jpg", ".jpeg", ".png", ".mp4"}
 
 
 settings = Settings()

@@ -404,6 +404,10 @@ export default function IdentityVerificationPage() {
     }
   }, [navigate, isAuthAdmin, isAuthVerified]);
 
+  const handleStatusReady = useCallback(() => {
+    setStatusChecked(true);
+  }, []);
+
   if (!effectiveUserId) {
     return (
       <div className="texture-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-(--color-navy-950) px-4 py-10">
@@ -431,10 +435,6 @@ export default function IdentityVerificationPage() {
       </div>
     );
   }
-
-  const handleStatusReady = useCallback(() => {
-    setStatusChecked(true);
-  }, []);
 
   if (!statusChecked) {
     return <StatusChecker userId={effectiveUserId} navigate={navigate} onReady={handleStatusReady} />;

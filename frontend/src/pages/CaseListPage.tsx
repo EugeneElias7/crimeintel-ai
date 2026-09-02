@@ -256,7 +256,7 @@ export default function CaseListPage() {
         <div className="flex flex-wrap items-center gap-2">
           <div className="min-w-[200px] flex-1">
             <Input
-              placeholder="🔍 Search cases..."
+              placeholder="Search cases..."
               icon={<Search size={16} />}
               value={search}
               onChange={(e) => {

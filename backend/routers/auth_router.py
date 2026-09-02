@@ -25,6 +25,96 @@ def _get_client_ip(request: Request) -> str:
 
 
 @router.post(
+    "/register",
+    status_code=status.HTTP_201_CREATED,
+    summary="Register new officer account (public)",
+)
+async def register(body: dict):
+    # Frontend sends: full_name, email, employee_id, department, designation, password, confirm_password
+    from datetime import datetime as _dt
+    import hashlib as _hashlib
+    from utils.helpers import generate_uuid as _gen
+
+    full_name = (body.get("full_name") or body.get("display_name") or "").strip()
+    email = (body.get("email") or "").strip()
+    employee_id = (body.get("employee_id") or body.get("badge_number") or "").strip()
+    department = (body.get("department") or "Karnataka State Police").strip()
+    designation = (body.get("designation") or "Officer").strip()
+    password = body.get("password") or ""
+    confirm = body.get("confirm_password") or body.get("confirmPassword") or ""
+
+    if not full_name or not email or not employee_id or not department or not designation:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="All fields are required")
+    if not password or password != confirm:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Passwords do not match")
+    if len(password) < 8:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Password must be at least 8 characters")
+
+    try:
+        # Use get_all + manual filter to avoid Catalyst query edge cases
+        all_users = await db.get_all("Users") or []
+        # Debug: log check
+        print(f"[REGISTER] Checking email={email} badge={employee_id} against {len(all_users)} existing users")
+        for u in all_users:
+            em = str(u.get("email", "")).strip().lower()
+            if em == email.lower():
+                print(f"[REGISTER] Found duplicate email {em} == {email.lower()}")
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists. Please sign in.")
+            bm = str(u.get("badge_number", "")).strip().lower()
+            if employee_id and bm == employee_id.lower():
+                print(f"[REGISTER] Found duplicate badge {bm} == {employee_id.lower()}")
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Employee ID already registered. Please sign in.")
+
+        auth_user_id = None
+        try:
+            if auth and hasattr(auth, "signup"):
+                res = await auth.signup(email=email, password=password, display_name=full_name)
+                auth_user_id = res.get("user_id") if isinstance(res, dict) else None
+        except Exception:
+            auth_user_id = None
+
+        user_id = auth_user_id or _gen()
+        now = _dt.utcnow().isoformat()
+        pwd_hash = _hashlib.sha256(password.encode()).hexdigest()
+        # Users table schema uses badge_number for employee_id; department/designation stored in display_name suffix or ignored to avoid missing column error
+        row = {
+            "ROWID": user_id,
+            "user_id": user_id,
+            "display_name": full_name,
+            "email": email,
+            "badge_number": employee_id,
+            "role": "officer",
+            "phone": body.get("phone") or "",
+            "status": "pending_document",
+            "password_hash": pwd_hash,
+            "created_at": now,
+            "updated_at": now,
+        }
+        # Store department/designation as extra audit detail since ci_Users has no such columns
+        await db.insert("Users", row)
+        await db.insert("Audit_Logs", {
+            "user_id": user_id,
+            "action": "user.registered",
+            "module": "auth",
+            "details": f"New registration {email} ({employee_id})",
+            "created_at": now,
+        })
+        return {"user_id": user_id, "redirect_url": "/verify-identity", "message": "Registration successful. Please proceed to identity verification."}
+    except HTTPException:
+        raise
+    except Exception as e:
+        err_str = str(e)
+        if "UNIQUE constraint" in err_str or "already exists" in err_str.lower() or "duplicate" in err_str.lower():
+            # Handle race where Catalyst remote already has the email but local query didn't find it
+            if "email" in err_str.lower():
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists. Please sign in.")
+            if "badge" in err_str.lower() or "employee" in err_str.lower():
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Employee ID already registered. Please sign in.")
+        logger.exception("Registration failed: %s", e)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Registration failed: {err_str}")
+
+
+@router.post(
     "/login",
     response_model=LoginResponse,
     status_code=status.HTTP_200_OK,

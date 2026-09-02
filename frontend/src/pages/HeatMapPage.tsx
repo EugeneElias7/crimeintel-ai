@@ -18,6 +18,18 @@ import Button from '../components/ui/Button';
 import Spinner from '../components/ui/Spinner';
 import EmptyState from '../components/ui/EmptyState';
 
+// Fix default Leaflet icon paths for Vite (prevents _leaflet_pos / missing icon issues)
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+// @ts-ignore - allow merging
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
+
 
 const CRIME_TYPE_MAP: Record<string, string> = {
   'Theft': 'theft',
@@ -49,6 +61,35 @@ const DISTRICTS_LIST = [
   'Shimoga',
   'Tumkur',
 ];
+
+const DISTRICT_CENTERS: Record<string, [number, number]> = {
+  'Bangalore Urban': [12.9716, 77.5946],
+  'Bangalore Rural': [13.2, 77.5],
+  'Belgaum': [15.85, 74.5],
+  'Dharwad': [15.46, 75.01],
+  'Gulbarga': [17.33, 76.83],
+  'Hubli': [15.36, 75.12],
+  'Mangalore': [12.87, 74.84],
+  'Mysore': [12.2958, 76.6394],
+  'Shimoga': [13.93, 75.56],
+  'Tumkur': [13.339, 77.1],
+};
+
+const DISTRICT_ALIAS_MAP: Record<string, string> = {
+  'bengaluru urban': 'Bangalore Urban',
+  'bengaluru rural': 'Bangalore Rural',
+  'belagavi': 'Belgaum',
+  'shivamogga': 'Shimoga',
+  'kalaburagi': 'Gulbarga',
+  'mysuru': 'Mysore',
+  'tumakuru': 'Tumkur',
+};
+
+function normalizeDistrict(d: string): string {
+  if (!d) return '';
+  const lower = d.trim().toLowerCase();
+  return DISTRICT_ALIAS_MAP[lower] || d.trim();
+}
 
 interface HeatPoint {
   lat: number;
@@ -110,21 +151,15 @@ function HeatmapLayer({ points, radius = 20, blur = 20, maxZoom = 14 }: {
       blur,
       maxZoom,
       max: 1.0,
-      minOpacity: 0.4,
+      minOpacity: 0.35,
       gradient: {
-        0.05: '#0d47a1',
-        0.15: '#1565c0',
-        0.25: '#1976d2',
-        0.40: '#1e88e5',
-        0.50: '#00acc1',
-        0.60: '#00bfa5',
-        0.70: '#43a047',
-        0.75: '#8bc34a',
-        0.80: '#ffeb3b',
-        0.85: '#ffb300',
-        0.90: '#ff8f00',
-        0.95: '#ff5722',
-        1.00: '#d32f2f',
+        0.0: '#2563eb',   // low - blue
+        0.25: '#06b6d4',  // medium-low - cyan
+        0.45: '#22c55e',  // medium - green
+        0.65: '#eab308',  // high - yellow
+        0.80: '#f97316',  // very high - orange
+        0.90: '#ef4444',  // critical - red
+        1.00: '#dc2626',  // critical deep
       },
     });
 
@@ -137,6 +172,14 @@ function HeatmapLayer({ points, radius = 20, blur = 20, maxZoom = 14 }: {
     };
   }, [map, points, radius, blur, maxZoom]);
 
+  return null;
+}
+
+function MapController({ mapRef }: { mapRef: React.MutableRefObject<any> }) {
+  const map = useMap();
+  useEffect(() => {
+    mapRef.current = map;
+  }, [map, mapRef]);
   return null;
 }
 
@@ -240,19 +283,46 @@ export default function HeatMapPage() {
     fetchHeatMapData();
   }, [fetchHeatMapData]);
 
+  // Auto-focus map: if district selected, fly to its center, otherwise fitBounds to all points
   useEffect(() => {
-    if (mapRef.current && heatPoints.length > 0) {
-      const validPoints = heatPoints.filter(p => 
-        Number.isFinite(p.lat) && Number.isFinite(p.lng)
-      );
-      
-      if (validPoints.length > 0) {
-        const bounds = validPoints.map(p => [p.lat, p.lng] as [number, number]);
-        // @ts-ignore
-        mapRef.current.fitBounds(bounds, { padding: [40, 40], maxZoom: 12 });
-      }
-    }
-  }, [heatPoints]);
+    if (!mapRef.current || typeof mapRef.current.setView !== 'function') return;
+    const map = mapRef.current;
+    // Defer until map is fully ready and container has size (prevents _leaflet_pos on hidden container)
+    const doFit = () => {
+      try {
+        if (!map || !map.getContainer || !map.getContainer().offsetParent) return;
+        // @ts-ignore - Leaflet internal ready check
+        if (!map._loaded) {
+          map.whenReady(() => doFit());
+          return;
+        }
+        map.invalidateSize();
+        if (selectedDistrict && DISTRICT_CENTERS[selectedDistrict]) {
+          const center = DISTRICT_CENTERS[selectedDistrict];
+          const validPoints = heatPoints.filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng) && p.lat !== 0 && p.lng !== 0);
+          if (validPoints.length > 0) {
+            const bounds = validPoints.map((p) => [p.lat, p.lng] as [number, number]);
+            map.fitBounds(bounds, { padding: [50, 50], maxZoom: 13 });
+          } else {
+            map.setView(center, 11);
+          }
+          return;
+        }
+        if (heatPoints.length > 0) {
+          const validPoints = heatPoints.filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng) && p.lat !== 0 && p.lng !== 0);
+          if (validPoints.length > 0) {
+            const bounds = validPoints.map((p) => [p.lat, p.lng] as [number, number]);
+            map.fitBounds(bounds, { padding: [40, 40], maxZoom: 12 });
+          }
+        } else if (!selectedDistrict) {
+          map.setView(DISTRICT_CENTERS['Bangalore Urban'], 10);
+        }
+      } catch {}
+    };
+    // Use timeout to allow MarkerClusterGroup to settle after data change (prevents _leaflet_pos race)
+    const t = setTimeout(doFit, 150);
+    return () => clearTimeout(t);
+  }, [heatPoints, selectedDistrict]);
 
   const toggleCrimeType = (type: string) => {
     setSelectedCrimeTypes((prev) =>
@@ -305,8 +375,12 @@ export default function HeatMapPage() {
   const filteredPoints = heatPoints.filter((p) => {
     const backendType = (p.crime_type || '').toLowerCase();
     const matchesCrimeType = mappedSelectedTypes.length === 0 || mappedSelectedTypes.includes(backendType);
-    const matchesDistrict = !selectedDistrict || p.district === selectedDistrict;
-    return matchesCrimeType && matchesDistrict;
+    const matchesDistrict = !selectedDistrict || normalizeDistrict(p.district) === normalizeDistrict(selectedDistrict);
+    // Heatmap server already filters by date, but keep client-side date sanity check as fallback
+    const normDate = p.date_filed ? String(p.date_filed).slice(0, 10) : '';
+    const matchesFrom = !dateFrom || !normDate || normDate >= dateFrom.slice(0, 10);
+    const matchesTo = !dateTo || !normDate || normDate <= dateTo.slice(0, 10);
+    return matchesCrimeType && matchesDistrict && matchesFrom && matchesTo;
   });
 
   const heatmapPoints = filteredPoints
@@ -338,13 +412,12 @@ export default function HeatMapPage() {
           </div>
         ) : (
           <MapContainer
-            ref={mapRef}
-            center={[12.9716, 77.5946]}
-            zoom={12}
+            center={selectedDistrict && DISTRICT_CENTERS[selectedDistrict] ? DISTRICT_CENTERS[selectedDistrict] : [12.9716, 77.5946]}
+            zoom={selectedDistrict ? 11 : 10}
             className="h-full w-full"
             zoomControl={true}
-            whenReady={() => { mapRef.current = mapRef.current; }}
           >
+            <MapController mapRef={mapRef} />
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -461,17 +534,17 @@ export default function HeatMapPage() {
           </MapContainer>
         )}
 
-        <div className="absolute bottom-4 left-4 z-[1000] rounded-lg border border-(--color-border-primary) bg-white px-3 py-2 shadow-md">
+        <div className="absolute bottom-4 left-4 z-[1000] rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-md">
           <div className="flex items-center gap-2 text-xs">
-            <span className="flex h-3 w-3 rounded-full bg-(--color-intel-blue-500)" />
+            <span className="flex h-3 w-3 rounded-full bg-blue-500" />
             <span>Low</span>
-            <span className="flex h-3 w-3 rounded-full bg-(--color-cyan-500)" />
+            <span className="flex h-3 w-3 rounded-full bg-cyan-500" />
             <span>Medium</span>
-            <span className="flex h-3 w-3 rounded-full bg-(--color-amber-500)" />
+            <span className="flex h-3 w-3 rounded-full bg-yellow-500" />
             <span>High</span>
-            <span className="flex h-3 w-3 rounded-full bg-(--color-amber-500)" />
+            <span className="flex h-3 w-3 rounded-full bg-orange-500" />
             <span>Very High</span>
-            <span className="flex h-3 w-3 rounded-full bg-(--color-red-500)" />
+            <span className="flex h-3 w-3 rounded-full bg-red-600" />
             <span>Critical</span>
           </div>
         </div>
@@ -543,23 +616,42 @@ export default function HeatMapPage() {
             </div>
           </div>
 
-          <Button 
-            size="sm" 
-            className="w-full" 
-            onClick={fetchHeatMapData}
-            disabled={applyingFilters}
-          >
-            {applyingFilters ? 'Applying...' : 'Apply Filters'}
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              size="sm" 
+              className="flex-1" 
+              onClick={fetchHeatMapData}
+              disabled={applyingFilters}
+            >
+              {applyingFilters ? 'Applying...' : 'Apply Filters'}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="flex-1"
+              onClick={() => {
+                setSelectedCrimeTypes([]);
+                setSelectedDistrict('');
+                setDateFrom('');
+                setDateTo('');
+              }}
+              disabled={applyingFilters}
+            >
+              Clear Filters
+            </Button>
+          </div>
         </Card>
 
         <Card>
           <p className="text-xs font-medium text-(--color-text-tertiary)">
-            Total Incidents
+            Total Incidents {selectedDistrict || dateFrom || dateTo || selectedCrimeTypes.length > 0 ? '(filtered)' : ''}
           </p>
           <p className="text-2xl font-bold text-(--color-text-primary)">
-            {heatPoints.length}
+            {filteredPoints.length}
           </p>
+          {filteredPoints.length !== heatPoints.length && (
+            <p className="text-[11px] text-(--color-text-tertiary)">of {heatPoints.length} with coordinates</p>
+          )}
         </Card>
       </div>
     </div>

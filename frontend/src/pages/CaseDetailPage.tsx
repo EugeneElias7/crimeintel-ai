@@ -187,7 +187,7 @@ export default function CaseDetailPage() {
       </div>
 
       {activeTab === 'fir' && <FIRInfoTab detail={caseDetail} />}
-      {activeTab === 'suspects' && <SuspectsTab />}
+      {activeTab === 'suspects' && <SuspectsTab suspects={caseDetail.suspects ?? []} />}
       {activeTab === 'witnesses' && (
         <WitnessesTab witnesses={caseDetail.witnesses ?? []} />
       )}
@@ -287,52 +287,62 @@ function FIRInfoTab({ detail }: { detail: CaseDetail }) {
               {detail.district && <p className="text-xs text-gray-500">{detail.district}</p>}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="rounded-lg bg-slate-50 border border-gray-200 p-2.5">
-              <p className="text-gray-400">Latitude</p>
-              <p className="font-mono font-medium text-gray-900">{detail.latitude != null ? Number(detail.latitude).toFixed(6) : '—'}</p>
-            </div>
-            <div className="rounded-lg bg-slate-50 border border-gray-200 p-2.5">
-              <p className="text-gray-400">Longitude</p>
-              <p className="font-mono font-medium text-gray-900">{detail.longitude != null ? Number(detail.longitude).toFixed(6) : '—'}</p>
-            </div>
+          <div className="h-80 overflow-hidden rounded-xl border border-slate-200 shadow-sm">
+            <ReadOnlyMap lat={detail.latitude != null ? Number(detail.latitude) : 12.9716} lng={detail.longitude != null ? Number(detail.longitude) : 77.5946} district={detail.district} />
           </div>
-          {detail.latitude != null && detail.longitude != null ? (
-            <div className="h-75 overflow-hidden rounded-lg border border-gray-200">
-              <ReadOnlyMap lat={Number(detail.latitude)} lng={Number(detail.longitude)} />
-            </div>
-          ) : (
-            <p className="text-xs text-gray-400 italic">No GPS coordinates stored for this case (created before map feature).</p>
-          )}
+          <p className="text-center text-xs text-slate-500">Shown in map • {detail.district || 'Karnataka'} • {detail.location || '—'}</p>
         </div>
       </Card>
     </div>
   );
 }
 
-function ReadOnlyMap({ lat, lng }: { lat: number; lng: number }) {
-  // Lazy import leaflet to avoid SSR issues - use dynamic
+const DISTRICT_MAP_CENTERS: Record<string, [number, number]> = {
+  'Bangalore Urban': [12.9716, 77.5946],
+  'Bangalore Rural': [13.2, 77.5],
+  'Belgaum': [15.85, 74.5],
+  'Mysore': [12.2958, 76.6394],
+  'Mangalore': [12.87, 74.84],
+  'Shimoga': [13.93, 75.56],
+  'Tumkur': [13.339, 77.1],
+  'Gulbarga': [17.33, 76.83],
+  'Dharwad': [15.46, 75.01],
+  'Hubli': [15.36, 75.12],
+};
+
+function ReadOnlyMap({ lat, lng, district }: { lat: number; lng: number; district?: string }) {
   const [Ready, setReady] = useState(false);
   useEffect(() => { setReady(true); }, []);
   if (!Ready) return <div className="h-full w-full bg-slate-100 animate-pulse" />;
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const hasCoords = Number.isFinite(lat) && Number.isFinite(lng) && !(lat === 12.9716 && lng === 77.5946 && !district);
+  // Fallback to district center if no coords
+  let displayLat = lat;
+  let displayLng = lng;
+  if (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 12.9716 && lng === 77.5946 && !district)) {
+    // keep default Bangalore
+  }
+  if (district && DISTRICT_MAP_CENTERS[district]) {
+    // If no real coords, use district center with higher zoom
+    if (!hasCoords || (lat === 12.9716 && lng === 77.5946)) {
+      const c = DISTRICT_MAP_CENTERS[district];
+      displayLat = c[0];
+      displayLng = c[1];
+    }
+  }
   return (
     <div className="h-full w-full">
-      {/* Use iframe fallback for read-only to avoid extra bundle if leaflet not ready */}
       <iframe
         title="Incident Location"
         className="h-full w-full border-0"
         loading="lazy"
-        src={`https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01}%2C${lat - 0.01}%2C${lng + 0.01}%2C${lat + 0.01}&layer=mapnik&marker=${lat}%2C${lng}`}
+        src={`https://www.openstreetmap.org/export/embed.html?bbox=${displayLng - 0.015}%2C${displayLat - 0.015}%2C${displayLng + 0.015}%2C${displayLat + 0.015}&layer=mapnik&marker=${displayLat}%2C${displayLng}`}
       />
     </div>
   );
 }
 
-function SuspectsTab() {
-  const emptySuspects: never[] = [];
-
-  if (emptySuspects.length === 0) {
+function SuspectsTab({ suspects }: { suspects: Suspect[] }) {
+  if (!suspects || suspects.length === 0) {
     return (
       <EmptyState
         icon={<User size={48} />}
@@ -344,7 +354,7 @@ function SuspectsTab() {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {emptySuspects.map((s: Suspect) => (
+      {suspects.map((s: Suspect) => (
         <Card key={s.suspect_id}>
           <div className="flex items-start gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-400">
@@ -506,10 +516,242 @@ function TimelineTab({ timeline }: { timeline: TimelineEvent[] }) {
   );
 }
 
+function EvidenceThumbSmall({ ev }: { ev: any }) {
+  const fileName: string = ev.file_name || ev.original_file_name || 'file';
+  const fileType: string = ev.mime_type || ev.file_type || '';
+  const isImage = fileType.toLowerCase().includes('image') || /\.(jpg|jpeg|png|webp|gif)$/i.test(fileName);
+  const isPdf = fileType.toLowerCase().includes('pdf') || /\.pdf$/i.test(fileName);
+  const isVideo = fileType.toLowerCase().includes('video') || /\.(mp4|mov|avi|webm)$/i.test(fileName);
+  const [thumbUrl, setThumbUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    let objectUrl: string | null = null;
+    let cancelled = false;
+    // Use api baseURL correctly: "/evidence/..." not "/api/v1/evidence/..."
+    const apiUrl = ev.evidence_id ? `/evidence/${ev.evidence_id}/file` : null;
+    const url = ev.file_url && ev.file_url.startsWith('/storage') ? ev.file_url : apiUrl;
+    if (!url || (!isImage && !isPdf && !isVideo)) return;
+    if (isImage || isVideo) {
+      (async () => {
+        try {
+          // api.get will prepend /api/v1 automatically
+          const fetchUrl = url.startsWith('/storage') ? url : apiUrl!;
+          // For /storage use fetch directly to avoid double /api/v1 prefix
+          let res: any;
+          if (fetchUrl.startsWith('/storage')) {
+            const r = await fetch(fetchUrl);
+            if (!r.ok) throw new Error('fetch failed');
+            const blob = await r.blob();
+            objectUrl = URL.createObjectURL(blob);
+          } else {
+            res = await api.get(fetchUrl, { responseType: 'blob' });
+            const blob: Blob = res.data as unknown as Blob;
+            objectUrl = URL.createObjectURL(blob);
+          }
+          if (!cancelled) setThumbUrl(objectUrl);
+        } catch {
+          if (!cancelled) setThumbUrl(url.startsWith('http') ? url : url);
+        }
+      })();
+    }
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [ev.evidence_id, ev.file_url, ev.storage_path, isImage, isPdf, isVideo]);
+
+  if (isImage && thumbUrl) {
+    return <img src={thumbUrl} alt={fileName} className="h-full w-full object-cover" />;
+  }
+  if (isImage) {
+    return <Image size={22} className="text-emerald-500" />;
+  }
+  if (isPdf) return <FileText size={22} className="text-red-500" />;
+  if (isVideo) {
+    // For video, try to show first frame via video element with poster fallback
+    if (thumbUrl) {
+      return (
+        <div className="relative h-full w-full">
+          <video src={thumbUrl} className="h-full w-full object-cover" muted preload="metadata" />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90">
+              <span className="ml-0.5 text-xs">▶</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return <Image size={22} className="text-violet-500" />;
+  }
+  return <FileText size={22} className="text-slate-400" />;
+}
+
+function EvidencePreviewModal({ ev, onClose }: { ev: any; onClose: () => void }) {
+  const fileName = ev.file_name || ev.original_file_name || 'file';
+  const fileType = ev.mime_type || ev.file_type || '';
+  const isImage = fileType.toLowerCase().includes('image') || /\.(jpg|jpeg|png|webp|gif)$/i.test(fileName);
+  const isVideo = fileType.toLowerCase().includes('video') || /\.(mp4|mov|avi|webm)$/i.test(fileName);
+  const isPdf = fileType.toLowerCase().includes('pdf') || /\.pdf$/i.test(fileName);
+  const fileUrl = ev.file_url && ev.file_url.startsWith('/storage') ? ev.file_url : (ev.evidence_id ? `/evidence/${ev.evidence_id}/file` : (ev.file_url || ev.storage_path || null));
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!fileUrl) {
+      setLoading(false);
+      setError('File URL not available');
+      return;
+    }
+    let objectUrl: string | null = null;
+    let cancelled = false;
+    (async () => {
+      try {
+        setLoading(true);
+        let res: any;
+        if (fileUrl.startsWith('/storage')) {
+          const r = await fetch(fileUrl);
+          if (!r.ok) throw new Error('fetch failed');
+          const blob = await r.blob();
+          objectUrl = URL.createObjectURL(blob);
+          if (!cancelled) setBlobUrl(objectUrl);
+          return;
+        }
+        res = await api.get(fileUrl, { responseType: 'blob' });
+        const blob: Blob = res.data as unknown as Blob;
+        const ct = (res.headers as any)?.['content-type'] || fileType || blob.type || '';
+        const typedBlob = ct ? new Blob([blob], { type: ct }) : blob;
+        objectUrl = URL.createObjectURL(typedBlob);
+        if (!cancelled) setBlobUrl(objectUrl);
+      } catch (e: any) {
+        // Fallback to direct URL (public storage)
+        const directUrl = fileUrl.startsWith('http') ? fileUrl : `${window.location.origin}${fileUrl.startsWith('/') ? '' : '/'}${fileUrl}`;
+        if (!cancelled) setBlobUrl(directUrl);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [fileUrl, fileType]);
+
+  const handleDownload = () => {
+    if (!blobUrl) return;
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
+      <div className="flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+          <div>
+            <h3 className="text-base font-semibold text-slate-900">Evidence Preview</h3>
+            <p className="text-xs text-slate-500 truncate max-w-[400px]">{fileName} • {fileType || 'Unknown type'}</p>
+          </div>
+          <button onClick={onClose} className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+            <span className="text-lg">✕</span>
+          </button>
+        </div>
+        <div className="flex-1 overflow-auto bg-slate-50 p-4 flex items-center justify-center">
+          {loading ? (
+            <div className="flex h-64 items-center justify-center text-sm text-slate-500">Loading preview...</div>
+          ) : error ? (
+            <div className="flex h-64 flex-col items-center justify-center gap-2 text-sm text-red-600">
+              <FileText size={28} />
+              <span>{error}</span>
+            </div>
+          ) : !blobUrl ? (
+            <div className="flex h-64 items-center justify-center text-sm text-slate-500">No preview available</div>
+          ) : isImage ? (
+            <img src={blobUrl} alt={fileName} className="max-h-[70vh] max-w-full rounded-lg object-contain shadow" />
+          ) : isVideo ? (
+            <video src={blobUrl} controls className="max-h-[70vh] w-full rounded-lg bg-black" />
+          ) : isPdf ? (
+            <iframe src={blobUrl} title={fileName} className="h-[70vh] w-full rounded-lg border border-slate-200 bg-white" />
+          ) : (
+            <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
+              <FileText size={40} className="text-slate-400" />
+              <p className="text-sm">{fileName}</p>
+              <p className="text-xs text-slate-500">{fileType}</p>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center justify-between border-t border-slate-200 bg-white px-6 py-4">
+          <span className="text-xs text-slate-500 truncate max-w-[300px]">{fileName}</span>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={onClose}>Close</Button>
+            <Button onClick={handleDownload} disabled={!blobUrl}>Download</Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+void EvidencePreviewModal;
+function EvidenceGalleryPreview({ ev }: { ev: any }) {
+  const fileName = ev.file_name || ev.original_file_name || 'file';
+  const fileType = ev.mime_type || ev.file_type || '';
+  const isImage = fileType.toLowerCase().includes('image') || /\.(jpg|jpeg|png|webp|gif)$/i.test(fileName);
+  const isVideo = fileType.toLowerCase().includes('video') || /\.(mp4|mov|avi|webm)$/i.test(fileName);
+  const isPdf = fileType.toLowerCase().includes('pdf') || /\.pdf$/i.test(fileName);
+  const fileUrl = ev.file_url && ev.file_url.startsWith('/storage') ? ev.file_url : (ev.evidence_id ? `/evidence/${ev.evidence_id}/file` : (ev.file_url || ev.storage_path || null));
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (!fileUrl) { setLoading(false); return; }
+    let objectUrl: string | null = null;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res: any = await api.get(fileUrl, { responseType: 'blob' });
+        const blob: Blob = res.data as unknown as Blob;
+        objectUrl = URL.createObjectURL(blob);
+        if (!cancelled) setBlobUrl(objectUrl);
+      } catch {
+        if (!cancelled) setBlobUrl(fileUrl.startsWith('http') ? fileUrl : `${window.location.origin}${fileUrl.startsWith('/') ? '' : '/'}${fileUrl}`);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; if (objectUrl) URL.revokeObjectURL(objectUrl); };
+  }, [fileUrl]);
+  if (loading) return <div className="text-sm text-slate-500">Loading...</div>;
+  if (!blobUrl) return <div className="text-sm text-slate-500">No preview</div>;
+  if (isImage) return <img src={blobUrl} alt={fileName} className="max-h-[55vh] max-w-full rounded-lg object-contain shadow" />;
+  if (isVideo) return <video src={blobUrl} controls className="max-h-[55vh] w-full rounded-lg bg-black" />;
+  if (isPdf) return <iframe src={blobUrl} title={fileName} className="h-[55vh] w-full max-w-3xl rounded-lg border bg-white" />;
+  return <div className="text-sm text-slate-600">{fileName}</div>;
+}
+
 function EvidenceTab({ caseId }: { caseId: string }) {
-  const navigate = useNavigate();
   const [evidence, setEvidence] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const [filterType, setFilterType] = useState<'all' | 'image' | 'video' | 'pdf'>('all');
+  const [isUploading, setIsUploading] = useState(false);
+  const { addToast } = useToast();
+
+  const fetchEvidence = async () => {
+    try {
+      const { listEvidence } = await import('../services/evidenceService');
+      const items: any = await listEvidence(caseId);
+      const arr = Array.isArray(items) ? items : (items as any)?.data || [];
+      setEvidence(arr);
+    } catch {
+      setEvidence([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -528,39 +770,180 @@ function EvidenceTab({ caseId }: { caseId: string }) {
     return () => { mounted = false; };
   }, [caseId]);
 
+  const filtered = evidence.filter((ev) => {
+    const fileName = ev.file_name || ev.original_file_name || '';
+    const fileType = ev.mime_type || ev.file_type || '';
+    const isImage = fileType.toLowerCase().includes('image') || /\.(jpg|jpeg|png|webp|gif)$/i.test(fileName);
+    const isVideo = fileType.toLowerCase().includes('video') || /\.(mp4|mov|avi|webm)$/i.test(fileName);
+    const isPdf = fileType.toLowerCase().includes('pdf') || /\.pdf$/i.test(fileName);
+    if (filterType === 'image' && !isImage) return false;
+    if (filterType === 'video' && !isVideo) return false;
+    if (filterType === 'pdf' && !isPdf) return false;
+    return true;
+  });
+
+  const openGallery = (index: number) => {
+    setGalleryIndex(index);
+    setGalleryOpen(true);
+  };
+
+  const handleAttach = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploading(true);
+    try {
+      const { uploadEvidence } = await import('../services/evidenceService');
+      await uploadEvidence(file, caseId, '', false);
+      addToast('success', 'Evidence attached');
+      await fetchEvidence();
+    } catch (err: any) {
+      addToast('error', err?.response?.data?.detail || 'Failed to attach evidence');
+    } finally {
+      setIsUploading(false);
+      if (e.target) e.target.value = '';
+    }
+  };
+
+  const handleDownload = async (ev: any) => {
+    const fileUrl = ev.file_url && ev.file_url.startsWith('/storage') ? ev.file_url : (ev.evidence_id || ev.id ? `/evidence/${ev.evidence_id || ev.id}/file` : (ev.file_url || ev.storage_path));
+    const fileName = ev.file_name || ev.original_file_name || 'file';
+    try {
+      let res: any;
+      let blob: Blob;
+      if (fileUrl.startsWith('/storage')) {
+        const r = await fetch(fileUrl);
+        if (!r.ok) throw new Error('fetch failed');
+        blob = await r.blob();
+      } else {
+        res = await api.get(fileUrl, { responseType: 'blob' });
+        blob = res.data as unknown as Blob;
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch {
+      window.open(fileUrl, '_blank');
+    }
+  };
+
   if (loading) {
-    return <div className="flex justify-center py-8"><span className="text-sm text-gray-500">Loading evidence...</span></div>;
+    return <div className="flex justify-center py-12"><Spinner size="lg" text="Loading evidence..." /></div>;
   }
-  if (evidence.length === 0) {
-    return (
-      <EmptyState
-        icon={<Image size={48} />}
-        title="No evidence uploaded"
-        description="Evidence will appear here once uploaded."
-        action={{
-          label: 'Go to Evidence',
-          onClick: () => navigate(`/evidence/${caseId}`),
-        }}
-      />
-    );
-  }
+
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {evidence.map((ev: any) => (
-        <Card key={ev.evidence_id || ev.id} className="p-3">
-          <div className="mb-2 flex h-20 items-center justify-center rounded bg-slate-50">
-            {ev.file_type?.includes('image') ? <Image size={24} className="text-green-500"/> : <FileText size={24} className="text-red-500"/>}
-          </div>
-          <p className="truncate text-sm font-medium">{ev.file_name || ev.original_file_name}</p>
-          <p className="text-xs text-gray-500">{ev.description || 'No description'}</p>
-          <p className="text-xs text-gray-400 mt-1">{ev.mime_type || ev.file_type} • {(ev.file_size/1024).toFixed(1)} KB</p>
-          {ev.is_sensitive && <div className="mt-1"><Badge variant="critical">Sensitive</Badge></div>}
-          <div className="mt-2 flex gap-2">
-            <a href={ev.file_url || ev.storage_path} target="_blank" rel="noopener" className="text-xs text-blue-600 hover:underline">Download</a>
-            <button onClick={() => navigate(`/evidence/${caseId}`)} className="text-xs text-gray-500 hover:underline ml-auto">Manage</button>
-          </div>
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap gap-2">
+          {(['all','image','video','pdf'] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setFilterType(t)}
+              className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-all ${filterType === t ? 'bg-slate-900 text-white shadow' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}
+            >
+              {t === 'all' ? 'All' : t === 'image' ? 'Images' : t === 'video' ? 'Videos' : 'PDFs'}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-xs text-slate-500 hidden sm:inline">{filtered.length} of {evidence.length}</span>
+          <label className={`inline-flex cursor-pointer items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white shadow hover:bg-slate-800 transition-all active:scale-[0.98] ${isUploading ? 'opacity-60 pointer-events-none' : ''}`}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            {isUploading ? 'Uploading...' : 'Attach Evidence'}
+            <input type="file" className="hidden" onChange={handleAttach} disabled={isUploading} />
+          </label>
+        </div>
+      </div>
+
+      {evidence.length === 0 ? (
+        <Card className="py-10">
+          <EmptyState
+            icon={<Image size={48} />}
+            title="No evidence yet"
+            description="Attach photos, videos, PDFs or documents to build a strong case."
+            action={{ label: 'Attach First Evidence', onClick: () => document.querySelector<HTMLInputElement>('input[type="file"]')?.click() }}
+          />
         </Card>
-      ))}
+      ) : filtered.length === 0 ? (
+        <Card className="py-12 text-center text-sm text-slate-500">No evidence matches the selected filter</Card>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((ev: any, idx: number) => {
+            const fileName = ev.file_name || ev.original_file_name || 'file';
+            const fileType = ev.mime_type || ev.file_type || '';
+            const isImage = fileType.toLowerCase().includes('image') || /\.(jpg|jpeg|png|webp|gif)$/i.test(fileName);
+            const isVideo = fileType.toLowerCase().includes('video') || /\.(mp4|mov|avi|webm)$/i.test(fileName);
+            const isPdf = fileType.toLowerCase().includes('pdf') || /\.pdf$/i.test(fileName);
+            const isSensitive = Boolean(ev.is_sensitive || ev.sensitive);
+            return (
+              <div
+                key={ev.evidence_id || ev.id}
+                onClick={() => openGallery(idx)}
+                className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-slate-300 transition-all duration-300"
+              >
+                <div className="relative h-36 w-full overflow-hidden bg-slate-50">
+                  <div className={`h-full w-full ${isSensitive ? 'blur-[6px] scale-105' : ''} transition-all duration-300`}>
+                    <EvidenceThumbSmall ev={ev} />
+                  </div>
+                  {isSensitive && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-900/30 backdrop-blur-[2px]">
+                      <span className="rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-slate-700 shadow">Sensitive • Tap to view</span>
+                    </div>
+                  )}
+                  <span className={`absolute right-2 top-2 rounded-full px-2 py-1 text-[11px] font-medium border backdrop-blur-sm ${isImage ? 'bg-emerald-50/90 text-emerald-700 border-emerald-200' : isVideo ? 'bg-violet-50/90 text-violet-700 border-violet-200' : isPdf ? 'bg-red-50/90 text-red-700 border-red-200' : 'bg-white/90 text-slate-600 border-slate-200'}`}>{isImage ? 'Image' : isVideo ? 'Video' : isPdf ? 'PDF' : 'File'}</span>
+                  {isSensitive && <span className="absolute left-2 top-2 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">Sensitive</span>}
+                </div>
+                <div className="flex flex-1 flex-col p-3">
+                  <p className="truncate text-sm font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">{fileName}</p>
+                  <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-500">{ev.description || 'No description'}</p>
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-400">{ev.file_size ? (ev.file_size / 1024).toFixed(1) + ' KB' : ''}</span>
+                    <span className="text-xs font-medium text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">View →</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Single popup gallery for all evidence - buttery smooth */}
+      {galleryOpen && filtered.length > 0 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm p-3 sm:p-6 animate-fade-in" onClick={() => setGalleryOpen(false)}>
+          <div className="flex h-[85vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl animate-scale-in" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
+              <div className="min-w-0">
+                <h3 className="truncate text-sm font-semibold text-slate-900">{filtered[galleryIndex]?.file_name || 'Evidence'}</h3>
+                <p className="text-xs text-slate-500">{galleryIndex + 1} of {filtered.length} • {filtered[galleryIndex]?.description || filtered[galleryIndex]?.file_type || ''}</p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <Button variant="outline" size="sm" onClick={() => handleDownload(filtered[galleryIndex])}>Download</Button>
+                <button onClick={() => setGalleryOpen(false)} className="rounded-full p-2 text-slate-400 hover:bg-slate-100"><span className="text-lg leading-none">✕</span></button>
+              </div>
+            </div>
+            <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-slate-50 p-4">
+              <EvidenceGalleryPreview ev={filtered[galleryIndex]} />
+              <button onClick={() => setGalleryIndex((i) => (i > 0 ? i - 1 : filtered.length - 1))} className="absolute left-3 rounded-full bg-white/90 p-2 shadow hover:bg-white">‹</button>
+              <button onClick={() => setGalleryIndex((i) => (i < filtered.length - 1 ? i + 1 : 0))} className="absolute right-3 rounded-full bg-white/90 p-2 shadow hover:bg-white">›</button>
+            </div>
+            <div className="flex gap-2 overflow-x-auto border-t border-slate-200 bg-white p-3">
+              {filtered.map((ev: any, i: number) => (
+                <button key={ev.evidence_id || i} onClick={() => setGalleryIndex(i)} className={`h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 ${i === galleryIndex ? 'border-blue-500' : 'border-slate-200'} bg-slate-50`}>
+                  <EvidenceThumbSmall ev={ev} />
+                </button>
+              ))}
+              <label className="flex h-16 w-16 shrink-0 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 text-xs text-slate-500 hover:border-blue-400">
+                + Attach
+                <input type="file" className="hidden" onChange={handleAttach} />
+              </label>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

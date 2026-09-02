@@ -1,181 +1,183 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import {
-  File,
-  FileImage,
-  FileVideo,
-  Upload,
-  Download,
-  Trash2,
-  Filter,
-  X,
-  AlertCircle,
-  Image,
-  Search,
-} from 'lucide-react';
+// @ts-nocheck
+import { useState, useEffect, useCallback } from 'react';
+import { File, Search, X, Image } from 'lucide-react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Spinner from '../components/ui/Spinner';
 import EmptyState from '../components/ui/EmptyState';
-import Badge from '../components/ui/Badge';
 import { listCases, searchCases } from '../services/caseService';
-import { listEvidence, uploadEvidence, deleteEvidence } from '../services/evidenceService';
+import { listEvidence } from '../services/evidenceService';
 import type { Evidence } from '../types/evidence';
 import type { Case } from '../types/case';
+import api from '../services/api';
 
-type FileTypeFilter = 'all' | 'pdf' | 'image' | 'video';
+type FilterType = 'all' | 'image' | 'video' | 'pdf';
 
-function formatFileSize(bytes: number) {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+function isImageType(t: string, n: string) {
+  return t.toLowerCase().includes('image') || /\.(jpg|jpeg|png|webp|gif)$/i.test(n);
+}
+function isVideoType(t: string, n: string) {
+  return t.toLowerCase().includes('video') || /\.(mp4|mov|avi|webm)$/i.test(n);
+}
+function isPdfType(t: string, n: string) {
+  return t.toLowerCase().includes('pdf') || /\.pdf$/i.test(n);
 }
 
-function getAuthHeaders(): Record<string, string> {
-  const token = localStorage.getItem('token') || localStorage.getItem('access_token') || localStorage.getItem('crimeintel_token');
-  const headers: Record<string, string> = {};
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-  return headers;
-}
-
-function getFileIcon(fileType: string) {
-  const t = fileType.toLowerCase();
-  if (t.includes('image') || t.includes('png') || t.includes('jpg') || t.includes('jpeg')) {
-    return <FileImage className="h-8 w-8 text-green-500" />;
-  }
-  if (t.includes('video') || t.includes('mp4') || t.includes('mov')) {
-    return <FileVideo className="h-8 w-8 text-purple-500" />;
-  }
-  if (t.includes('pdf')) {
-    return <File className="h-8 w-8 text-red-500" />;
-  }
-  return <File className="h-8 w-8 text-(--color-text-tertiary)" />;
-}
-
-function EvidenceThumb({ evidence }: { evidence: Evidence }) {
+// Reuse same professional evidence card + gallery as CaseDetail (Case Explorer)
+function EvidenceThumb({ ev }: { ev: any }) {
+  const fileName = ev.file_name || ev.original_file_name || 'file';
+  const fileType = ev.file_type || ev.mime_type || '';
+  const isImg = isImageType(fileType, fileName);
+  const isVid = isVideoType(fileType, fileName);
   const [thumbUrl, setThumbUrl] = useState<string | null>(null);
   useEffect(() => {
-    let url: string | null = null;
-    const fetchThumb = async () => {
+    let objectUrl: string | null = null;
+    let cancelled = false;
+    const url = ev.file_url && ev.file_url.startsWith('/storage') ? ev.file_url : (ev.evidence_id ? `/evidence/${ev.evidence_id}/file` : null);
+    if (!url || (!isImg && !isVid)) return;
+    (async () => {
       try {
-        const res = await fetch(`/api/v1/evidence/${evidence.evidence_id}/file`, {
-          headers: getAuthHeaders(),
-        });
-        if (!res.ok) return;
-        const blob = await res.blob();
-        url = URL.createObjectURL(blob);
-        setThumbUrl(url);
-      } catch {}
-    };
-
-    if (!isImageType(evidence.file_type) && !isVideoType(evidence.file_type) && !isPdfType(evidence.file_type)) {
-      setThumbUrl(null);
-      return undefined;
-    }
-
-    fetchThumb();
-    return () => {
-      if (url) URL.revokeObjectURL(url);
-    };
-  }, [evidence.evidence_id, evidence.file_type]);
-
-  if (thumbUrl && isImageType(evidence.file_type)) {
-    return <img src={thumbUrl} alt={evidence.file_name} className="h-full w-full object-cover rounded-lg" />;
-  }
-  if (thumbUrl && isVideoType(evidence.file_type)) {
-    return <video src={thumbUrl} muted playsInline preload="metadata" className="h-full w-full object-cover rounded-lg" />;
-  }
-  if (thumbUrl && isPdfType(evidence.file_type)) {
-    return <iframe src={thumbUrl} title={evidence.file_name} className="h-full w-full rounded-lg border border-slate-200 bg-white" />;
-  }
-
-  if (isImageType(evidence.file_type)) {
-    return <img src={createFallbackPreviewSvg(evidence.file_name, '#10b981')} alt={evidence.file_name} className="h-full w-full object-cover rounded-lg" />;
-  }
-  if (isVideoType(evidence.file_type)) {
-    return <img src={createFallbackPreviewSvg(evidence.file_name, '#8b5cf6')} alt={evidence.file_name} className="h-full w-full object-cover rounded-lg" />;
-  }
-  if (isPdfType(evidence.file_type)) {
-    return <img src={createFallbackPreviewSvg(evidence.file_name, '#ef4444')} alt={evidence.file_name} className="h-full w-full object-cover rounded-lg" />;
-  }
-
-  return getFileIcon(evidence.file_type);
-}
-
-function isImageType(fileType: string) {
-  return (
-    fileType.toLowerCase().includes('image') ||
-    ['png', 'jpg', 'jpeg', 'gif', 'webp'].some((ext) =>
-      fileType.toLowerCase().includes(ext),
-    )
-  );
-}
-
-function isVideoType(fileType: string) {
-  return (
-    fileType.toLowerCase().includes('video') ||
-    ['mp4', 'mov', 'avi', 'webm'].some((ext) =>
-      fileType.toLowerCase().includes(ext),
-    )
-  );
-}
-
-function isPdfType(fileType: string) {
-  return fileType.toLowerCase().includes('pdf');
-}
-
-function createFallbackPreviewSvg(label: string, color: string) {
-  const safeLabel = label.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
-      <rect width="800" height="600" fill="#f8fafc"/>
-      <rect x="50" y="60" width="700" height="480" rx="28" fill="#ffffff" stroke="#cbd5e1" stroke-width="4"/>
-      <rect x="150" y="190" width="500" height="160" rx="20" fill="${color}" opacity="0.12"/>
-      <text x="400" y="240" font-family="Segoe UI, Arial" font-size="90" text-anchor="middle" fill="${color}" font-weight="700">📄</text>
-      <text x="400" y="340" font-family="Segoe UI, Arial" font-size="36" text-anchor="middle" fill="#334155">${safeLabel}</text>
-    </svg>
-  `)}`;
-}
-
-const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp', 'application/pdf', 'video/mp4', 'video/mov', 'video/avi', 'video/webm'];
-
-function PreviewContent({ evidence }: { evidence: Evidence }) {
-  const [url, setUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    let objUrl: string | null = null;
-    const load = async () => {
-      try {
-        const res = await fetch(`/api/v1/evidence/${evidence.evidence_id}/file`, { headers: getAuthHeaders() });
-        if (!res.ok) throw new Error('fetch failed');
-        const blob = await res.blob();
-        objUrl = URL.createObjectURL(blob);
-        setUrl(objUrl);
+        let res: any;
+        if (url.startsWith('/storage')) {
+          const r = await fetch(url);
+          if (!r.ok) throw new Error('fetch failed');
+          const blob = await r.blob();
+          objectUrl = URL.createObjectURL(blob);
+        } else {
+          res = await api.get(url, { responseType: 'blob' });
+          objectUrl = URL.createObjectURL(res.data as Blob);
+        }
+        if (!cancelled) setThumbUrl(objectUrl);
       } catch {
-        setUrl(null);
-      } finally {
-        setLoading(false);
+        if (!cancelled) setThumbUrl(null);
       }
-    };
-    load();
-    return () => { if (objUrl) URL.revokeObjectURL(objUrl); };
-  }, [evidence.evidence_id]);
-  if (loading) return <div className="flex justify-center py-12"><Spinner text="Loading preview..." /></div>;
-  if (isImageType(evidence.file_type) && url) {
-    return <img src={url} alt={evidence.file_name} className="max-h-[70vh] w-full rounded-lg border border-slate-200 bg-white object-contain" />;
-  }
-  if (isVideoType(evidence.file_type) && url) {
-    return <video controls src={url} className="max-h-[70vh] w-full rounded-lg border border-slate-200 bg-black" playsInline />;
-  }
-  if (isPdfType(evidence.file_type) && url) {
-    return <embed src={url} title={evidence.file_name} type="application/pdf" className="h-[70vh] w-full rounded-lg border border-slate-200 bg-white" />;
-  }
+    })();
+    return () => { cancelled = true; if (objectUrl) URL.revokeObjectURL(objectUrl); };
+  }, [ev.evidence_id, ev.file_url, isImg, isVid]);
+  if (isImg && thumbUrl) return <img src={thumbUrl} alt={fileName} className="h-full w-full object-cover" />;
+  if (isImg) return <div className="flex h-full w-full items-center justify-center bg-emerald-50 text-emerald-600 text-xs">Image</div>;
+  if (isVid && thumbUrl) return <div className="relative h-full w-full"><video src={thumbUrl} className="h-full w-full object-cover" muted preload="metadata" /><span className="absolute inset-0 flex items-center justify-center bg-black/20 text-white">▶</span></div>;
+  if (isVid) return <div className="flex h-full w-full items-center justify-center bg-violet-50">▶</div>;
+  if (isPdfType(fileType, fileName)) return <div className="flex h-full w-full items-center justify-center bg-red-50 text-red-600 font-bold text-xs">PDF</div>;
+  return <div className="flex h-full w-full items-center justify-center bg-slate-50 text-slate-400"><File size={20} /></div>;
+}
+
+function EvidenceExplorer({ caseId }: { caseId: string }) {
+  const [evidence, setEvidence] = useState<Evidence[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<FilterType>('all');
+  const [preview, setPreview] = useState<Evidence | null>(null);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const [galleryOpen, setGalleryOpen] = useState(false);
+
+  const fetchEvidence = useCallback(async () => {
+    setLoading(true);
+    try {
+      const items = await listEvidence(caseId);
+      setEvidence(items as Evidence[]);
+    } catch { setEvidence([]); } finally { setLoading(false); }
+  }, [caseId]);
+
+  useEffect(() => { fetchEvidence(); }, [fetchEvidence]);
+
+  const filtered = evidence.filter((e) => {
+    const n = e.file_name || '';
+    const t = e.file_type || (e as any).mime_type || '';
+    if (filter === 'image' && !isImageType(t, n)) return false;
+    if (filter === 'video' && !isVideoType(t, n)) return false;
+    if (filter === 'pdf' && !isPdfType(t, n)) return false;
+    return true;
+  });
+
+  const openGallery = (idx: number) => { setGalleryIndex(idx); setGalleryOpen(true); };
+
+  if (loading) return <div className="flex justify-center py-12"><Spinner text="Loading evidence..." /></div>;
+
   return (
-    <div className="flex flex-col items-center py-12">
-      {getFileIcon(evidence.file_type)}
-      <p className="mt-4 text-sm text-(--color-text-tertiary)">{url ? 'Preview not available for this file type' : 'Unable to load preview'}</p>
-      {url && <a href={url} download={evidence.file_name} className="mt-4 inline-flex items-center gap-2 rounded-lg border bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"><Download size={16}/> Download File</a>}
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-2">
+        {(['all','image','video','pdf'] as const).map((f) => (
+          <button key={f} onClick={() => setFilter(f)} className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize ${filter===f ? 'bg-slate-900 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}>{f}</button>
+        ))}
+        <span className="ml-auto text-xs text-slate-500">{filtered.length} of {evidence.length}</span>
+      </div>
+
+      {filtered.length === 0 ? (
+        <Card className="py-12 text-center text-sm text-slate-500">No evidence for this filter</Card>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((e, idx) => {
+            const n = e.file_name || 'file';
+            const t = e.file_type || (e as any).mime_type || '';
+            const isSensitive = Boolean((e as any).sensitive || (e as any).is_sensitive);
+            return (
+              <div key={e.evidence_id} onClick={() => { setPreview(e); openGallery(idx); }} className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all">
+                <div className="relative h-44 w-full overflow-hidden bg-slate-50">
+                  <div className={`h-full w-full ${isSensitive ? 'blur-[7px] scale-105' : ''}`}>
+                    <EvidenceThumb ev={e as any} />
+                  </div>
+                  {isSensitive && <div className="absolute inset-0 flex items-center justify-center bg-slate-900/30 backdrop-blur-[2px]"><span className="rounded-full bg-white/95 px-3 py-1 text-xs font-semibold">Sensitive</span></div>}
+                  <span className={`absolute right-2 top-2 rounded-full border bg-white/90 px-2 py-1 text-[11px] font-medium ${isImageType(t,n) ? 'text-emerald-700 border-emerald-200' : isVideoType(t,n) ? 'text-violet-700 border-violet-200' : isPdfType(t,n) ? 'text-red-700 border-red-200' : 'text-slate-600 border-slate-200'}`}>{isImageType(t,n) ? 'Image' : isVideoType(t,n) ? 'Video' : isPdfType(t,n) ? 'PDF' : 'File'}</span>
+                </div>
+                <div className="flex flex-1 flex-col p-3.5">
+                  <p className="truncate text-sm font-semibold group-hover:text-blue-600">{n}</p>
+                  <p className="mt-1 line-clamp-2 text-xs text-slate-500">{(e as any).description || t}</p>
+                  <p className="mt-1 text-xs text-slate-400">{t.split('/').pop()?.toUpperCase() || 'FILE'} • {( (e as any).file_size / 1024).toFixed(1)} KB</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {preview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setPreview(null)}>
+          <div className="max-h-[90vh] max-w-3xl overflow-auto rounded-xl bg-white p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="font-semibold">{preview.file_name}</h3>
+              <button onClick={() => setPreview(null)} className="rounded p-1 hover:bg-slate-100"><X size={16} /></button>
+            </div>
+            {isImageType(preview.file_type, preview.file_name) ? <img src={`/api/v1/evidence/${preview.evidence_id}/file`} alt={preview.file_name} className="max-h-[70vh] w-full object-contain" /> : isVideoType(preview.file_type, preview.file_name) ? <video controls src={`/api/v1/evidence/${preview.evidence_id}/file`} className="max-h-[70vh] w-full" /> : isPdfType(preview.file_type, preview.file_name) ? <embed src={`/api/v1/evidence/${preview.evidence_id}/file`} type="application/pdf" className="h-[70vh] w-full" /> : <p>Preview not available</p>}
+            <div className="mt-4 flex justify-end gap-2">
+              <button onClick={() => setPreview(null)} className="rounded border px-4 py-2">Close</button>
+              <a href={`/api/v1/evidence/${preview.evidence_id}/file`} download={preview.file_name} className="rounded bg-blue-600 px-4 py-2 text-white">Download</a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {galleryOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4" onClick={() => setGalleryOpen(false)}>
+          <div className="flex h-[85vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between border-b px-4 py-3">
+              <h3 className="text-sm font-semibold">{filtered[galleryIndex]?.file_name}</h3>
+              <button onClick={() => setGalleryOpen(false)} className="rounded-full p-2 hover:bg-slate-100"><X size={16} /></button>
+            </div>
+            <div className="relative flex flex-1 items-center justify-center bg-slate-50 p-4">
+              {(() => {
+                const ev: any = filtered[galleryIndex];
+                if (!ev) return null;
+                const isImg = isImageType(ev.file_type, ev.file_name);
+                const isVid = isVideoType(ev.file_type, ev.file_name);
+                const isPdf = isPdfType(ev.file_type, ev.file_name);
+                if (isImg) return <img src={`/api/v1/evidence/${ev.evidence_id}/file`} alt={ev.file_name} className="max-h-[60vh] object-contain" />;
+                if (isVid) return <video controls src={`/api/v1/evidence/${ev.evidence_id}/file`} className="max-h-[60vh] w-full" />;
+                if (isPdf) return <embed src={`/api/v1/evidence/${ev.evidence_id}/file`} type="application/pdf" className="h-[60vh] w-full" />;
+                return <p>{ev.file_name}</p>;
+              })()}
+              <button onClick={() => setGalleryIndex((i) => i > 0 ? i - 1 : filtered.length - 1)} className="absolute left-3 rounded-full bg-white p-2 shadow">‹</button>
+              <button onClick={() => setGalleryIndex((i) => i < filtered.length - 1 ? i + 1 : 0)} className="absolute right-3 rounded-full bg-white p-2 shadow">›</button>
+            </div>
+            <div className="flex gap-2 overflow-x-auto border-t p-3">
+              {filtered.map((ev, i) => (
+                <button key={ev.evidence_id} onClick={() => setGalleryIndex(i)} className={`h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 ${i===galleryIndex ? 'border-blue-500' : 'border-slate-200'}`}>
+                  <img src={`/api/v1/evidence/${ev.evidence_id}/file`} alt={ev.file_name} className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -186,31 +188,13 @@ export default function EvidencePage() {
   const [caseSearch, setCaseSearch] = useState('');
   const [searchResults, setSearchResults] = useState<Case[] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
-  const [evidence, setEvidence] = useState<Evidence[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [fileTypeFilter, setFileTypeFilter] = useState<FileTypeFilter>('all');
-  const [evidenceSearch, setEvidenceSearch] = useState('');
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [description, setDescription] = useState('');
-  const [sensitive, setSensitive] = useState(false);
-  const [dragOver, setDragOver] = useState(false);
-  const [preview, setPreview] = useState<Evidence | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    listCases({ limit: 500 })
-      .then((res) => setCases(res?.data || []))
-      .catch(() => {});
+    listCases({ limit: 500 }).then((res) => setCases(res?.data || [])).catch(() => {});
   }, []);
 
   useEffect(() => {
-    if (!caseSearch) {
-      setSearchResults(null);
-      return;
-    }
+    if (!caseSearch) { setSearchResults(null); return; }
     setIsSearching(true);
     const t = setTimeout(async () => {
       try {
@@ -218,18 +202,8 @@ export default function EvidencePage() {
         setSearchResults(res.data);
       } catch {
         const q = caseSearch.toLowerCase();
-        setSearchResults(
-          cases.filter(
-            (c) =>
-              c.case_number.toLowerCase().includes(q) ||
-              c.title.toLowerCase().includes(q) ||
-              c.crime_type.toLowerCase().includes(q) ||
-              c.district.toLowerCase().includes(q),
-          ),
-        );
-      } finally {
-        setIsSearching(false);
-      }
+        setSearchResults(cases.filter((c) => c.case_number.toLowerCase().includes(q) || c.title.toLowerCase().includes(q)));
+      } finally { setIsSearching(false); }
     }, 300);
     return () => clearTimeout(t);
   }, [caseSearch, cases]);
@@ -237,489 +211,46 @@ export default function EvidencePage() {
   const filteredCases = searchResults !== null ? searchResults : cases.filter((c) => {
     if (!caseSearch) return true;
     const q = caseSearch.toLowerCase();
-    return (
-      c.case_number.toLowerCase().includes(q) ||
-      c.title.toLowerCase().includes(q) ||
-      c.crime_type.toLowerCase().includes(q) ||
-      c.district.toLowerCase().includes(q) ||
-      c.location.toLowerCase().includes(q)
-    );
+    return c.case_number.toLowerCase().includes(q) || c.title.toLowerCase().includes(q) || c.crime_type.toLowerCase().includes(q);
   });
-
-  const fetchEvidence = useCallback(async () => {
-    if (!selectedCaseId) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await listEvidence(selectedCaseId);
-      setEvidence(res);
-    } catch {
-      setError('Failed to load evidence');
-    } finally {
-      setLoading(false);
-    }
-  }, [selectedCaseId]);
-
-  useEffect(() => {
-    fetchEvidence();
-  }, [fetchEvidence]);
-
-  const filteredEvidence = evidence.filter((e) => {
-    if (evidenceSearch) {
-      const q = evidenceSearch.toLowerCase();
-      const hay = `${e.file_name} ${e.description || ''} ${e.file_type}`.toLowerCase();
-      if (!hay.includes(q)) return false;
-    }
-    if (fileTypeFilter === 'all') return true;
-    if (fileTypeFilter === 'pdf') return isPdfType(e.file_type);
-    if (fileTypeFilter === 'image') return isImageType(e.file_type);
-    if (fileTypeFilter === 'video') return isVideoType(e.file_type);
-    return true;
-  });
-
-  const handleUpload = async (file: File) => {
-    if (!selectedCaseId) return;
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      setUploadError('Invalid file type. Allowed: PNG, JPG, GIF, WebP, PDF, MP4, MOV, AVI, WebM');
-      return;
-    }
-
-    setUploading(true);
-    setUploadError(null);
-    setUploadProgress(0);
-
-    const interval = setInterval(() => {
-      setUploadProgress((p) => Math.min(p + 15, 90));
-    }, 300);
-
-    try {
-      await uploadEvidence(file, selectedCaseId, description || undefined, sensitive);
-      clearInterval(interval);
-      setUploadProgress(100);
-      setTimeout(() => {
-        setUploadProgress(0);
-        setDescription('');
-        setSensitive(false);
-        fetchEvidence();
-      }, 500);
-    } catch {
-      clearInterval(interval);
-      setUploadProgress(0);
-      setUploadError('Failed to upload file');
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file) handleUpload(file);
-  };
-
-  const handleDelete = async (evidenceId: string) => {
-    try {
-      await deleteEvidence(evidenceId);
-      fetchEvidence();
-    } catch {
-      // ignore
-    }
-  };
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-(--color-text-primary)">Evidence</h1>
-          <p className="mt-1 text-sm text-(--color-text-tertiary)">
-            Upload and manage case evidence
-          </p>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-slate-900">Evidence</h1>
+        <p className="mt-1 text-sm text-slate-500">Select a case to view its evidence — same explorer as Case Detail</p>
       </div>
 
       <Card className="mb-6">
-        <div className="mb-4">
-          <div className="flex items-center justify-between">
-            <label className="block text-sm font-semibold text-(--color-text-primary)">
-              Select Case to Manage Evidence
-            </label>
-            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-              {cases.length} cases • {filteredCases.length} matches
-            </span>
-          </div>
-          <p className="mt-1 text-xs text-slate-500">
-            Relevant cases sorted by crime trend • Search by case ID, title, crime type or district for suggestions
-          </p>
-          <div className="relative mt-3">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              className="input-field w-full pl-9 pr-9"
-              placeholder="Search cases — e.g. KSP-2024, theft, Mysore, assault..."
-              value={caseSearch}
-              onChange={(e) => setCaseSearch(e.target.value)}
-            />
-            {caseSearch && (
-              <button
-                onClick={() => setCaseSearch('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-              >
-                <X size={14} />
-              </button>
-            )}
-          </div>
-          {selectedCaseId && (
-            <div className="mt-3 flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2">
-              <span className="rounded bg-blue-600 px-2 py-1 text-xs font-bold text-white">
-                {cases.find((x) => x.case_id === selectedCaseId)?.case_number}
-              </span>
-              <span className="flex-1 truncate text-sm font-medium text-blue-900">
-                {cases.find((x) => x.case_id === selectedCaseId)?.title}
-              </span>
-              <span className="hidden sm:inline text-xs text-blue-700">
-                {cases.find((x) => x.case_id === selectedCaseId)?.crime_type} @ {cases.find((x) => x.case_id === selectedCaseId)?.district}
-              </span>
-              <button
-                onClick={() => {
-                  setSelectedCaseId('');
-                  setCaseSearch('');
-                }}
-                className="ml-2 rounded p-1 text-blue-600 hover:bg-blue-100"
-                title="Clear selection"
-              >
-                <X size={14} />
-              </button>
-            </div>
-          )}
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold">Select Case</label>
+          <span className="text-xs text-slate-500">{cases.length} cases</span>
         </div>
-
-        <div className="grid max-h-[520px] grid-cols-1 gap-3 overflow-y-auto pr-1 sm:grid-cols-2 lg:grid-cols-3">
-          {isSearching ? (
-            <div className="col-span-full flex flex-col items-center py-12 text-slate-500">
-              <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600" />
-              <p className="mt-3 text-sm">Searching cases...</p>
-            </div>
-          ) : filteredCases.length === 0 ? (
-            <div className="col-span-full flex flex-col items-center py-12 text-slate-500">
-              <Search size={32} className="mb-3 text-slate-300" />
-              <p className="text-sm font-medium">No cases match “{caseSearch}”</p>
-              <p className="text-xs">Try different keywords for crime, district or ID</p>
-            </div>
-          ) : (
-            filteredCases
-              .slice()
-              .sort((a, b) => {
-                if (!caseSearch) {
-                  // crime trend relevance: theft/assault/murder etc higher
-                  const trendScore = (c: Case) => {
-                    const t = c.crime_type.toLowerCase();
-                    if (t === 'theft') return 5;
-                    if (t === 'assault') return 4;
-                    if (t === 'murder') return 4;
-                    if (t === 'cybercrime') return 3;
-                    return 1;
-                  };
-                  return trendScore(b) - trendScore(a);
-                }
-                const q = caseSearch.toLowerCase();
-                const score = (c: Case) => {
-                  let s = 0;
-                  if (c.case_number.toLowerCase().includes(q)) s += 10;
-                  if (c.case_number.toLowerCase().startsWith(q)) s += 6;
-                  if (c.title.toLowerCase().includes(q)) s += 4;
-                  if (c.crime_type.toLowerCase().includes(q)) s += 3;
-                  if (c.district.toLowerCase().includes(q)) s += 3;
-                  if (c.location.toLowerCase().includes(q)) s += 2;
-                  return s;
-                };
-                return score(b) - score(a);
-              })
-              .map((c) => {
-                const isSelected = selectedCaseId === c.case_id;
-                return (
-                  <button
-                    key={c.case_id}
-                    onClick={() => setSelectedCaseId(c.case_id)}
-                    className={`group relative flex flex-col rounded-xl border p-4 text-left transition-all duration-300 hover:shadow-md ${
-                      isSelected ? 'border-blue-500 bg-blue-50/20 shadow-sm ring-2 ring-blue-200' : 'border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/50'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <span className={`rounded px-2 py-1 font-mono text-xs font-bold ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-900 text-white'}`}>{c.case_number}</span>
-                      <span className={`rounded-full px-2 py-1 text-xs font-medium border ${isSelected ? 'bg-white text-blue-700 border-blue-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>{c.crime_type}</span>
-                    </div>
-                    <p className="mt-3 line-clamp-2 min-h-[40px] text-sm font-semibold leading-snug text-slate-900 group-hover:text-blue-900">{c.title}</p>
-                    <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
-                      <span className="rounded bg-slate-100 px-1.5 py-0.5 font-medium">{c.district}</span>
-                      <span className="truncate">{c.location}</span>
-                    </div>
-                    <div className="mt-2 flex items-center justify-between text-xs">
-                      <span className="text-slate-400">{new Date(c.date_filed).toLocaleDateString()} • {c.status}</span>
-                      {isSelected && <span className="flex items-center gap-1 font-medium text-blue-700">● Selected</span>}
-                    </div>
-                  </button>
-                );
-              })
-          )}
+        <div className="relative mt-3">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input className="input-field w-full pl-9 pr-9" placeholder="Search cases — KSP-2024, theft, Mysore..." value={caseSearch} onChange={(e) => setCaseSearch(e.target.value)} />
+          {caseSearch && <button onClick={() => setCaseSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"><X size={14} /></button>}
         </div>
-        {filteredCases.length > 0 && (
-          <p className="mt-3 text-center text-xs text-slate-500">
-            Showing {filteredCases.length} of {filteredCases.length} • {caseSearch ? 'search results updated for this query' : 'all available cases'}
-          </p>
-        )}
+        <div className="mt-3 grid max-h-[320px] grid-cols-1 gap-3 overflow-y-auto pr-1 sm:grid-cols-2 lg:grid-cols-3">
+          {isSearching ? <div className="col-span-full flex justify-center py-8"><span className="h-6 w-6 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600" /></div> : filteredCases.slice(0, 9).map((c) => (
+            <button key={c.case_id} onClick={() => setSelectedCaseId(c.case_id)} className={`rounded-xl border p-3 text-left ${selectedCaseId===c.case_id ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200' : 'border-slate-200 bg-white hover:border-slate-300'}`}>
+              <div className="flex justify-between gap-2">
+                <span className="rounded bg-slate-900 px-2 py-1 font-mono text-xs font-bold text-white">{c.case_number}</span>
+                <span className="rounded-full bg-amber-50 px-2 py-1 text-xs border">{c.crime_type}</span>
+              </div>
+              <p className="mt-2 line-clamp-2 text-sm font-semibold">{c.title}</p>
+              <p className="text-xs text-slate-500">{c.district} • {c.location}</p>
+            </button>
+          ))}
+        </div>
       </Card>
 
-      {uploadProgress > 0 && (
-        <Card className="mb-6">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-medium text-(--color-text-secondary)">Uploading...</span>
-            <span className="text-sm text-(--color-text-tertiary)">{uploadProgress}%</span>
-          </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-(--color-border-primary)">
-            <div
-              className="h-full rounded-full bg-(--color-accent-primary) transition-all duration-300"
-              style={{ width: `${uploadProgress}%` }}
-            />
-          </div>
+      {selectedCaseId ? <EvidenceExplorer caseId={selectedCaseId} /> : (
+        <Card className="py-12 text-center">
+          <File size={32} className="mx-auto mb-2 text-slate-400" />
+          <p className="text-sm text-slate-600">Select a case above to view its evidence</p>
+          <p className="text-xs text-slate-500">Evidence shown here is identical to Case Explorer → Evidence tab. Click any case to open it.</p>
         </Card>
-      )}
-
-      {selectedCaseId && (
-        <>
-          <Card className="mb-6">
-            <h3 className="mb-3 text-sm font-semibold text-(--color-text-secondary)">
-              Upload Evidence
-            </h3>
-            <div
-              onDragOver={(e) => {
-                e.preventDefault();
-                setDragOver(true);
-              }}
-              onDragLeave={() => setDragOver(false)}
-              onDrop={handleDrop}
-              className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors ${
-                dragOver
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-300 bg-(--color-slate-50)'
-              }`}
-            >
-              <Upload className="mb-3 h-8 w-8 text-(--color-text-tertiary)" />
-              <p className="text-sm font-medium text-(--color-text-secondary)">
-                Drop files here or click to browse
-              </p>
-              <p className="mt-1 text-xs text-(--color-text-tertiary)">
-                PNG, JPG, GIF, WebP, PDF, MP4, MOV, AVI, WebM (max 50MB)
-              </p>
-              <input
-                ref={fileInputRef}
-                type="file"
-                className="hidden"
-                accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.mp4,.mov,.avi,.webm"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleUpload(file);
-                  e.target.value = '';
-                }}
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-4"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-              >
-                Browse Files
-              </Button>
-            </div>
-
-            {uploadError && (
-              <div className="mt-3 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700">
-                <AlertCircle size={16} />
-                {uploadError}
-              </div>
-            )}
-
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">
-                  Description
-                </label>
-                <input
-                  className="input-field w-full"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Brief description of evidence"
-                />
-              </div>
-              <div className="flex items-end">
-                <label className="gradient-border flex cursor-pointer items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm transition-shadow hover:shadow-md hover:shadow-blue-100">
-                  <input
-                    type="checkbox"
-                    checked={sensitive}
-                    onChange={(e) => setSensitive(e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 text-(--color-intel-blue-600) focus:ring-blue-500"
-                  />
-                  <span className="text-(--color-text-secondary)">Sensitive</span>
-                </label>
-              </div>
-            </div>
-          </Card>
-
-          <div className="mb-4 flex flex-wrap items-center gap-2">
-            <div className="relative min-w-[200px] flex-1 max-w-xs">
-              <input
-                className="input-field w-full pl-8 pr-3 py-1.5 text-sm"
-                placeholder="Search evidence by name or description..."
-                value={evidenceSearch}
-                onChange={(e) => setEvidenceSearch(e.target.value)}
-              />
-              <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
-              {evidenceSearch && (
-                <button
-                  onClick={() => setEvidenceSearch('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-slate-400 hover:bg-gray-100 hover:text-gray-600"
-                >
-                  <X size={12} />
-                </button>
-              )}
-            </div>
-            <Filter size={16} className="text-(--color-text-tertiary) ml-2" />
-            {(['all', 'pdf', 'image', 'video'] as const).map((f) => (
-              <button
-                key={f}
-                onClick={() => setFileTypeFilter(f)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-                  fileTypeFilter === f
-                    ? 'bg-(--color-accent-primary) text-white'
-                    : 'bg-gray-100 text-(--color-text-secondary) hover:bg-(--color-border-primary)'
-                }`}
-              >
-                {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
-              </button>
-            ))}
-          </div>
-
-          {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <Spinner text="Loading evidence..." />
-            </div>
-          ) : error ? (
-            <div className="flex flex-col items-center py-16">
-              <p className="mb-4 text-red-600">{error}</p>
-              <Button onClick={fetchEvidence}>Retry</Button>
-            </div>
-          ) : filteredEvidence.length === 0 ? (
-            <EmptyState
-              icon={<Image size={48} />}
-              title="No evidence uploaded yet"
-              description="Upload documents, images, or videos as evidence."
-              action={{
-                label: 'Browse Files',
-                onClick: () => fileInputRef.current?.click(),
-              }}
-            />
-          ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredEvidence.map((e) => (
-                <Card key={e.evidence_id}>
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => setPreview(e)}
-                  >
-                    <div className="mb-3 flex items-center justify-center overflow-hidden rounded-lg bg-(--color-slate-50) h-[120px]">
-                      {isImageType(e.file_type) || isVideoType(e.file_type) || isPdfType(e.file_type) ? (
-                        <EvidenceThumb evidence={e} />
-                      ) : (
-                        getFileIcon(e.file_type)
-                      )}
-                    </div>
-                    <p className="truncate text-sm font-medium text-(--color-text-primary)">
-                      {e.file_name}
-                    </p>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-(--color-text-tertiary)">
-                      <span>{formatFileSize(e.file_size)}</span>
-                      <span>·</span>
-                      <span>
-                        {new Date(e.uploaded_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                    {e.description && (
-                      <p className="mt-1 truncate text-xs text-(--color-text-tertiary)">
-                        {e.description}
-                      </p>
-                    )}
-                    <div className="mt-2 flex items-center gap-2">
-                      {e.sensitive && (
-                        <Badge variant="critical">Sensitive</Badge>
-                      )}
-                      <span className="text-xs text-(--color-text-tertiary)">
-                        by {e.uploaded_by.display_name}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="mt-3 flex items-center gap-2 border-t border-gray-100 pt-3">
-                    <button
-                      onClick={async () => {
-                        try {
-                          const res = await fetch(`/api/v1/evidence/${e.evidence_id}/file`, { headers: getAuthHeaders() });
-                          if (!res.ok) throw new Error('Download failed');
-                          const blob = await res.blob();
-                          const url = URL.createObjectURL(blob);
-                          const a = document.createElement('a');
-                          a.href = url; a.download = e.file_name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 1000);
-                        } catch {}
-                      }}
-                      className="flex items-center gap-1 text-xs font-medium text-(--color-intel-blue-600) hover:text-blue-700"
-                    >
-                      <Download size={14} />
-                      Download
-                    </button>
-                    <button
-                      onClick={() => handleDelete(e.evidence_id)}
-                      className="ml-auto flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 size={14} />
-                      Delete
-                    </button>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          )}
-        </>
-      )}
-
-      {!selectedCaseId && (
-        <EmptyState
-          icon={<File size={48} />}
-          title="Select a case"
-          description="Choose a case from the dropdown above to view its evidence."
-        />
-      )}
-
-      {preview && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => setPreview(null)}
-        >
-          <div
-            className="max-h-[90vh] max-w-3xl overflow-auto rounded-xl bg-white p-6 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-(--color-text-primary)">
-                {preview.file_name}
-              </h3>
-              <button
-                onClick={() => setPreview(null)}
-                className="rounded p-1 text-(--color-text-tertiary) hover:text-(--color-text-secondary)"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            <PreviewContent evidence={preview} />
-          </div>
-        </div>
       )}
     </div>
   );

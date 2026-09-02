@@ -183,17 +183,47 @@ async def get_heatmap_data(
         if not all_cases:
             return []
 
+        # Normalize district aliases to handle Shimoga/Shivamogga etc.
+        DISTRICT_ALIAS = {
+            "bengaluru urban": "bangalore urban",
+            "bengaluru rural": "bangalore rural",
+            "mysuru": "mysore",
+            "tumakuru": "tumkur",
+            "belagavi": "belgaum",
+            "shivamogga": "shimoga",
+            "kalaburagi": "gulbarga",
+            "chamarajanagar": "chamarajanagar",
+            "chikkmagaluru": "chikkamagaluru",
+        }
+        def normalize_district(d: str) -> str:
+            if not d:
+                return ""
+            ld = d.strip().lower()
+            return DISTRICT_ALIAS.get(ld, ld)
+
+        def normalize_date(s: str) -> str:
+            if not s:
+                return ""
+            ss = str(s).strip()
+            return ss[:10] if len(ss) >= 10 and ss[4] == "-" else ss
+
+        norm_district = normalize_district(district) if district else None
+        norm_from = normalize_date(from_date) if from_date else None
+        norm_to = normalize_date(to_date) if to_date else None
+        norm_crime = crime_type.lower().strip() if crime_type else None
+
         filtered = []
         missing_coords = 0
         for case in all_cases:
             date_str = case.get("date_filed") or case.get("created_at", "")
-            if from_date and date_str < from_date:
+            norm_date = normalize_date(date_str)
+            if norm_from and norm_date and norm_date < norm_from:
                 continue
-            if to_date and date_str > to_date:
+            if norm_to and norm_date and norm_date > norm_to:
                 continue
-            if crime_type and case.get("crime_type") != crime_type:
+            if norm_crime and (case.get("crime_type") or "").lower().strip() != norm_crime:
                 continue
-            if district and case.get("district") != district:
+            if norm_district and normalize_district(case.get("district") or "") != norm_district:
                 continue
 
             lat = case.get("latitude")

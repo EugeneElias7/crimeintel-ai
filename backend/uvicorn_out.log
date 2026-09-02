@@ -1,0 +1,157 @@
+[REGISTER] Checking email=finalcheck_20260902161049059_449358@ksp.gov.in badge=KSP449358 against 22 existing users
+INFO:     127.0.0.1:57820 - "POST /api/v1/auth/register HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:60136 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62497 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62499 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56028 - "GET /api/v1/analytics/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56029 - "GET /api/v1/cases?page=1&limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56033 - "GET /api/v1/analytics/trends HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56034 - "GET /api/v1/analytics/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56035 - "GET /api/v1/analytics/by-district HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56037 - "GET /api/v1/analytics/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63346 - "GET /api/v1/cases?page=1&limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58348 - "GET /api/v1/analytics/trends HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58349 - "GET /api/v1/analytics/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58350 - "GET /api/v1/analytics/by-district HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58351 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58355 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58363 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55678 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55684 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55691 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61059 - "GET /api/v1/crima/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64261 - "GET /api/v1/crima/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57089 - "GET /api/v1/analytics/overview?from=2026-08-03&to=2026-09-02 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57090 - "GET /api/v1/analytics/distribution?from=2026-08-03&to=2026-09-02 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59151 - "GET /api/v1/analytics/trends?from=2026-08-03&to=2026-09-02 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59152 - "GET /api/v1/analytics/by-district?from=2026-08-03&to=2026-09-02 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54729 - "GET /api/v1/analytics/overview?from=2026-08-03&to=2026-09-02 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54731 - "GET /api/v1/analytics/distribution?from=2026-08-03&to=2026-09-02 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51687 - "GET /api/v1/analytics/trends?from=2026-08-03&to=2026-09-02 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51688 - "GET /api/v1/analytics/by-district?from=2026-08-03&to=2026-09-02 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59918 - "GET /api/v1/analytics/heatmap/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59920 - "GET /api/v1/analytics/heatmap/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64261 - "GET /api/v1/cases?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64263 - "GET /api/v1/cases?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54442 - "GET /api/v1/analytics/heatmap/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60344 - "GET /api/v1/analytics/heatmap/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55131 - "GET /api/v1/analytics/heatmap/data?district=Bangalore+Urban HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62770 - "GET /api/v1/analytics/heatmap/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52111 - "GET /api/v1/analytics/heatmap/data?district=Belgaum HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54962 - "GET /api/v1/analytics/heatmap/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51895 - "GET /api/v1/cases?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53513 - "GET /api/v1/cases?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49671 - "GET /api/v1/cases?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57908 - "GET /api/v1/cases?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49406 - "GET /api/v1/cases?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49669 - "GET /api/v1/cases?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61779 - "GET /api/v1/admin/users?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50975 - "GET /api/v1/admin/users?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62961 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64578 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64579 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65112 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59381 - "DELETE /api/v1/admin/users/d7103b1f3f7f4ca8a33d4bb40f1135bc HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:59771 - "DELETE /api/v1/admin/users/d7103b1f3f7f4ca8a33d4bb40f1135bc HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:62579 - "GET /api/v1/admin/users?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64189 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64190 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60015 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64003 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54763 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59044 - "PATCH /api/v1/admin/users/759b94d49444484ab56c8b1cb911ab9a/verification HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51582 - "GET /api/v1/admin/users?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50678 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54594 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59700 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61147 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63204 - "PATCH /api/v1/admin/users/759b94d49444484ab56c8b1cb911ab9a/verification HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56280 - "GET /api/v1/admin/users?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64404 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56977 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62391 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62649 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51769 - "PATCH /api/v1/admin/users/f301a9b4cb594d77b029c54b320ea2ba/verification HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57036 - "GET /api/v1/admin/users?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64352 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63878 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65202 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65057 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63621 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62114 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60128 - "GET /api/v1/analytics/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60129 - "GET /api/v1/cases?page=1&limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60130 - "GET /api/v1/analytics/trends HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60131 - "GET /api/v1/analytics/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60132 - "GET /api/v1/analytics/by-district HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50083 - "GET /api/v1/analytics/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52123 - "GET /api/v1/analytics/trends HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52124 - "GET /api/v1/cases?page=1&limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55703 - "GET /api/v1/analytics/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55704 - "GET /api/v1/analytics/by-district HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55705 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60828 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60832 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60836 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60841 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60845 - "GET /api/v1/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63012 - "GET /api/v1/cases?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51114 - "GET /api/v1/cases?limit=500 HTTP/1.1" 200 OK
+[REGISTER] Checking email=muthu@gmail.com badge=KSP873 against 23 existing users
+INFO:     127.0.0.1:58120 - "POST /api/v1/auth/register HTTP/1.1" 409 Conflict
+[REGISTER] Checking email=muthuman@gmail.com badge=KSP873 against 24 existing users
+INFO:     127.0.0.1:61812 - "POST /api/v1/auth/register HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:49671 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49673 - "GET /api/v1/analytics/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49680 - "GET /api/v1/cases?page=1&limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49684 - "GET /api/v1/analytics/trends HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49685 - "GET /api/v1/analytics/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49686 - "GET /api/v1/analytics/by-district HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62525 - "GET /api/v1/analytics/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55578 - "GET /api/v1/cases?page=1&limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52117 - "GET /api/v1/analytics/trends HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56582 - "GET /api/v1/analytics/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56583 - "GET /api/v1/analytics/by-district HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52246 - "GET /api/v1/admin/users?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50502 - "GET /api/v1/admin/users?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58872 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51529 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62611 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52058 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52069 - "GET /api/v1/admin/users?page=2&limit=15 HTTP/1.1" 200 OK
+[REGISTER] Checking email=muthumann@gmail.com badge=KSP873 against 25 existing users
+INFO:     127.0.0.1:52071 - "POST /api/v1/auth/register HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:50401 - "GET /api/v1/admin/users?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59586 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53923 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53924 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53223 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63098 - "GET /api/v1/admin/users?page=2&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59429 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50063 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50065 - "GET /api/v1/admin/users?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50067 - "GET /api/v1/admin/users?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50070 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50071 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53277 - "GET /api/v1/api/v1/admin/users/usr_003/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53278 - "GET /api/v1/api/v1/admin/users/usr_005/verification/file HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65355 - "GET /api/v1/crima/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56289 - "GET /api/v1/crima/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50605 - "GET /api/v1/cases?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50607 - "GET /api/v1/cases?page=1&limit=15 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50610 - "GET /api/v1/cases/FIR-2026-873327 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50611 - "GET /api/v1/cases/FIR-2026-873327/related HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50613 - "GET /api/v1/cases/FIR-2026-873327 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50615 - "GET /api/v1/cases/FIR-2026-873327/related HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58111 - "GET /api/v1/evidence/case/FIR-2026-873327 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58244 - "GET /api/v1/evidence/case/FIR-2026-873327 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53838 - "GET /api/v1/storage/cases/FIR-2026-873327/evidence/3d93a3ba_1788262345.jpg HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54652 - "GET /api/v1/storage/cases/FIR-2026-873327/evidence/3d93a3ba_1788262345.jpg HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58962 - "GET /api/v1/evidence/case/FIR-2026-873327 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50883 - "GET /api/v1/evidence/case/FIR-2026-873327 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54765 - "GET /api/v1/storage/cases/FIR-2026-873327/evidence/3d93a3ba_1788262345.jpg HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61076 - "GET /api/v1/storage/cases/FIR-2026-873327/evidence/3d93a3ba_1788262345.jpg HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64007 - "GET /api/v1/cases?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64009 - "GET /api/v1/cases?limit=500 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51237 - "GET /api/v1/evidence/case/FIR-2026-420424 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57599 - "GET /api/v1/evidence/91254083115f4b6e82938579e6a17b44/file HTTP/1.1" 200 OK

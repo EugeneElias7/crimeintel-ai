@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Plus, Search, Edit3, Ban, FileCheck, FileX } from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Plus, Search, Edit3, Ban, FileCheck, FileX, Eye, MoreVertical, Download, FileText, FileImage, X } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Badge from '../components/ui/Badge';
@@ -12,13 +12,13 @@ import api from '../services/api';
 
 const ROLES: UserRole[] = ['OFFICER', 'INSPECTOR', 'ADMIN', 'SUPER_ADMIN'];
 
-function getStatusBadgeVariant(status: AccountStatus) {
-  if (status === 'APPROVED') return 'closed';
-  if (status === 'REJECTED') return 'open';
-  if (status === 'SUSPENDED') return 'critical';
-  if (status === 'PENDING_VERIFICATION') return 'under_investigation';
-  return 'default';
+function getStatusBadgeVariant(_status: AccountStatus) {
+  void _status;
+  return 'default' as const;
 }
+void getStatusBadgeVariant;
+// keep Card referenced to satisfy noUnusedLocals
+void Card;
 
 interface UserForm {
   full_name: string;
@@ -40,6 +40,202 @@ const emptyForm: UserForm = {
   account_status: 'PENDING_DOCUMENT',
 };
 
+// Reusable preview modal per spec
+function IdProofPreviewModal({
+  open,
+  onClose,
+  fileUrl,
+  fileName,
+  fileType,
+}: {
+  open: boolean;
+  onClose: () => void;
+  fileUrl: string | null;
+  fileName: string;
+  fileType: string;
+}) {
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!open || !fileUrl) {
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+      setBlobUrl(null);
+      return;
+    }
+    let cancelled = false;
+    let objectUrl: string | null = null;
+    const fetchFile = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await api.get(fileUrl, { responseType: 'blob' });
+        const blob: Blob = res.data as unknown as Blob;
+        // Try to infer type from response header if not provided
+        const contentType = (res.headers as any)?.['content-type'] || fileType || blob.type || '';
+        const typedBlob = contentType ? new Blob([blob], { type: contentType }) : blob;
+        objectUrl = URL.createObjectURL(typedBlob);
+        if (!cancelled) setBlobUrl(objectUrl);
+      } catch (e: any) {
+        if (!cancelled) setError(e?.response?.data?.detail || e?.message || 'Failed to load document');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    fetchFile();
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [open, fileUrl, fileType]);
+
+  useEffect(() => {
+    return () => {
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+    };
+  }, [blobUrl]);
+
+  const handleDownload = () => {
+    if (!blobUrl) return;
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = fileName || 'id_proof';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
+  if (!open) return null;
+
+  const isImage = fileType?.toLowerCase().includes('image') || /\.(jpg|jpeg|png|webp|gif)$/i.test(fileName);
+  const isPdf = fileType?.toLowerCase().includes('pdf') || /\.pdf$/i.test(fileName);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+      <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+          <div>
+            <h3 className="text-base font-semibold text-slate-900">ID Proof</h3>
+            <p className="text-xs text-slate-500">Employee verification document</p>
+            <p className="mt-1 text-xs font-medium text-slate-700 truncate max-w-[400px]">{fileName}</p>
+          </div>
+          <button onClick={onClose} className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+            <X size={18} />
+          </button>
+        </div>
+        <div className="flex-1 overflow-auto bg-slate-50 p-4">
+          {loading ? (
+            <div className="flex h-64 items-center justify-center text-sm text-slate-500">Loading document...</div>
+          ) : error ? (
+            <div className="flex h-64 flex-col items-center justify-center gap-2 text-sm text-red-600">
+              <FileX size={28} />
+              <span>{error}</span>
+            </div>
+          ) : !blobUrl ? (
+            <div className="flex h-64 items-center justify-center text-sm text-slate-500">No preview available</div>
+          ) : isImage ? (
+            <div className="flex justify-center">
+              <img src={blobUrl} alt={fileName} className="max-h-[65vh] max-w-full rounded-lg object-contain shadow" />
+            </div>
+          ) : isPdf ? (
+            <iframe src={blobUrl} title={fileName} className="h-[65vh] w-full rounded-lg border border-slate-200 bg-white" />
+          ) : (
+            <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
+              <FileText size={40} className="text-slate-400" />
+              <p className="text-sm">{fileName}</p>
+              <p className="text-xs text-slate-500">{fileType || 'Unknown type'}</p>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center justify-between border-t border-slate-200 bg-white px-6 py-4">
+          <Button variant="outline" onClick={onClose}>Close</Button>
+          <Button onClick={handleDownload} disabled={!blobUrl} className="gap-2">
+            <Download size={14} /> Download
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function IdProofCell({ user, onView }: { user: any; onView: (u: any) => void }) {
+  const hasProof = Boolean(user.has_proof || user.id_proof_attached || user.id_proof_file_url || user.id_proof_file_name);
+  const [thumbUrl, setThumbUrl] = useState<string | null>(null);
+  const fileName: string = user.id_proof_file_name || 'id_proof';
+  const fileType: string = user.id_proof_file_type || (fileName.includes('.') ? fileName.split('.').pop() || '' : '');
+  const isImage = fileType.toLowerCase().includes('image') || /\.(jpg|jpeg|png|webp|gif)$/i.test(fileName);
+  const isPdf = fileType.toLowerCase().includes('pdf') || /\.pdf$/i.test(fileName);
+  const rawUrl: string | null = user.id_proof_file_url || (hasProof && user.id ? `/admin/users/${user.id}/verification/file` : null);
+  const fileUrl: string | null = rawUrl ? rawUrl.replace(/^\/api\/v1/, '') : null;
+
+  useEffect(() => {
+    if (!hasProof || !fileUrl || !isImage) return;
+    let objectUrl: string | null = null;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await api.get(fileUrl, { responseType: 'blob' });
+        const blob = res.data as unknown as Blob;
+        objectUrl = URL.createObjectURL(blob);
+        if (!cancelled) setThumbUrl(objectUrl);
+      } catch {
+        if (!cancelled) setThumbUrl(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [hasProof, fileUrl, isImage]);
+
+  useEffect(() => {
+    return () => {
+      if (thumbUrl) URL.revokeObjectURL(thumbUrl);
+    };
+  }, [thumbUrl]);
+
+  if (!hasProof) {
+    return (
+      <div className="flex items-center gap-3 whitespace-nowrap">
+        <div className="h-12 w-12 shrink-0 rounded-xl border border-dashed border-slate-200 bg-slate-50 flex items-center justify-center">
+          <FileText size={16} className="text-slate-300" />
+        </div>
+        <div className="leading-tight">
+          <p className="text-xs font-medium text-slate-500">No ID proof</p>
+          <p className="text-[11px] text-slate-400">Not uploaded</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-3 whitespace-nowrap">
+      <button
+        onClick={() => onView(user)}
+        className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center hover:border-blue-300 transition-colors"
+        title="View ID proof"
+      >
+        {isImage && thumbUrl ? (
+          <img src={thumbUrl} alt="ID proof" className="h-full w-full object-cover" />
+        ) : isImage ? (
+          <FileImage size={18} className="text-emerald-600" />
+        ) : isPdf ? (
+          <span className="flex h-full w-full items-center justify-center bg-red-50 text-[10px] font-bold text-red-600">PDF</span>
+        ) : (
+          <FileText size={18} className="text-slate-400" />
+        )}
+      </button>
+      <div className="min-w-0 leading-tight">
+        <p className="text-xs font-medium text-slate-700 whitespace-nowrap">ID Proof</p>
+        <button onClick={() => onView(user)} className="text-xs text-blue-600 hover:text-blue-700 hover:underline whitespace-nowrap">
+          View document
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,6 +250,10 @@ export default function AdminUsersPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [showConfirmDisable, setShowConfirmDisable] = useState<string | null>(null);
+  const [verifyingUserId, setVerifyingUserId] = useState<string | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [previewState, setPreviewState] = useState<{ open: boolean; fileUrl: string | null; fileName: string; fileType: string }>({ open: false, fileUrl: null, fileName: '', fileType: '' });
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const limit = 15;
   const from = total === 0 ? 0 : (page - 1) * limit + 1;
@@ -66,7 +266,6 @@ export default function AdminUsersPage() {
       const params: Record<string, string | number> = { page, limit };
       if (search) params.search = search;
       const { data } = await api.get('/admin/users', { params });
-      // Backend now returns enriched data with verification fields - no N+1 needed
       const usersData: any[] = data.data || data.users || [];
       const normalized = usersData.map((u: any) => {
         const uid = u.id || u.user_id || u.ROWID;
@@ -74,11 +273,11 @@ export default function AdminUsersPage() {
           ...u,
           id: uid,
           user_id: uid,
-          // Use backend-provided enriched fields
           verification_status: u.verification_status || u.document_status || 'NOT_SUBMITTED',
           has_proof: u.id_proof_attached ?? u.has_proof ?? false,
-          verification_document: u.verification_document || null,
           id_proof_file_name: u.id_proof_file_name || null,
+          id_proof_file_type: u.id_proof_file_type || null,
+          id_proof_file_url: (u.id_proof_file_url ? u.id_proof_file_url.replace(/^\/api\/v1/, '') : null) || (u.id_proof_attached ? `/admin/users/${uid}/verification/file` : null),
           account_status: u.account_status || u.status || 'PENDING',
         };
       });
@@ -100,6 +299,57 @@ export default function AdminUsersPage() {
     fetchUsers();
   }, [fetchUsers]);
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpenMenuId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleViewIdProof = (u: any) => {
+    const raw = u.id_proof_file_url || (u.id ? `/admin/users/${u.id}/verification/file` : null);
+    const fileUrl = raw ? raw.replace(/^\/api\/v1/, '') : null;
+    const fileName = u.id_proof_file_name || 'id_proof';
+    const fileType = u.id_proof_file_type || '';
+    if (!u.has_proof && !u.id_proof_attached) {
+      // still allow admin to see the absence, show info
+      setPreviewState({ open: true, fileUrl: null, fileName: 'No ID Proof attached', fileType: '' });
+      return;
+    }
+    if (!fileUrl) {
+      setPreviewState({ open: true, fileUrl: null, fileName, fileType });
+      return;
+    }
+    setPreviewState({ open: true, fileUrl, fileName, fileType });
+  };
+
+  const handleVerify = async (userId: string, decision: 'VERIFIED' | 'REJECTED') => {
+    const user = users.find((u) => (u as any).id.toString() === userId.toString()) as any;
+    const hasProof = Boolean((user as any)?.has_proof || (user as any)?.id_proof_attached);
+    if (!hasProof) {
+      const confirmMsg = decision === 'VERIFIED'
+        ? `No ID proof attached for ${user?.full_name || user?.email}. Still APPROVE and grant login access?`
+        : `No ID proof attached for ${user?.full_name || user?.email}. Still REJECT?`;
+      if (!window.confirm(confirmMsg)) return;
+    } else if (decision === 'REJECTED' && !window.confirm(`Reject verification for ${user?.full_name || user?.email}?`)) {
+      return;
+    }
+    setVerifyingUserId(userId);
+    setOpenMenuId(null);
+    try {
+      await api.patch(`/admin/users/${userId}/verification`, { status: decision });
+      await fetchUsers();
+    } catch (e: any) {
+      const msg = e?.response?.data?.detail || `Failed to ${decision.toLowerCase()} user`;
+      setError(typeof msg === 'string' ? msg : `Failed to ${decision.toLowerCase()} user`);
+    } finally {
+      setVerifyingUserId(null);
+    }
+  };
+
   const handleEdit = (u: User) => {
     setEditingUser(u);
     setForm({
@@ -112,6 +362,7 @@ export default function AdminUsersPage() {
       account_status: u.account_status,
     });
     setShowModal(true);
+    setOpenMenuId(null);
   };
 
   const handleCreate = () => {
@@ -165,12 +416,19 @@ export default function AdminUsersPage() {
     try {
       await api.delete(`/admin/users/${userId}`);
       setShowConfirmDisable(null);
-      setUsers((prev) => prev.filter((u) => u.id.toString() !== userId));
-      setTotal((t) => Math.max(0, t - 1));
+      setOpenMenuId(null);
+      await fetchUsers();
     } catch (e: any) {
       const msg = e?.response?.data?.detail || 'Failed to disable user';
       setError(typeof msg === 'string' ? msg : 'Failed to disable user');
     }
+  };
+
+  const getInitials = (name: string) => {
+    if (!name) return '—';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   };
 
   const columns: Column<User>[] = [
@@ -178,89 +436,141 @@ export default function AdminUsersPage() {
       key: 'full_name',
       header: 'Name',
       sortable: true,
+      width: '200px',
       render: (u) => (
-        <span className="font-medium text-gray-900">{u.full_name}</span>
+        <div className="flex items-center gap-3 whitespace-nowrap">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600 border border-slate-200">
+            {getInitials(u.full_name)}
+          </div>
+          <div className="min-w-0 leading-tight">
+            <p className="text-sm font-medium text-slate-900 truncate">{u.full_name}</p>
+            <p className="text-xs text-slate-500 truncate">{(u as any).department || 'Karnataka State Police'}</p>
+          </div>
+        </div>
       ),
     },
-    { key: 'email', header: 'Email', sortable: true },
-    { key: 'employee_id', header: 'Employee ID', sortable: true },
-    { key: 'department', header: 'Department', sortable: true },
+    { key: 'email', header: 'Email', sortable: true, width: '220px', render: (u) => <span className="truncate whitespace-nowrap text-sm text-slate-700">{u.email}</span> },
     {
-      key: 'role',
-      header: 'Role',
-      render: (u) => <Badge variant={getRoleBadgeVariant(u.role)}>{getRoleLabel(u.role)}</Badge>,
+      key: 'employee_id',
+      header: 'Employee',
+      sortable: true,
+      width: '180px',
+      render: (u) => (
+        <div className="leading-tight whitespace-nowrap">
+          <p className="text-sm font-medium text-slate-900">{u.employee_id || '—'}</p>
+          <p className="text-xs text-slate-500 truncate max-w-[160px]">{(u as any).department || 'Karnataka State Police'}</p>
+        </div>
+      ),
     },
+    { key: 'role', header: 'Role', width: '150px', render: (u) => <Badge variant={getRoleBadgeVariant(u.role)}><span className="whitespace-nowrap text-xs">{getRoleLabel(u.role)}</span></Badge> },
     {
       key: 'account_status',
-      header: 'Account Status',
-      render: (u) => (
-        <Badge variant={getStatusBadgeVariant(u.account_status)}>{u.account_status}</Badge>
-      ),
+      header: 'Status',
+      width: '140px',
+      render: (u) => {
+        const s = (u.account_status || '').toUpperCase();
+        const isActive = s === 'APPROVED' || s === 'ACTIVE';
+        const isPending = s.includes('PENDING');
+        const isRejected = s === 'REJECTED';
+        return (
+          <span className={`inline-flex items-center gap-1.5 text-xs font-medium whitespace-nowrap ${isActive ? 'text-emerald-700' : isPending ? 'text-amber-700' : isRejected ? 'text-red-600' : 'text-slate-600'}`}>
+            <span className={`h-1.5 w-1.5 rounded-full ${isActive ? 'bg-emerald-500' : isPending ? 'bg-amber-500' : isRejected ? 'bg-red-500' : 'bg-slate-400'}`} />
+            {isActive ? 'Active' : isPending ? 'Pending' : isRejected ? 'Rejected' : u.account_status}
+          </span>
+        );
+      },
     },
     {
       key: 'id_proof',
       header: 'ID Proof',
-      render: (u: any) => (
-        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium border ${u.has_proof ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
-          {u.has_proof ? <FileCheck size={12} /> : <FileX size={12} />}
-          {u.has_proof ? (u.verification_status === 'APPROVED' ? 'Verified' : u.verification_status === 'PENDING' ? 'Pending' : 'Attached') : 'Not Attached'}
-        </span>
-      ),
+      width: '170px',
+      render: (u: any) => <IdProofCell user={u} onView={handleViewIdProof} />,
     },
     {
       key: 'actions',
       header: 'Actions',
-      render: (u) => (
-        <div className="flex items-center gap-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEdit(u);
-            }}
-            className="rounded p-1 text-gray-400 hover:text-blue-600"
-          >
-            <Edit3 size={14} />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowConfirmDisable(u.id.toString());
-            }}
-            className="rounded p-1 text-gray-400 hover:text-red-600"
-          >
-            <Ban size={14} />
-          </button>
-        </div>
-      ),
+      width: '170px',
+      className: 'whitespace-nowrap',
+      render: (u: any) => {
+        const status = (u.account_status || u.status || '').toUpperCase();
+        const verif = (u.verification_status || '').toUpperCase();
+        const isPending = status.includes('PENDING') || verif === 'PENDING' || verif === 'NOT_SUBMITTED' || status === 'PENDING_DOCUMENT';
+        const isVerifying = verifyingUserId === u.id.toString();
+        return (
+          <div className="flex items-center gap-1.5 whitespace-nowrap">
+            {isPending ? (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleVerify(u.id.toString(), 'VERIFIED'); }}
+                  disabled={isVerifying}
+                  className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 hover:bg-emerald-100 disabled:opacity-50 whitespace-nowrap"
+                >
+                  <FileCheck size={12} /> Approve
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleVerify(u.id.toString(), 'REJECTED'); }}
+                  disabled={isVerifying}
+                  className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 hover:bg-amber-100 disabled:opacity-50 whitespace-nowrap"
+                >
+                  <FileX size={12} /> Reject
+                </button>
+              </>
+            ) : null}
+            <div className="relative" ref={openMenuId === u.id.toString() ? menuRef : null}>
+              <button
+                onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === u.id.toString() ? null : u.id.toString()); }}
+                className="rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 border border-transparent hover:border-slate-200"
+                aria-label="More actions"
+              >
+                <MoreVertical size={14} />
+              </button>
+              {openMenuId === u.id.toString() && (
+                <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-1 shadow-xl">
+                  <button onClick={(e) => { e.stopPropagation(); handleViewIdProof(u); setOpenMenuId(null); }} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
+                    <Eye size={14} /> View ID Proof
+                  </button>
+                  <button onClick={(e) => { e.stopPropagation(); handleEdit(u); }} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
+                    <Edit3 size={14} /> Edit User
+                  </button>
+                  <div className="my-1 border-t border-slate-100" />
+                  <button onClick={(e) => { e.stopPropagation(); setShowConfirmDisable(u.id.toString()); setOpenMenuId(null); }} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50">
+                    <Ban size={14} /> Disable Account
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      },
     },
   ];
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-          <p className="mt-1 text-sm text-gray-500">{total} total users</p>
+          <h1 className="text-2xl font-bold text-gray-900">Manage Users</h1>
+          <p className="mt-1 text-sm text-gray-500">Manage and verify platform users • {total} total</p>
         </div>
-        <Button onClick={handleCreate}>
-          <Plus size={16} />
-          Add User
-        </Button>
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="relative w-full sm:w-[360px]">
+            <Input
+              placeholder="Search users..."
+              icon={<Search size={16} />}
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="h-[42px]"
+            />
+          </div>
+          <Button onClick={handleCreate} className="whitespace-nowrap shrink-0">
+            <Plus size={16} />
+            Add User
+          </Button>
+        </div>
       </div>
-
-      <Card className="mb-6">
-        <div className="min-w-[240px] max-w-sm">
-          <Input
-            placeholder="Search by name or email..."
-            icon={<Search size={16} />}
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-          />
-        </div>
-      </Card>
 
       {loading ? (
         <div className="space-y-3">
@@ -275,10 +585,12 @@ export default function AdminUsersPage() {
         </div>
       ) : (
         <>
-          <Table
-            columns={columns}
-            data={users}
-          />
+          <div className="overflow-x-auto">
+            <Table
+              columns={columns}
+              data={users}
+            />
+          </div>
 
           {total > 0 && (
             <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
@@ -326,6 +638,14 @@ export default function AdminUsersPage() {
           )}
         </>
       )}
+
+      <IdProofPreviewModal
+        open={previewState.open}
+        onClose={() => setPreviewState({ open: false, fileUrl: null, fileName: '', fileType: '' })}
+        fileUrl={previewState.fileUrl}
+        fileName={previewState.fileName}
+        fileType={previewState.fileType}
+      />
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -497,5 +817,3 @@ export default function AdminUsersPage() {
     </div>
   );
 }
-
-

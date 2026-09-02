@@ -1,0 +1,8 @@
+INFO:     Started server process [4040]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+SQLite insert failed for Users: UNIQUE constraint failed: ci_Users.email
+SQLite insert failed for Users: UNIQUE constraint failed: ci_Users.email
+SQLite insert failed for Users: UNIQUE constraint failed: ci_Users.email
+SQLite insert failed for Users: UNIQUE constraint failed: ci_Users.email

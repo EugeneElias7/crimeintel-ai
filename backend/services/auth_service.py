@@ -32,6 +32,21 @@ class AuthService:
         if not user:
             raise ValueError("User not found in database")
 
+        # Enforce verification: block login if not yet approved by admin
+        # Allow login for active/approved, also for admin/super_admin bypass
+        user_status_raw = (user.get("status") or "active").lower()
+        # Normalize: pending variants and rejected should block
+        blocked_statuses = {"pending", "pending_verification", "pending_document", "rejected", "suspended", "disabled"}
+        role_lower = (user.get("role") or "").lower()
+        is_privileged = role_lower in ("admin", "super_admin")
+        if user_status_raw in blocked_statuses and not is_privileged:
+            if user_status_raw == "rejected":
+                raise ValueError("Account has been rejected. Contact administrator.")
+            elif user_status_raw in ("pending_verification", "pending_document", "pending"):
+                raise ValueError("Account pending verification. Admin approval required before login.")
+            else:
+                raise ValueError(f"Account status '{user.get('status')}' does not allow login. Contact administrator.")
+
         role = user.get("role", "officer")
 
         token = create_access_token(

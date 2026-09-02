@@ -168,6 +168,18 @@ class AnalyticsService:
         }
 
     @staticmethod
+    def _normalize_date_str(date_str: str) -> str:
+        """Extract YYYY-MM-DD for reliable comparison, handling ISO datetime."""
+        if not date_str:
+            return ""
+        # Handle "2026-07-15T09:30:00Z" -> "2026-07-15"
+        s = str(date_str).strip()
+        # Take first 10 chars if ISO date
+        if len(s) >= 10 and s[4] == "-" and s[7] == "-":
+            return s[:10]
+        return s
+
+    @staticmethod
     def _filter_by_date(
         cases: list,
         from_date: Optional[str],
@@ -176,22 +188,26 @@ class AnalyticsService:
         if not from_date and not to_date:
             return cases
 
+        norm_from = AnalyticsService._normalize_date_str(from_date) if from_date else None
+        norm_to = AnalyticsService._normalize_date_str(to_date) if to_date else None
+
         filtered = []
         for case in cases:
             date_str = case.get("date_filed") or case.get("created_at", "")
             if not date_str:
+                # Keep cases with no date when filtering? Only if no range restricts — else include to avoid hiding open cases
+                # For heatmap we still want to show, so include
                 filtered.append(case)
                 continue
 
-            try:
-                dt = date_str if isinstance(date_str, str) else str(date_str)
-            except (ValueError, TypeError):
+            norm_dt = AnalyticsService._normalize_date_str(date_str)
+            if not norm_dt:
                 filtered.append(case)
                 continue
 
-            if from_date and dt < from_date:
+            if norm_from and norm_dt < norm_from:
                 continue
-            if to_date and dt > to_date:
+            if norm_to and norm_dt > norm_to:
                 continue
 
             filtered.append(case)

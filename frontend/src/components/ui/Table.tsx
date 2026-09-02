@@ -6,6 +6,8 @@ export interface Column<T> {
   header: string;
   sortable?: boolean;
   render?: (item: T) => ReactNode;
+  width?: string;
+  className?: string;
 }
 
 interface TableProps<T extends Record<string, any>> {
@@ -33,7 +35,8 @@ export default function Table<T extends Record<string, any>>({
             {columns.map((col) => (
               <th
                 key={col.key}
-                className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 ${
+                style={col.width ? { width: col.width, minWidth: col.width } : undefined}
+                className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 whitespace-nowrap ${col.className || ''} ${
                   col.sortable ? 'cursor-pointer select-none transition-colors hover:text-indigo-600' : ''
                 }`}
                 onClick={() => col.sortable && onSort?.(col.key)}
@@ -80,7 +83,7 @@ export default function Table<T extends Record<string, any>>({
                 onClick={() => onRowClick?.(item)}
               >
                 {columns.map((col) => (
-                  <td key={col.key} className="whitespace-nowrap px-4 py-3 text-sm text-gray-700">
+                  <td key={col.key} style={col.width ? { width: col.width, minWidth: col.width } : undefined} className={`px-4 py-4 text-sm text-gray-700 ${col.className || ''} ${col.key === 'actions' || col.key === 'id_proof' ? 'whitespace-nowrap' : ''}`}>
                     {col.render ? col.render(item) : (item[col.key] as ReactNode) ?? '-'}
                   </td>
                 ))}

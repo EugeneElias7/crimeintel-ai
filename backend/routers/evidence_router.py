@@ -87,6 +87,84 @@ def get_evidence_service() -> EvidenceService:
 
 
 @router.get(
+    "",
+    status_code=status.HTTP_200_OK,
+    summary="List all evidence (global gallery)",
+    include_in_schema=False,
+)
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    summary="List all evidence (global gallery)",
+)
+async def list_all_evidence(
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        all_items = await db.get_all("Evidence_Metadata")
+        if not all_items:
+            return []
+        result = []
+        for item in all_items:
+            try:
+                # Normalize uploaded_by
+                ub = item.get("uploaded_by")
+                if isinstance(ub, str):
+                    item["uploaded_by"] = {"user_id": ub, "display_name": ub}
+                elif not isinstance(ub, dict):
+                    item["uploaded_by"] = {"user_id": str(ub) if ub else "unknown", "display_name": str(ub) if isinstance(ub, str) else "Unknown"}
+                    if not isinstance(item["uploaded_by"], dict) or "user_id" not in item["uploaded_by"]:
+                        item["uploaded_by"] = {"user_id": "unknown", "display_name": "Unknown"}
+                # Normalize file_size
+                try:
+                    item["file_size"] = int(item.get("file_size", 0) or 0)
+                except:
+                    item["file_size"] = 0
+                # Ensure required fields
+                for fld in ["evidence_id", "case_id", "file_name", "file_type", "file_url", "uploaded_at"]:
+                    if fld not in item or item[fld] is None:
+                        if fld == "uploaded_at":
+                            item[fld] = "2026-01-01T00:00:00"
+                        elif fld == "file_size":
+                            item[fld] = 0
+                        else:
+                            item[fld] = ""
+                # Ensure uploaded_by has correct shape
+                if not isinstance(item.get("uploaded_by"), dict) or "display_name" not in item["uploaded_by"]:
+                    item["uploaded_by"] = {"user_id": "unknown", "display_name": "Unknown"}
+                # Try to validate, but fallback to raw dict on failure
+                try:
+                    validated = EvidenceResponse(**item)
+                    result.append(validated.model_dump())
+                except Exception as ve:
+                    logger.warning(f"Skipping validation for {item.get('evidence_id')}: {ve}")
+                    result.append({
+                        "evidence_id": str(item.get("evidence_id", "unknown")),
+                        "case_id": str(item.get("case_id", "")),
+                        "file_name": str(item.get("file_name", "file")),
+                        "file_type": str(item.get("file_type", "file")),
+                        "file_size": int(item.get("file_size", 0) or 0),
+                        "file_url": str(item.get("file_url", "")),
+                        "description": item.get("description"),
+                        "sensitive": bool(item.get("sensitive", False)),
+                        "uploaded_by": {"user_id": "unknown", "display_name": "Unknown"},
+                        "uploaded_at": str(item.get("uploaded_at", "2026-01-01T00:00:00"))
+                    })
+            except Exception as e:
+                logger.warning(f"Failed to process evidence item {item.get('evidence_id')}: {e}")
+                continue
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Failed to list all evidence: %s", e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to list evidence.",
+        )
+
+
+@router.get(
     "/case/{case_id}",
     response_model=list[EvidenceResponse],
     status_code=status.HTTP_200_OK,

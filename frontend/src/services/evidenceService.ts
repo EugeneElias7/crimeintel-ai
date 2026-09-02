@@ -19,7 +19,12 @@ function normalizeEvidenceResponse(res: any): Evidence | null {
 
 export const listEvidence = async (caseId: string): Promise<Evidence[]> => {
   const res = await api.get(`/evidence/case/${caseId}`);
-  return normalizeEvidenceListResponse(res);
+  return normalizeEvidenceListResponse(res.data);
+};
+
+export const listAllEvidence = async (): Promise<Evidence[]> => {
+  const res = await api.get(`/evidence`);
+  return normalizeEvidenceListResponse(res.data);
 };
 
 export const getEvidence = async (evidenceId: string): Promise<Evidence | null> => {

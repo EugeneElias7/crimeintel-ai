@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { User, Bell, Save } from 'lucide-react';
+import { User, Bell, Save, Settings as SettingsIcon } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
@@ -7,17 +7,21 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/ui/Toast';
 import { updateProfile } from '../services/authService';
 import { useAuthStore } from '../store/authStore';
+import api from '../services/api';
 
-type SettingsTab = 'profile' | 'notifications';
+type SettingsTab = 'profile' | 'notifications' | 'system';
 
 export default function SettingsPage() {
   const { user } = useAuth();
   const { addToast } = useToast();
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
+  const authUser = useAuthStore((s) => s.user);
+  const isAdmin = (authUser?.role || '').toLowerCase() === 'admin' || (authUser?.role || '').toLowerCase() === 'super_admin';
 
   const tabs: { key: SettingsTab; label: string; icon: React.ReactNode }[] = [
     { key: 'profile', label: 'Profile', icon: <User size={16} /> },
     { key: 'notifications', label: 'Notifications', icon: <Bell size={16} /> },
+    ...(isAdmin ? [{ key: 'system' as SettingsTab, label: 'System', icon: <SettingsIcon size={16} /> }] : []),
   ];
 
   return (
@@ -48,6 +52,7 @@ export default function SettingsPage() {
 
       {activeTab === 'profile' && <ProfileTab user={user} addToast={addToast} />}
       {activeTab === 'notifications' && <NotificationsTab />}
+      {activeTab === 'system' && <SystemTab addToast={addToast} />}
     </div>
   );
 }
@@ -219,6 +224,82 @@ function NotificationsTab() {
         <p className="text-xs text-(--color-text-tertiary)">
           Notification preferences are saved automatically
         </p>
+      </div>
+    </Card>
+  );
+}
+
+function SystemTab({ addToast }: { addToast: (type: 'success' | 'error', message: string) => void }) {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [settings, setSettings] = useState<Record<string, string>>({});
+  const [form, setForm] = useState({ session_timeout_minutes: '60', password_min_length: '8', max_upload_size_mb: '25' });
+
+  useEffect(() => {
+    let active = true;
+    const fetchSettings = async () => {
+      try {
+        setLoading(true);
+        const { data } = await api.get('/admin/settings');
+        const cfg = (data as any)?.data || data;
+        if (!active) return;
+        setSettings(cfg || {});
+        setForm({
+          session_timeout_minutes: cfg?.session_timeout_minutes || '60',
+          password_min_length: cfg?.password_min_length || '8',
+          max_upload_size_mb: cfg?.max_upload_size_mb || '25',
+        });
+      } catch (e: any) {
+        if (active) addToast('error', e?.response?.data?.detail || 'Failed to load system settings');
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+    fetchSettings();
+    return () => { active = false; };
+  }, [addToast]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const payload = {
+        session_timeout_minutes: form.session_timeout_minutes,
+        password_min_length: form.password_min_length,
+        max_upload_size_mb: form.max_upload_size_mb,
+      };
+      const { data } = await api.put('/admin/settings', payload);
+      const saved = (data as any)?.data || payload;
+      setSettings(saved);
+      addToast('success', 'System settings saved');
+    } catch (e: any) {
+      addToast('error', e?.response?.data?.detail || 'Failed to save settings');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return <Card><div className="py-8 text-center text-sm text-slate-500">Loading system settings...</div></Card>;
+  }
+
+  return (
+    <Card>
+      <div className="max-w-lg space-y-4">
+        <div>
+          <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">Session Timeout (minutes)</label>
+          <input className="w-full rounded-lg border border-(--color-border-primary) px-3 py-2 text-sm" value={form.session_timeout_minutes} onChange={(e) => setForm(f => ({ ...f, session_timeout_minutes: e.target.value }))} />
+          <p className="mt-1 text-xs text-(--color-text-tertiary)">Current: {settings.session_timeout_minutes || '—'}</p>
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">Password Min Length</label>
+          <input className="w-full rounded-lg border border-(--color-border-primary) px-3 py-2 text-sm" value={form.password_min_length} onChange={(e) => setForm(f => ({ ...f, password_min_length: e.target.value }))} />
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium text-(--color-text-secondary)">Max Upload Size (MB)</label>
+          <input className="w-full rounded-lg border border-(--color-border-primary) px-3 py-2 text-sm" value={form.max_upload_size_mb} onChange={(e) => setForm(f => ({ ...f, max_upload_size_mb: e.target.value }))} />
+        </div>
+        <Button onClick={handleSave} isLoading={saving} className="gap-2"><Save size={16} /> Save Settings</Button>
+        <p className="text-xs text-(--color-text-tertiary)">Settings are fetched from backend and persist after save.</p>
       </div>
     </Card>
   );

@@ -1,4 +1,5 @@
 import logging
+import mimetypes
 import os
 from datetime import datetime
 from pathlib import Path
@@ -73,6 +74,8 @@ class UserService:
             # Check id proof storage
             id_proof_attached = False
             id_proof_file_name = None
+            id_proof_file_type = None
+            id_proof_file_url = None
             verification_status = "NOT_SUBMITTED"
             if uid:
                 # New SQLite storage
@@ -91,9 +94,12 @@ class UserService:
                     if p.exists() and any(p.iterdir()):
                         id_proof_attached = True
                         try:
-                            files = list(p.iterdir())
+                            files = [ff for ff in p.iterdir() if ff.is_file()]
                             if files:
+                                files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
                                 id_proof_file_name = files[0].name
+                                id_proof_file_type = mimetypes.guess_type(files[0].name)[0] or "application/octet-stream"
+                                id_proof_file_url = f"/api/v1/admin/users/{uid}/verification/file"
                         except Exception:
                             pass
                         break
@@ -121,6 +127,8 @@ class UserService:
                 "verification_status": verification_status,
                 "id_proof_attached": id_proof_attached,
                 "id_proof_file_name": id_proof_file_name,
+                "id_proof_file_type": id_proof_file_type,
+                "id_proof_file_url": id_proof_file_url,
                 "is_active": u.get("status") not in ("disabled", "suspended", "rejected"),
                 # Keep original for compatibility
                 "status": account_status,
@@ -128,9 +136,11 @@ class UserService:
         return {"data": enriched, "total": total, "page": page, "pages": pages}
 
     async def create_user(self, data: UserCreate) -> dict:
-        existing = await self.db.query("Users", {"email": data.email})
-        if existing:
-            raise ValueError(f"User with email {data.email} already exists")
+        # Manual check to avoid Catalyst query edge cases (case sensitivity, missing index)
+        all_users = await self.db.get_all("Users") or []
+        for u in all_users:
+            if str(u.get("email", "")).strip().lower() == str(data.email).strip().lower():
+                raise ValueError(f"User with email {data.email} already exists")
 
         auth_user_id = None
         if self.auth:
@@ -200,12 +210,30 @@ class UserService:
         if not existing:
             raise ValueError("User not found")
 
-        await self.db.update("Users", user_id, {"status": "disabled"})
+        # Hard delete so user disappears from list and does not reappear on refresh
+        try:
+            await self.db.delete("Users", user_id)
+        except Exception:
+            # Fallback to status update if hard delete not supported
+            await self.db.update("Users", user_id, {"status": "disabled", "updated_at": datetime.utcnow().isoformat()})
+
+        # Also clean up verification documents if any
+        try:
+            from pathlib import Path as _P
+            for p in [
+                _P(__file__).parent.parent / "storage" / "verification_documents" / str(user_id),
+                _P(__file__).parent.parent / "storage" / "verification_documents" / f"user_{user_id}",
+            ]:
+                if p.exists():
+                    import shutil
+                    shutil.rmtree(str(p), ignore_errors=True)
+        except Exception:
+            pass
 
         await self.db.insert("Audit_Logs", {
             "user_id": user_id,
             "action": AUDIT_USER_DELETED,
             "module": "users",
-            "details": f"Disabled user {user_id}",
+            "details": f"Disabled/deleted user {user_id}",
             "created_at": datetime.utcnow().isoformat(),
         })

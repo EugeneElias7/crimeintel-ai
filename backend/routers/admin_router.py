@@ -1,7 +1,10 @@
 import logging
+import mimetypes
+from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi.responses import FileResponse
 
 from middleware.auth_middleware import get_current_user, require_role
 from models.common import PaginatedResponse, SuccessResponse
@@ -145,12 +148,19 @@ async def get_user_verification(
                 verification_status = "REJECTED"
             else:
                 verification_status = "PENDING"
+        file_type = None
+        file_url = None
+        if file_name:
+            file_type = mimetypes.guess_type(file_name)[0] or "application/octet-stream"
+            file_url = f"/api/v1/admin/users/{user_id}/verification/file"
         return SuccessResponse(data={
             "user_id": user_id,
             "verification_status": verification_status,
             "id_proof_attached": id_proof_attached,
             "id_proof_file_name": file_name,
             "id_proof_file_path": file_path,
+            "id_proof_file_type": file_type,
+            "id_proof_file_url": file_url,
             "account_status": user.get("status"),
         }, message="Verification details retrieved.")
     except HTTPException:
@@ -158,6 +168,53 @@ async def get_user_verification(
     except Exception as e:
         logger.exception("Failed to get verification for %s: %s", user_id, e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve verification.")
+
+
+@router.get(
+    "/users/{user_id}/verification/file",
+    summary="Download/view uploaded ID proof file",
+)
+async def get_user_verification_file(
+    user_id: str,
+    current_user: dict = Depends(_admin_role),
+):
+    # Also allow the user themselves to view their own proof
+    try:
+        user = await db.get("Users", user_id)
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        # Check multiple possible storage locations (mirrors get_user_verification)
+        candidates = [
+            Path(__file__).parent.parent / "storage" / "verification_documents" / str(user_id),
+            Path(__file__).parent.parent / "storage" / "verification_documents" / f"user_{user_id}",
+        ]
+        if isinstance(user_id, str) and user_id.startswith("usr_"):
+            try:
+                _num = user_id.split("_")[1].lstrip("0") or "0"
+                candidates.append(Path(__file__).parent.parent / "storage" / "verification_documents" / f"user_{_num}")
+            except Exception:
+                pass
+        file_path = None
+        for cand in candidates:
+            if cand.exists() and cand.is_dir():
+                try:
+                    files = [p for p in cand.iterdir() if p.is_file()]
+                    if files:
+                        # Prefer most recent
+                        files.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+                        file_path = files[0]
+                        break
+                except Exception:
+                    continue
+        if not file_path or not file_path.exists():
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No ID proof found for this user")
+        media_type = mimetypes.guess_type(str(file_path))[0] or "application/octet-stream"
+        return FileResponse(path=str(file_path), filename=file_path.name, media_type=media_type)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Failed to serve verification file for %s: %s", user_id, e)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve file")
 
 
 @router.patch(
@@ -200,7 +257,28 @@ async def update_user_verification(
             "created_at": datetime.utcnow().isoformat(),
         })
         updated = await db.get("Users", user_id)
-        return SuccessResponse(data={**updated, "verification_status": verification_status, "id_proof_attached": True}, message=f"Verification {verification_status} successfully.")
+        # Re-check actual ID proof attachment rather than hard-coding True
+        from pathlib import Path as _Path
+        _check_paths = [
+            _Path(__file__).parent.parent / "storage" / "verification_documents" / str(user_id),
+            _Path(__file__).parent.parent / "storage" / "verification_documents" / f"user_{user_id}",
+        ]
+        if isinstance(user_id, str) and user_id.startswith("usr_"):
+            try:
+                _num = user_id.split("_")[1].lstrip("0") or "0"
+                _check_paths.append(_Path(__file__).parent.parent / "storage" / "verification_documents" / f"user_{_num}")
+            except Exception:
+                pass
+        _actually_attached = any(p.exists() and any(p.iterdir()) for p in _check_paths if p.exists())
+        _file_name = None
+        for p in _check_paths:
+            if p.exists() and any(p.iterdir()):
+                try:
+                    _file_name = list(p.iterdir())[0].name
+                    break
+                except Exception:
+                    pass
+        return SuccessResponse(data={**updated, "verification_status": verification_status, "id_proof_attached": _actually_attached, "id_proof_file_name": _file_name}, message=f"Verification {verification_status} successfully.")
     except HTTPException:
         raise
     except Exception as e:

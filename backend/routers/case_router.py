@@ -342,6 +342,21 @@ async def add_suspect(
             "details": f"Added suspect '{body.name}' to case {case_id}",
         })
 
+        # RAG sync: update case embedding with suspect info
+        try:
+            from services.embedding_service import EmbeddingService
+            from services.faiss_service import FAISSService
+            case_row = await db.get("Cases", case_id)
+            if not case_row:
+                q = await db.query("Cases", {"case_id": case_id})
+                case_row = q[0] if q else None
+            if case_row:
+                doc_text = f"{case_row.get('crime_type','')} {case_row.get('location','')} {case_row.get('district','')} {case_row.get('description','')} {case_row.get('status','')} suspect {body.name}"
+                emb = await EmbeddingService().generate(doc_text)
+                await FAISSService().update(case_id, emb)
+        except Exception as e:
+            logger.warning("RAG sync suspect sync failed for case %s: %s", case_id, e)
+
         return SuccessResponse(data=row_data, message="Suspect added successfully.")
     except ValueError as e:
         raise HTTPException(
@@ -415,6 +430,21 @@ async def add_witness(
             "module": "cases",
             "details": f"Added witness '{body.name}' to case {case_id}",
         })
+
+        # RAG sync: update case embedding with witness info
+        try:
+            from services.embedding_service import EmbeddingService
+            from services.faiss_service import FAISSService
+            case_row = await db.get("Cases", case_id)
+            if not case_row:
+                q = await db.query("Cases", {"case_id": case_id})
+                case_row = q[0] if q else None
+            if case_row:
+                doc_text = f"{case_row.get('crime_type','')} {case_row.get('location','')} {case_row.get('district','')} {case_row.get('description','')} {case_row.get('status','')} witness {body.name}"
+                emb = await EmbeddingService().generate(doc_text)
+                await FAISSService().update(case_id, emb)
+        except Exception as e:
+            logger.warning("RAG sync witness sync failed for case %s: %s", case_id, e)
 
         return SuccessResponse(data=row_data, message="Witness added successfully.")
     except ValueError as e:

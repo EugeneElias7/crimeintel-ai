@@ -55,7 +55,14 @@ export default function CaseDetailPage() {
   const { user } = useAuth();
   const [caseDetail, setCaseDetail] = useState<CaseDetail | null>(null);
   const [relatedCases, setRelatedCases] = useState<Case[]>([]);
-  const [activeTab, setActiveTab] = useState<Tab>('fir');
+  // support navigation like /cases/{case_id}?tab=evidence via CRIMA clickable cards
+  const getInitialTab = (): Tab => {
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get('tab');
+    if (t && ['fir','suspects','witnesses','timeline','evidence'].includes(t)) return t as Tab;
+    return 'fir';
+  };
+  const [activeTab, setActiveTab] = useState<Tab>(getInitialTab);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -75,6 +82,14 @@ export default function CaseDetailPage() {
       addToast('error', typeof msg === 'string' ? msg : 'Failed to delete case');
     }
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get('tab');
+    if (t && ['fir','suspects','witnesses','timeline','evidence'].includes(t)) {
+      setActiveTab(t as Tab);
+    }
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;

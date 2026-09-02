@@ -22,5 +22,8 @@ export interface ChatMessage {
   role: 'user' | 'assistant';
   text: string;
   results?: QueryResult[];
+  intent?: string;
+  entities?: Record<string, any>;
+  sources?: string[];
   timestamp: string;
 }

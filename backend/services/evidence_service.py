@@ -154,6 +154,22 @@ class EvidenceService:
             "created_at": datetime.utcnow().isoformat(),
         })
 
+        # RAG sync: update case embedding with evidence description
+        try:
+            from services.embedding_service import EmbeddingService
+            from services.faiss_service import FAISSService
+            case_row = await self.db.get("Cases", case_id)
+            if not case_row:
+                q = await self.db.query("Cases", {"case_id": case_id})
+                case_row = q[0] if q else None
+            if case_row:
+                doc_text = f"{case_row.get('crime_type','')} {case_row.get('location','')} {case_row.get('district','')} {case_row.get('description','')} {case_row.get('status','')} {description} {file.filename}"
+                emb = await EmbeddingService().generate(doc_text)
+                await FAISSService().update(case_id, emb)
+                logger.info("RAG sync evidence upload updated case %s", case_id)
+        except Exception as e:
+            logger.warning("RAG sync evidence sync failed for case %s: %s", case_id, e)
+
         return {
             "evidence_id": evidence_id,
             "file_name": file.filename,
@@ -183,3 +199,18 @@ class EvidenceService:
             "details": f"Deleted evidence {evidence_id} ('{record.get('file_name', '')}') from case {record.get('case_id', '')}",
             "created_at": datetime.utcnow().isoformat(),
         })
+        # RAG sync: update case embedding after delete
+        try:
+            from services.embedding_service import EmbeddingService
+            from services.faiss_service import FAISSService
+            case_id = record.get("case_id", "")
+            case_row = await self.db.get("Cases", case_id) if case_id else None
+            if not case_row and case_id:
+                q = await self.db.query("Cases", {"case_id": case_id})
+                case_row = q[0] if q else None
+            if case_row and case_id:
+                doc_text = f"{case_row.get('crime_type','')} {case_row.get('location','')} {case_row.get('district','')} {case_row.get('description','')} {case_row.get('status','')}"
+                emb = await EmbeddingService().generate(doc_text)
+                await FAISSService().update(case_id, emb)
+        except Exception as e:
+            logger.warning("RAG sync evidence delete sync failed: %s", e)

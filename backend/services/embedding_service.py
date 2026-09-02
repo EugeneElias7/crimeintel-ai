@@ -28,9 +28,19 @@ class EmbeddingService:
         if self._model is not None:
             return
 
-        # Use fallback embeddings for local development to avoid SSL download issues
-        logger.info("Using fallback dummy embeddings for local development")
-        self._model = None
+        # Try to load sentence-transformers/all-MiniLM-L6-v2, fallback to dummy only if import fails
+        try:
+            from sentence_transformers import SentenceTransformer  # type: ignore
+            logger.info("Loading sentence-transformers model %s", self.MODEL_NAME)
+            self._model = SentenceTransformer(self.MODEL_NAME)
+            logger.info("Loaded sentence-transformers model %s dimension=%d", self.MODEL_NAME, self.DIMENSION)
+            return
+        except ImportError as e:
+            logger.warning("sentence-transformers not installed, using fallback dummy embeddings: %s", e)
+            self._model = None
+        except Exception as e:
+            logger.warning("Failed to load sentence-transformers model, using fallback dummy embeddings: %s", e)
+            self._model = None
 
     async def generate(self, text: str) -> List[float]:
         await self.load_model()

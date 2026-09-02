@@ -351,6 +351,17 @@ class CaseService:
             "created_at": datetime.utcnow().isoformat(),
         })
 
+        # RAG sync: embedding + faiss add
+        try:
+            from services.embedding_service import EmbeddingService
+            from services.faiss_service import FAISSService
+            doc_text = self._build_case_document(row_data)
+            emb = await EmbeddingService().generate(doc_text)
+            await FAISSService().add(case_id, emb)
+            logger.info("RAG sync add case %s", case_id)
+        except Exception as e:
+            logger.warning("RAG sync add failed for case %s: %s", case_id, e)
+
         return {**row_data, "ROWID": case_id}
 
     async def update_case(
@@ -400,7 +411,47 @@ class CaseService:
             })
 
         updated = await self.db.get("Cases", case_id)
+        # RAG sync: embedding update
+        try:
+            from services.embedding_service import EmbeddingService
+            from services.faiss_service import FAISSService
+            doc_text = self._build_case_document(updated or existing)
+            emb = await EmbeddingService().generate(doc_text)
+            await FAISSService().update(case_id, emb)
+            logger.info("RAG sync update case %s", case_id)
+        except Exception as e:
+            logger.warning("RAG sync update failed for case %s: %s", case_id, e)
         return updated or existing
+
+    def _build_case_document(self, case: dict) -> str:
+        """Helper to build document text: f"{crime_type} {location} {district} {description} {status}" for cases."""
+        return f"{case.get('crime_type','')} {case.get('location','')} {case.get('district','')} {case.get('description','')} {case.get('status','')}".strip()
+
+    def _build_evidence_document(self, evidence: dict) -> str:
+        """Helper to build evidence description text."""
+        return f"{evidence.get('file_name','')} {evidence.get('description','')} {evidence.get('file_type','')}".strip()
+
+    async def rebuild_faiss_index(self) -> dict:
+        """Fallback rebuild script: regenerate embeddings for all cases and rebuild FAISS index."""
+        try:
+            from services.embedding_service import EmbeddingService
+            from services.faiss_service import FAISSService
+            all_cases = await self.db.get_all("Cases") or []
+            embeddings = []
+            emb_service = EmbeddingService()
+            for case in all_cases:
+                cid = case.get("case_id") or case.get("ROWID")
+                if not cid:
+                    continue
+                text = self._build_case_document(case)
+                emb = await emb_service.generate(text)
+                embeddings.append((cid, emb))
+            if embeddings:
+                await FAISSService().build_index(embeddings)
+            return {"rebuilt": len(embeddings), "status": "ready"}
+        except Exception as e:
+            logger.error("FAISS rebuild failed: %s", e)
+            return {"rebuilt": 0, "error": str(e)}
 
     async def delete_case(self, case_id: str, user_id: Optional[str] = None) -> None:
         existing = await self.db.get("Cases", case_id)
@@ -451,6 +502,13 @@ class CaseService:
             "details": f"Hard-deleted case {case_id} and all related data",
             "created_at": datetime.utcnow().isoformat(),
         })
+        # RAG sync remove
+        try:
+            from services.faiss_service import FAISSService
+            await FAISSService().remove(case_id)
+            logger.info("RAG sync remove case %s", case_id)
+        except Exception as e:
+            logger.warning("RAG sync remove failed for case %s: %s", case_id, e)
 
     async def get_related_cases(self, case_id: str) -> List[dict]:
         case = await self.db.get("Cases", case_id)

@@ -119,3 +119,120 @@ class FAISSService:
                 logger.warning("Failed to load ID mapping: %s", e)
 
         return {}
+
+    async def add(self, case_id: str, embedding: List[float]) -> None:
+        """Add a single vector to index (RAG sync)."""
+        try:
+            await self.load_index()
+            import faiss
+            if self._index is None:
+                self._index = faiss.IndexFlatL2(self.dimension)
+                self._id_mapping = {}
+            vec = np.array([embedding], dtype=np.float32)
+            # normalize
+            norm = np.linalg.norm(vec)
+            if norm > 0:
+                vec = vec / norm
+            # append id mapping
+            next_idx = self._index.ntotal
+            self._index.add(vec)
+            if self._id_mapping is None:
+                self._id_mapping = await self.get_id_mapping()
+            self._id_mapping[next_idx] = case_id
+            # persist
+            os.makedirs(os.path.dirname(settings.FAISS_INDEX_PATH), exist_ok=True)
+            faiss.write_index(self._index, settings.FAISS_INDEX_PATH)
+            mapping_path = settings.FAISS_INDEX_PATH.replace(".bin", "_mapping.json")
+            # json keys as strings for consistency with build script
+            with open(mapping_path, "w") as f:
+                json.dump({str(k): v for k, v in self._id_mapping.items()}, f)
+            logger.info("FAISS add: case_id=%s idx=%d total=%d", case_id, next_idx, self._index.ntotal)
+        except Exception as e:
+            logger.warning("FAISS add failed for %s: %s", case_id, e)
+
+    async def update(self, case_id: str, embedding: List[float]) -> None:
+        """Update vector for case_id by rebuilding mapping (remove+add with rebuild fallback)."""
+        try:
+            mapping = await self.get_id_mapping()
+            # find idx for case_id
+            target_idx = None
+            for idx, cid in mapping.items():
+                if cid == case_id:
+                    target_idx = idx
+                    break
+            if target_idx is None:
+                await self.add(case_id, embedding)
+                return
+            # For IndexFlatL2 we cannot in-place update; rebuild index without old and add new
+            await self.remove(case_id)
+            await self.add(case_id, embedding)
+            logger.info("FAISS update: case_id=%s", case_id)
+        except Exception as e:
+            logger.warning("FAISS update failed for %s: %s", case_id, e)
+
+    async def remove(self, case_id: str) -> None:
+        """Remove vector for case_id by rebuilding index."""
+        try:
+            await self.load_index()
+            import faiss
+            mapping = await self.get_id_mapping()
+            if not mapping:
+                return
+            # find idx
+            target_idx = None
+            for idx, cid in mapping.items():
+                if cid == case_id:
+                    target_idx = idx
+                    break
+            if target_idx is None:
+                return
+            # Need to rebuild index from remaining vectors
+            # We can extract vectors by needing to store them: rebuild from DB embeddings fallback
+            # For simplicity, remove mapping entry and rebuild via build script logic if needed
+            # Try to reconstruct remaining vectors from current index if possible
+            if self._index is not None and self._index.ntotal > 0:
+                # Reconstruct all vectors
+                ntotal = self._index.ntotal
+                dim = self.dimension
+                all_vecs = []
+                remaining_mapping: Dict[int, str] = {}
+                new_idx = 0
+                for idx in range(ntotal):
+                    if idx == target_idx:
+                        continue
+                    try:
+                        vec = self._index.reconstruct(idx)  # works for Flat
+                    except Exception:
+                        continue
+                    all_vecs.append(vec)
+                    remaining_mapping[new_idx] = mapping[idx]
+                    new_idx += 1
+                # rebuild
+                new_index = faiss.IndexFlatL2(dim)
+                if all_vecs:
+                    arr = np.array(all_vecs, dtype=np.float32)
+                    new_index.add(arr)
+                self._index = new_index
+                self._id_mapping = remaining_mapping
+                os.makedirs(os.path.dirname(settings.FAISS_INDEX_PATH), exist_ok=True)
+                faiss.write_index(self._index, settings.FAISS_INDEX_PATH)
+                mapping_path = settings.FAISS_INDEX_PATH.replace(".bin", "_mapping.json")
+                with open(mapping_path, "w") as f:
+                    json.dump({str(k): v for k, v in self._id_mapping.items()}, f)
+                logger.info("FAISS remove: case_id=%s new_total=%d", case_id, self._index.ntotal)
+        except Exception as e:
+            logger.warning("FAISS remove failed for %s: %s", case_id, e)
+
+    async def get_metadata(self) -> Dict[str, Dict[str, str]]:
+        """Return case_id -> {district, crime_type} for metadata filtering."""
+        try:
+            from adapters.sqlite_db import sqlite_db
+            all_cases = await sqlite_db.get_all("Cases")
+            meta: Dict[str, Dict[str, str]] = {}
+            for c in all_cases or []:
+                cid = c.get("case_id") or c.get("ROWID")
+                if cid:
+                    meta[cid] = {"district": (c.get("district") or ""), "crime_type": (c.get("crime_type") or "")}
+            return meta
+        except Exception:
+            return {}

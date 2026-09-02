@@ -23,44 +23,30 @@ class IntentType(str, Enum):
 
 
 class QueryPlan(BaseModel):
-    """Structured query plan for CRIMA retrieval."""
-    intent: IntentType = IntentType.UNKNOWN
+    """Structured query plan for retrieval."""
+    text: str = ""
+    intent: str = "case_search"
     crime_type: Optional[str] = None
     location: Optional[str] = None
     district: Optional[str] = None
     status: Optional[str] = None
+    priority: Optional[str] = None
     date_from: Optional[str] = None
     date_to: Optional[str] = None
     person: Optional[str] = None
-    evidence_type: Optional[str] = None
-    semantic_search: bool = False
-    limit: int = 20
-    offset: int = 0
-    
-    # Entity references for conversation context
-    case_id: Optional[str] = None
     person_name: Optional[str] = None
-    location: Optional[str] = None
-    crime_type: Optional[str] = None
-    date_from: Optional[str] = None
-    date_to: Optional[str] = None
-    
-    # Search configuration
+    evidence_type: Optional[str] = None
+    file_type: Optional[str] = None
     semantic_search: bool = False
     fuzzy_matching: bool = True
     exact_match: bool = False
     limit: int = 20
     offset: int = 0
-    
-    # Context references
+    # For context resolution
     case_id: Optional[str] = None
-    person_name: Optional[str] = None
-    location: Optional[str] = None
-    crime_type: Optional[str] = None
-    date_from: Optional[str] = None
-    date_to: Optional[str] = None
-    
+
     class Config:
+        arbitrary_types_allowed = True
         use_enum_values = True
 
 
@@ -77,36 +63,3 @@ class RetrievalResult(BaseModel):
     relevance_score: float = 0.0
     source_type: str = "structured"  # structured, faiss, hybrid
     case_data: Dict[str, Any] = {}
-
-
-class QueryPlan(BaseModel):
-    """Structured query plan for retrieval."""
-    intent: str = "case_search"
-    crime_type: Optional[str] = None
-    location: Optional[str] = None
-    district: Optional[str] = None
-    status: Optional[str] = None
-    date_from: Optional[str] = None
-    date_to: Optional[str] = None
-    person: Optional[str] = None
-    evidence_type: Optional[str] = None
-    semantic_search: bool = False
-    limit: int = 20
-    offset: int = 0
-    
-    # For context resolution
-    case_id: Optional[str] = None
-    person_name: Optional[str] = None
-    location: Optional[str] = None
-    date_from: Optional[str] = None
-    date_to: Optional[str] = None
-    
-    # Search configuration
-    semantic_search: bool = False
-    fuzzy_matching: bool = True
-    exact_match: bool = False
-    limit: int = 20
-    offset: int = 0
-    
-    class Config:
-        arbitrary_types_allowed = True
